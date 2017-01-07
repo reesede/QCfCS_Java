@@ -298,6 +298,21 @@ class ComplexTest
         assertEquals(2.0, theSum.realPart);
         assertEquals(2.0, theSum.imagPart);
 
+        // Test adding doubles, floats, and ints.
+
+        num1 = new Complex(2.0,2.0);
+        theSum = num1.add(2.0);
+        assertEquals(4.0, theSum.realPart);
+        assertEquals(2.0, theSum.imagPart);
+
+        theSum = num1.add((float)2.0);
+        assertEquals(4.0, theSum.realPart);
+        assertEquals(2.0, theSum.imagPart);
+
+        theSum = num1.add(2);
+        assertEquals(4.0, theSum.realPart);
+        assertEquals(2.0, theSum.imagPart);
+
         // Verify that the exceptions are produced as expected.
 
         final Complex theNum = new Complex (2.0, 2.0);
@@ -490,6 +505,21 @@ class ComplexTest
         assertEquals(2.0, num2.imagPart);
         assertEquals(-2.0, theDifference.realPart);
         assertEquals(-2.0, theDifference.imagPart);
+
+        // Test subtracting doubles, floats, and ints.
+
+        num1 = new Complex(4.0,2.0);
+        theDifference = num1.subtract(2.0);
+        assertEquals(2.0, theDifference.realPart);
+        assertEquals(2.0, theDifference.imagPart);
+
+        theDifference = num1.subtract((float)2.0);
+        assertEquals(2.0, theDifference.realPart);
+        assertEquals(2.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(2);
+        assertEquals(2.0, theDifference.realPart);
+        assertEquals(2.0, theDifference.imagPart);
 
         // Verify that the exceptions are produced as expected.
 
@@ -685,6 +715,21 @@ class ComplexTest
         assertEquals(0.0, theProduct.realPart);
         assertEquals(0.0, theProduct.imagPart);
 
+        // Test multiplying by doubles, floats, and ints.
+
+        num1 = new Complex(4.0,1.0);
+        theProduct = num1.multiply(2.0);
+        assertEquals(8.0, theProduct.realPart);
+        assertEquals(2.0, theProduct.imagPart);
+
+        theProduct = num1.multiply((float)2.0);
+        assertEquals(8.0, theProduct.realPart);
+        assertEquals(2.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(2);
+        assertEquals(8.0, theProduct.realPart);
+        assertEquals(2.0, theProduct.imagPart);
+
         // Verify that the exceptions are produced as expected.
 
         final Complex theNum = new Complex (2.0, 2.0);
@@ -853,6 +898,21 @@ class ComplexTest
         assertEquals(0.0, theQuotient.realPart);
         assertEquals(0.0, theQuotient.imagPart);
 
+        // Test dividing by doubles, floats, and ints.
+
+        num1 = new Complex(5.0,2.0);
+        theQuotient = num1.divide(2.0);
+        assertEquals(2.5, theQuotient.realPart);
+        assertEquals(1.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide((float)2.0);
+        assertEquals(2.5, theQuotient.realPart);
+        assertEquals(1.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide(2);
+        assertEquals(2.5, theQuotient.realPart);
+        assertEquals(1.0, theQuotient.imagPart);
+
         // Verify that the exceptions are produced as expected.
 
         final Complex theNum = new Complex (2.0, 2.0);
@@ -878,18 +938,23 @@ class ComplexTest
         assertFalse(Complex.isZero(new Complex(1.0,1.0)));
 
         Complex theNum = new Complex();
+        assertTrue(Complex.isZero(theNum));
         assertTrue(theNum.isZero());
 
         theNum = new Complex(0.0);
+        assertTrue(Complex.isZero(theNum));
         assertTrue(theNum.isZero());
 
         theNum = new Complex(1.0);
+        assertFalse(Complex.isZero(theNum));
         assertFalse(theNum.isZero());
 
         theNum = new Complex(0.0, 1.0);
+        assertFalse(Complex.isZero(theNum));
         assertFalse(theNum.isZero());
 
         theNum = new Complex(1.0, 1.0);
+        assertFalse(Complex.isZero(theNum));
         assertFalse(theNum.isZero());
 
         assertThrows(IllegalArgumentException.class, () -> {

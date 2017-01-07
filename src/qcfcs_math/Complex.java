@@ -31,6 +31,8 @@ package qcfcs_math;
 //                                      Added subtract (), conjugate ().
 //      20170106    D.E. Reese          Added isZero (), divide ().
 //      20170107    D.E. Reese          Added static isZero () and explicit throw syntax to static procedure calls.
+//                                      Added additional operations when adding, subtracting, multiplying and
+//                                      dividing by doubles, floats, and ints.
 //
 
 public class Complex
@@ -201,6 +203,27 @@ public class Complex
     }
 
     /**
+     * This method adds a double real number to this complex number.
+     * @param num1  number to add to the real part of the complex number.
+     * @return      Result of adding num1 to the complex number.
+     */
+    public Complex add (double num1) { return Complex.add(this, new Complex (num1));}
+
+    /**
+     * This method adds a float real number to this complex number.
+     * @param num1  number to add to the real part of the complex number.
+     * @return      Result of adding num1 to the complex number.
+     */
+    public Complex add (float num1) {return Complex.add(this, new Complex ((double)num1));}
+
+    /**
+     * This method adds an integer real number to this complex number.
+     * @param num1  number to add to the real part of the complex number.
+     * @return      Result of adding num1 to the complex number.
+     */
+    public Complex add (int num1) {return Complex.add(this, new Complex ((double) num1));}
+
+    /**
      * Method to subtract a complex number from this complex number and return the result.
      * @param num1  Complex number to subtract from this one.
      * @return      Difference between this complex number and num1.
@@ -209,6 +232,27 @@ public class Complex
     {
         return Complex.subtract(this, num1);
     }
+
+    /**
+     * This method subtract a double real number from this complex number.
+     * @param num1  number to subtract from the real part of the complex number.
+     * @return      Result of subtracting num1 from the complex number.
+     */
+    public Complex subtract (double num1) { return Complex.subtract(this, new Complex (num1));}
+
+    /**
+     * This method subtracts a float real number from this complex number.
+     * @param num1  number to subtract from the real part of the complex number.
+     * @return      Result of subtractiny num1 from the complex number.
+     */
+    public Complex subtract (float num1) {return Complex.subtract(this, new Complex ((double)num1));}
+
+    /**
+     * This method subtracts an integer real number from this complex number.
+     * @param num1  number to subtract from the real part of the complex number.
+     * @return      Result of subtracting num1 from the complex number.
+     */
+    public Complex subtract (int num1) {return Complex.subtract(this, new Complex ((double) num1));}
 
     /**
      * Method to multiply this complex number by another complex number and return the result.
@@ -221,9 +265,53 @@ public class Complex
     }
 
     /**
+     * This method multiplies a double real number to this complex number.
+     * @param num1  number to multiply to the complex number.
+     * @return      Result of multiplying num1 to the complex number.
+     */
+    public Complex multiply (double num1) { return Complex.multiply(this, new Complex (num1));}
+
+    /**
+     * This method multiplies a float real number to this complex number.
+     * @param num1  number to multiply to the complex number.
+     * @return      Result of multiplying num1 to the complex number.
+     */
+    public Complex multiply (float num1) {return Complex.multiply(this, new Complex ((double)num1));}
+
+    /**
+     * This method multiplies an integer real number to this complex number.
+     * @param num1  number to multiply to the complex number.
+     * @return      Result of multiplying num1 to the complex number.
+     */
+    public Complex multiply (int num1) {return Complex.multiply(this, new Complex ((double) num1));}
+
+    /**
      * This method divides this complex number by another complex number.
      * @param num1  Number by which to divide this complex number.
      * @return      Quotient of this complex number divided by num1.
      */
     public Complex divide (Complex num1) { return Complex.divide(this, num1);}
+
+    /**
+     * This method divides this complex number by a double.
+     * @param num1  number by which to divide this complex number.
+     * @return      Result of division by num1.
+     */
+    public Complex divide (double num1) { return Complex.divide(this, new Complex (num1));}
+
+    /**
+     * This method divides this complex number by a float.
+     * @param num1  number by which to divide this complex number.
+     * @return      Result of division by num1.
+     */
+    public Complex divide (float num1) {return Complex.divide(this, new Complex ((double)num1));}
+
+    /**
+     * This method divides this complex number by an integer.
+     * @param num1  number by which to divide this complex number.
+     * @return      Result of division by num1.
+     */
+    public Complex divide (int num1) {return Complex.divide(this, new Complex ((double) num1));}
+
+
 }
