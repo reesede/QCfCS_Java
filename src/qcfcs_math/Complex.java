@@ -85,7 +85,10 @@ public class Complex
     public static Complex conjugate (Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        return new Complex (theNum.realPart, -theNum.imagPart);
+        Complex newComplex = new Complex (theNum.realPart, theNum.imagPart);
+        if (newComplex.imagPart != 0.0)
+            newComplex.imagPart = - newComplex.imagPart;
+        return newComplex;
     }
 
     /**
