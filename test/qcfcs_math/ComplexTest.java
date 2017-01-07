@@ -6,9 +6,35 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.IllegalArgumentException;
+
 /**
+ * This class implements complex numbers.
  * Created by reesede on 1/7/17.
+ * @author David E. Reese
+ * @version 1.2.1
  */
+
+// Copyright 2017 David E. Reese
+//
+// This file is part of QCfCS_java.
+//
+// QCfCS_java is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// QCfCS_java is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with AsianFlashCard.  If not, see <http://www.gnu.org/licenses/>.
+//
+// History:
+//      20170107    D.E. Reese          Creation (Programming Drill 1.2.1)
+//
 class ComplexTest
 {
     @BeforeEach
@@ -26,8 +52,8 @@ class ComplexTest
     @Test
     void conjugate()
     {
-        Complex theComplex = null;
-        Complex conjugatedComplex = null;
+        Complex theComplex;
+        Complex conjugatedComplex;
 
         // Test conjugate for 0 + 0I, which should be 0.
 
@@ -85,22 +111,17 @@ class ComplexTest
 
         // Verify that the exception is generated as expected.
 
-        try
-        {
+        assertThrows(IllegalArgumentException.class, () -> {
             Complex.conjugate(null);
-            fail("Expected IllegalArgumentsException not thrown.");
-        }
-        catch (IllegalArgumentException e)
-        {
-        }
+        });
     }
 
     @Test
     void add()
     {
-        Complex num1 = null;
-        Complex num2 = null;
-        Complex theSum = null;
+        Complex num1;
+        Complex num2;
+        Complex theSum;
 
         // Verify that complex numbers that are only real are added correctly.
 
@@ -279,43 +300,601 @@ class ComplexTest
 
         // Verify that the exceptions are produced as expected.
 
-        num1 = null;
-        num2 = new Complex (2.0, 2.0);
-        try {
-            theSum = Complex.add(num1, num2);
-            fail("IllegalArgumentException for num1 not thrown.");
-        } catch (IllegalArgumentException e) {}
-
-        num1 = new Complex (1.0, 1.0);
-        num2 = null;
-        try {
-            theSum = Complex.add(num1, num2);
-            fail("IllegalArgumentException for num2 not thrown.");
-        } catch (IllegalArgumentException e) {}
-
+        final Complex theNum = new Complex (2.0, 2.0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.add(null, theNum);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.add(theNum, null);
+        });
     }
 
     @Test
     void subtract()
     {
+        Complex num1;
+        Complex num2;
+        Complex theDifference;
+
+        // Verify that complex numbers that are only real subtract correctly.
+
+        num1 = new Complex(3.0);
+        num2 = new Complex(2.0);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(1.0, theDifference.realPart);
+        assertEquals(0.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(1.0, theDifference.realPart);
+        assertEquals(0.0, theDifference.imagPart);
+
+        // Verify that real num1 and imaginary num2 subtract correctly.
+
+        num1 = new Complex(3.0);
+        num2 = new Complex(0.0, 1.0);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(1.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(1.0, num2.imagPart);
+        assertEquals(3.0, theDifference.realPart);
+        assertEquals(-1.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(1.0, num2.imagPart);
+        assertEquals(3.0, theDifference.realPart);
+        assertEquals(-1.0, theDifference.imagPart);
+
+        // Verify that imaginary num1 and real num2 subtract correctly.
+
+        num1 = new Complex(0.0, 1.0);
+        num2 = new Complex(2.0, 0.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(-2.0, theDifference.realPart);
+        assertEquals(1.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(-2.0, theDifference.realPart);
+        assertEquals(1.0, theDifference.imagPart);
+
+        // Verify that imaginary num1 and imaginary num2 subtract correctly.
+
+        num1 = new Complex(0.0, 1.0);
+        num2 = new Complex(0.0, 2.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theDifference.realPart);
+        assertEquals(-1.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theDifference.realPart);
+        assertEquals(-1.0, theDifference.imagPart);
+
+        // Verify that complex num1 and complex num2 subtract correctly.
+
+        num1 = new Complex(1.0, 1.0);
+        num2 = new Complex(2.0, 2.0);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-1.0, theDifference.realPart);
+        assertEquals(-1.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-1.0, theDifference.realPart);
+        assertEquals(-1.0, theDifference.imagPart);
+
+        // Verify that complex num1 and 0 num2 subtract correctly.
+
+        num1 = new Complex(1.0, 1.0);
+        num2 = new Complex();
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(1.0, theDifference.realPart);
+        assertEquals(1.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(1.0, theDifference.realPart);
+        assertEquals(1.0, theDifference.imagPart);
+
+        // Verify that 0 num1 and complex num2 subtract correctly.
+
+        num1 = new Complex();
+        num2 = new Complex(2.0, 2.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theDifference = Complex.subtract(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-2.0, theDifference.realPart);
+        assertEquals(-2.0, theDifference.imagPart);
+
+        theDifference = num1.subtract(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-2.0, theDifference.realPart);
+        assertEquals(-2.0, theDifference.imagPart);
+
+        // Verify that the exceptions are produced as expected.
+
+        final Complex theNum = new Complex (2.0, 2.0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.subtract(null, theNum);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.subtract(theNum, null);
+        });
 
     }
 
     @Test
     void multiply()
     {
+        Complex num1;
+        Complex num2;
+        Complex theProduct;
 
+        // Verify that complex numbers that are only real multiply correctly.
+
+        num1 = new Complex(3.0);
+        num2 = new Complex(2.0);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(6.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(6.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        // Verify that real num1 and imaginary num2 multiply correctly.
+
+        num1 = new Complex(3.0);
+        num2 = new Complex(0.0, 1.0);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(1.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(1.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(3.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(3.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(1.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(3.0, theProduct.imagPart);
+
+        // Verify that imaginary num1 and real num2 multiply correctly.
+
+        num1 = new Complex(0.0, 1.0);
+        num2 = new Complex(2.0, 0.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(2.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(2.0, theProduct.imagPart);
+
+        // Verify that imaginary num1 and imaginary num2 multiply correctly.
+
+        num1 = new Complex(0.0, 1.0);
+        num2 = new Complex(0.0, 2.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-2.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-2.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        // Verify that complex num1 and complex num2 multiply correctly.
+
+        num1 = new Complex(1.0, 2.0);
+        num2 = new Complex(2.0, 2.0);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(2.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(2.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-2.0, theProduct.realPart);
+        assertEquals(6.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(2.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(-2.0, theProduct.realPart);
+        assertEquals(6.0, theProduct.imagPart);
+
+        // Verify that complex num1 and 0 num2 multiply correctly.
+
+        num1 = new Complex(1.0, 1.0);
+        num2 = new Complex();
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(1.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        // Verify that 0 num1 and complex num2 multiply correctly.
+
+        num1 = new Complex();
+        num2 = new Complex(2.0, 2.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theProduct = Complex.multiply(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        theProduct = num1.multiply(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theProduct.realPart);
+        assertEquals(0.0, theProduct.imagPart);
+
+        // Verify that the exceptions are produced as expected.
+
+        final Complex theNum = new Complex (2.0, 2.0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.multiply(null, theNum);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.multiply(theNum, null);
+        });
     }
 
     @Test
     void divide()
     {
+        Complex num1;
+        Complex num2;
+        Complex theQuotient;
 
+        // Verify that complex numbers that are only real divide correctly.
+
+        num1 = new Complex(6.0);
+        num2 = new Complex(2.0);
+        assertEquals(6.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theQuotient = Complex.divide(num1, num2);
+        assertEquals(6.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(3.0, theQuotient.realPart);
+        assertEquals(0.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide(num2);
+        assertEquals(6.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(3.0, theQuotient.realPart);
+        assertEquals(0.0, theQuotient.imagPart);
+
+        // Verify that real num1 and imaginary num2 divide correctly.
+
+        num1 = new Complex(6.0);
+        num2 = new Complex(0.0, 2.0);
+        assertEquals(6.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theQuotient = Complex.divide(num1, num2);
+        assertEquals(6.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theQuotient.realPart);
+        assertEquals(-3.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide(num2);
+        assertEquals(6.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theQuotient.realPart);
+        assertEquals(-3.0, theQuotient.imagPart);
+
+        // Verify that imaginary num1 and real num2 divide correctly.
+
+        num1 = new Complex(0.0, 6.0);
+        num2 = new Complex(2.0, 0.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(6.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+
+        theQuotient = Complex.divide(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(6.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(0.0, theQuotient.realPart);
+        assertEquals(3.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(6.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(0.0, num2.imagPart);
+        assertEquals(0.0, theQuotient.realPart);
+        assertEquals(3.0, theQuotient.imagPart);
+
+        // Verify that imaginary num1 and imaginary num2 divide correctly.
+
+        num1 = new Complex(0.0, 6.0);
+        num2 = new Complex(0.0, 3.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(6.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(3.0, num2.imagPart);
+
+        theQuotient = Complex.divide(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(6.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(3.0, num2.imagPart);
+        assertEquals(2.0, theQuotient.realPart);
+        assertEquals(0.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(6.0, num1.imagPart);
+        assertEquals(0.0, num2.realPart);
+        assertEquals(3.0, num2.imagPart);
+        assertEquals(2.0, theQuotient.realPart);
+        assertEquals(0.0, theQuotient.imagPart);
+
+        // Verify that complex num1 and complex num2 divide correctly.
+
+        num1 = new Complex(1.0, 2.0);
+        num2 = new Complex(2.0, 2.0);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(2.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theQuotient = Complex.divide(num1, num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(2.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.75, theQuotient.realPart);
+        assertEquals(0.25, theQuotient.imagPart);
+
+        theQuotient = num1.divide(num2);
+        assertEquals(1.0, num1.realPart);
+        assertEquals(2.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.75, theQuotient.realPart);
+        assertEquals(0.25, theQuotient.imagPart);
+
+        // Verify that 0 num1 and complex num2 divide correctly.
+
+        num1 = new Complex();
+        num2 = new Complex(2.0, 2.0);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+
+        theQuotient = Complex.divide(num1, num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theQuotient.realPart);
+        assertEquals(0.0, theQuotient.imagPart);
+
+        theQuotient = num1.divide(num2);
+        assertEquals(0.0, num1.realPart);
+        assertEquals(0.0, num1.imagPart);
+        assertEquals(2.0, num2.realPart);
+        assertEquals(2.0, num2.imagPart);
+        assertEquals(0.0, theQuotient.realPart);
+        assertEquals(0.0, theQuotient.imagPart);
+
+        // Verify that the exceptions are produced as expected.
+
+        final Complex theNum = new Complex (2.0, 2.0);
+        final Complex zeroNum = new Complex ();
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.divide(null, theNum);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.divide(theNum, null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.divide(theNum, zeroNum);
+        });
     }
 
     @Test
     void isZero()
     {
+        assertTrue(Complex.isZero(new Complex()));
+        assertTrue(Complex.isZero(new Complex(0.0, 0.0)));
+        assertFalse(Complex.isZero(new Complex(1.0)));
+        assertFalse(Complex.isZero(new Complex(0.0,1.0)));
+        assertFalse(Complex.isZero(new Complex(1.0,1.0)));
+
+        Complex theNum = new Complex();
+        assertTrue(theNum.isZero());
+
+        theNum = new Complex(0.0);
+        assertTrue(theNum.isZero());
+
+        theNum = new Complex(1.0);
+        assertFalse(theNum.isZero());
+
+        theNum = new Complex(0.0, 1.0);
+        assertFalse(theNum.isZero());
+
+        theNum = new Complex(1.0, 1.0);
+        assertFalse(theNum.isZero());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.isZero(null);
+        });
 
     }
 }

@@ -30,6 +30,7 @@ package qcfcs_math;
 //                                      Made realPart and imagPart public.
 //                                      Added subtract (), conjugate ().
 //      20170106    D.E. Reese          Added isZero (), divide ().
+//      20170107    D.E. Reese          Added static isZero () and explicit throw syntax to static procedure calls.
 //
 
 public class Complex
@@ -77,6 +78,19 @@ public class Complex
     }
 
     /**
+     * This method checks if a complex number is 0.
+     * @param theNum    Complex number to check.
+     * @return          True if theNum is 0; returns false otherwise.
+     * @throws IllegalArgumentException
+     */
+    public static boolean isZero(Complex theNum) throws IllegalArgumentException {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        if ((theNum.realPart == 0.0) && (theNum.imagPart == 0.0))
+            return true;
+        return false;
+    }
+
+    /**
      * This method takes the complex conjugate of a complex number.
      * @param theNum    Complex number whose conjugate is to be taken.
      * @return          Complex conjugate of theNum.
@@ -98,7 +112,7 @@ public class Complex
      * @return      Sum of the two complex numbers.
      * @throws IllegalArgumentException Thrown if num1 or num2 is null.
      */
-    public static Complex add (Complex num1, Complex num2)
+    public static Complex add (Complex num1, Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -112,7 +126,7 @@ public class Complex
      * @return      Difference between num1 and num2.
      * @throws IllegalArgumentException Thrown if num1 or num2 is null.
      */
-    public static Complex subtract (Complex num1, Complex num2)
+    public static Complex subtract (Complex num1, Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -126,7 +140,7 @@ public class Complex
      * @return
      * @throws IllegalArgumentException Thrown if num1 or num2 is null.
      */
-    public static Complex multiply (Complex num1, Complex num2)
+    public static Complex multiply (Complex num1, Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
