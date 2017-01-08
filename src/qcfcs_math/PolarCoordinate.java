@@ -1,5 +1,7 @@
 package qcfcs_math;
 
+import java.lang.Math;
+
 /**
  * This class implements polar coordinates.
  * Created by reesede on 1/7/17.
@@ -59,8 +61,70 @@ public class PolarCoordinate
     {
         if (theRadius < 0.0) throw new IllegalArgumentException("theRadius must be >= 0.0.");
         if (theRadius == 0.0) theAngle = 0.0;
-        angle = theAngle;
+        angle = PolarCoordinate.angleToStandardRange(theAngle);
         radius = theRadius;
+    }
+
+    /**
+     * Constructor to create a polar coordinate out of a complex number.
+     * @param theComplex    Complex number to be used to create the polar coordinate.
+     * @throws IllegalArgumentException Thrown if theComplex is null.
+     */
+    public PolarCoordinate (Complex theComplex) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null");
+
+        double theRadius = 0.0;
+        double theAngle = 0.0;
+
+        if ((theComplex.getReal() == 0.0) && (theComplex.getImag() == 0.0))
+        {
+            theRadius = 0.0;
+            theAngle = 0.0;
+        }
+        else
+        {
+            theRadius = Math.sqrt(Math.pow(theComplex.getReal(), 2.0) + Math.pow(theComplex.getImag(), 2.0));
+
+            if (theComplex.getImag() > 0.0)
+                theAngle = Math.atan(theComplex.getImag() / theComplex.getReal());
+
+            if ((theComplex.getImag() < 0.0) && (theComplex.getReal() >= 0.0))
+                theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) + Math.PI;
+
+            if ((theComplex.getImag() < 0.0) && (theComplex.getReal() < 0.0))
+                theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) - Math.PI;
+
+            if ((theComplex.getImag() == 0.0) && (theComplex.getReal() > 0.0))
+                theAngle = Math.PI / 2.0;
+
+            if ((theComplex.getImag() == 0.0) && (theComplex.getReal() < 0.0))
+                theAngle = -Math.PI / 2.0;
+        }
+
+        radius = theRadius;
+        angle  = PolarCoordinate.angleToStandardRange(theAngle);
+        ;
+    }
+
+    /**
+     * This method converts any real angle value to the range -PI...PI.
+     * @param theAngle  Angle to be converted.
+     * @return          Angle normalized to within the range -PI...PI.
+     */
+    public static double angleToStandardRange (double theAngle)
+    {
+        int multiplier = (int)(theAngle / Math.PI);
+        if (multiplier < 0)
+            multiplier = -multiplier;
+
+        double result;
+        if (theAngle >= 0.0)
+            result = theAngle - (double)multiplier * Math.PI;
+        else
+            result = theAngle + (double)multiplier * Math.PI;
+
+        return result;
     }
 
     /**
@@ -96,7 +160,7 @@ public class PolarCoordinate
     public static void setAngle (PolarCoordinate theCoord, double theAngle) throws IllegalArgumentException
     {
         if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
-        theCoord.angle = theAngle;
+        theCoord.angle = PolarCoordinate.angleToStandardRange(theAngle);
     }
 
     /**
@@ -108,7 +172,7 @@ public class PolarCoordinate
     public static void setAngle (PolarCoordinate theCoord, float theAngle) throws IllegalArgumentException
     {
         if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
-        theCoord.angle = (double)theAngle;
+        theCoord.angle = PolarCoordinate.angleToStandardRange((double)theAngle);
     }
 
     /**
@@ -120,7 +184,7 @@ public class PolarCoordinate
     public static void setAngle (PolarCoordinate theCoord, int theAngle) throws IllegalArgumentException
     {
         if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
-        theCoord.angle = (double)theAngle;
+        theCoord.angle = PolarCoordinate.angleToStandardRange((double)theAngle);
     }
 
     /**
@@ -135,7 +199,8 @@ public class PolarCoordinate
         if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
         if (theRadius < 0.0) throw new IllegalArgumentException("theRadius is < 0.0");
         theCoord.radius = theRadius;
-        if (theRadius == 0.0) theCoord.angle = 0.0;
+        if (theRadius == 0.0)
+            theCoord.angle = 0.0;
     }
 
     /**
@@ -150,7 +215,8 @@ public class PolarCoordinate
         if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
         if (theRadius < 0.0) throw new IllegalArgumentException("theRadius is < 0.0");
         theCoord.radius = (double)theRadius;
-        if (theRadius == 0.0) theCoord.angle = 0.0;
+        if (theRadius == 0.0)
+            theCoord.angle = 0.0;
     }
 
     /**
@@ -165,6 +231,112 @@ public class PolarCoordinate
         if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
         if (theRadius < 0) throw new IllegalArgumentException("theRadius is < 0.0");
         theCoord.radius = (double)theRadius;
-        if (theRadius == 0) theCoord.angle = 0.0;
+        if (theRadius == 0)
+            theCoord.angle = 0.0;
+    }
+
+    /**
+     * This method converts a given polar coordinate into a complex number.
+     * @param theCoord  Coordinate to convert to a complex number.
+     * @return          Complex number corresponding to the polar coordinate.
+     * @throws IllegalArgumentException Thrown if theCoord is null.
+     */
+    public static Complex polarToComplex (PolarCoordinate theCoord) throws IllegalArgumentException
+    {
+        if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
+
+        double realPart = theCoord.radius * Math.cos(theCoord.angle);
+        double imagPart = theCoord.radius * Math.sin(theCoord.angle);
+
+        return new Complex(realPart, imagPart);
+    }
+
+    /**
+     * This method returns the angle of the polar coordinate.
+     * @return          Angle of the polar coordinate.
+     */
+    public double getAngle ()
+    {
+        return angle;
+    }
+
+    /**
+     * This method returns the radius of the polar coordinate.
+     * @return          radius of the polar coordinate.
+     */
+    public double getRadius ()
+    {
+        return radius;
+    }
+
+    /**
+     * This method sets the angle of a given polar coordinate to the specified double value.
+     * @param theAngle  New value of the angle of the polar coordinate.
+     */
+    public void setAngle (double theAngle)
+    {
+        angle = PolarCoordinate.angleToStandardRange(theAngle);
+    }
+
+    /**
+     * This method sets the angle of a given polar coordinate to the specified float value.
+     * @param theAngle  New value of the angle of the polar coordinate.
+     */
+    public void setAngle (float theAngle)
+    {
+        angle = PolarCoordinate.angleToStandardRange((double)theAngle);
+    }
+
+    /**
+     * This method sets the angle of a given polar coordinate to the specified int value.
+     * @param theAngle  New value of the angle of the polar coordinate.
+     */
+    public void setAngle (int theAngle)
+    {
+        angle = PolarCoordinate.angleToStandardRange((double)theAngle);
+    }
+
+    /**
+     * This method sets the radius of a given polar coordinate to the specified double value. Note that if the
+     * new radius is 0.0, the angle will be set to 0.0 (angle is undefined for a 0-length radius).
+     * @param theRadius New value of the radius of the polar coordinate.
+     * @throws IllegalArgumentException Thrown if theRadius < 0.0.
+     */
+    public void setRadius (double theRadius) throws IllegalArgumentException
+    {
+        if (theRadius < 0.0) throw new IllegalArgumentException("theRadius < 0.0");
+        PolarCoordinate.setRadius(this, theRadius);
+    }
+
+    /**
+     * This method sets the radius of a given polar coordinate to the specified float value. Note that if the
+     * new radius is 0.0, the angle will be set to 0.0 (angle is undefined for a 0-length radius).
+     * @param theRadius New value of the radius of the polar coordinate.
+     * @throws IllegalArgumentException Thrown if theRadius < 0.0.
+     */
+    public void setRadius (float theRadius) throws IllegalArgumentException
+    {
+        if (theRadius < 0.0) throw new IllegalArgumentException("theRadius < 0.0");
+        PolarCoordinate.setRadius(this, theRadius);
+    }
+
+    /**
+     * This method sets the radius of a given polar coordinate to the specified int value. Note that if the
+     * new radius is 0.0, the angle will be set to 0.0 (angle is undefined for a 0-length radius).
+     * @param theRadius New value of the radius of the polar coordinate.
+     * @throws IllegalArgumentException Thrown if theRadius < 0.
+     */
+    public void setRadius (int theRadius) throws IllegalArgumentException
+    {
+        if (theRadius < 0.0) throw new IllegalArgumentException("theRadius < 0");
+        PolarCoordinate.setRadius(this, theRadius);
+    }
+
+    /**
+     * This method converts a given polar coordinate into a complex number.
+     */
+    public Complex toComplex () throws IllegalArgumentException
+    {
+        return PolarCoordinate.polarToComplex(this);
     }
 }
