@@ -4,7 +4,8 @@ package qcfcs_math;
  * This class implements complex numbers.
  * Created by reesede on 1/4/17.
  * @author David E. Reese
- * @version 1.2.1
+ * @since 1.1.1
+ * @version 1.3.1
  */
 
 // Copyright 2017 David E. Reese
@@ -33,6 +34,8 @@ package qcfcs_math;
 //      20170107    D.E. Reese          Added static isZero () and explicit throw syntax to static procedure calls.
 //                                      Added additional operations when adding, subtracting, multiplying and
 //                                      dividing by doubles, floats, and ints.
+//                                      Made realPart and imagPart private and added getReal () and getImag ()
+//                                      methods.
 //
 
 public class Complex
@@ -41,12 +44,12 @@ public class Complex
     /**
      * Real part of complex number.
      */
-    public double realPart;
+    private double realPart;
 
     /**
      * Imaginary part of complex number.
      */
-    public double imagPart;
+    private double imagPart;
 
     /**
      * Default constructor. Sets the complex number to 0 + 0I.
@@ -77,6 +80,102 @@ public class Complex
     {
         realPart = theReal;
         imagPart = theImag;
+    }
+
+    /**
+     * This method returns the real part of a complex number.
+     * @param theNum    Complex number whose real part is to be returned.
+     * @return          Real part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static double getReal (Complex theNum) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        return theNum.realPart;
+    }
+
+    /**
+     * This method returns the imaginary part of a complex number.
+     * @param theNum    Complex number whose imaginary part is to be returned.
+     * @return          Imaginary part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static double getImag (Complex theNum) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        return theNum.imagPart;
+    }
+
+    /**
+     * This method sets the real part of a given complex number to a given double value.
+     * @param theNum        Complex number whose real part is to be changed.
+     * @param newRealPart   New value of the real part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static void setReal (Complex theNum, double newRealPart) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        theNum.realPart = newRealPart;
+    }
+
+    /**
+     * This method sets the real part of a given complex number to a given float value.
+     * @param theNum        Complex number whose real part is to be changed.
+     * @param newRealPart   New value of the real part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static void setReal (Complex theNum, float newRealPart) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        theNum.realPart = (double)newRealPart;
+    }
+
+    /**
+     * This method sets the real part of a given complex number to a given int value.
+     * @param theNum        Complex number whose real part is to be changed.
+     * @param newRealPart   New value of the real part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static void setReal (Complex theNum, int newRealPart) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        theNum.realPart = (double)newRealPart;
+    }
+
+    /**
+     * This method sets the imaginary part of a given complex number to a given double value.
+     * @param theNum        Complex number whose imaginary part is to be changed.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static void setImag (Complex theNum, double newImagPart) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        theNum.imagPart = newImagPart;
+    }
+
+    /**
+     * This method sets the imaginary part of a given complex number to a given float value.
+     * @param theNum        Complex number whose imaginary part is to be changed.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static void setImag (Complex theNum, float newImagPart) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        theNum.imagPart = (double)newImagPart;
+    }
+
+    /**
+     * This method sets the imaginary part of a given complex number to a given int value.
+     * @param theNum        Complex number whose imaginary part is to be changed.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static void setImag (Complex theNum, int newImagPart) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        theNum.imagPart = (double)newImagPart;
     }
 
     /**
@@ -171,6 +270,78 @@ public class Complex
         result.realPart /= divisor;
         result.imagPart /= divisor;
         return result;
+    }
+
+    /**
+     * This method returns the real part of this complex number.
+     * @return  Real part of the complex number.
+     */
+    public double getReal()
+    {
+        return realPart;
+    }
+
+    /**
+     * This method returns the imaginary part of this complex number.
+     * @return  Imaginary part of the complex number.
+     */
+    public double getImag()
+    {
+        return imagPart;
+    }
+
+    /**
+     * This method sets the real part of this complex number to a given double value.
+     * @param newRealPart   New value of the real part of the complex number.
+     */
+    public void setReal(double newRealPart)
+    {
+        realPart = newRealPart;
+    }
+
+    /**
+     * This method sets the real part of this complex number to a given float value.
+     * @param newRealPart   New value of the real part of the complex number.
+     */
+    public void setReal(float newRealPart)
+    {
+        realPart = (double)newRealPart;
+    }
+
+    /**
+     * This method sets the real part of this complex number to a given int value.
+     * @param newRealPart   New value of the real part of the complex number.
+     */
+    public void setReal(int newRealPart)
+    {
+        realPart = (double)newRealPart;
+    }
+
+    /**
+     * This method sets the imaginary part of this complex number to a given double value.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     */
+    public void setImag(double newImagPart)
+    {
+        imagPart = newImagPart;
+    }
+
+    /**
+     * This method sets the imaginary part of this complex number to a given float value.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     */
+    public void setImag(float newImagPart)
+    {
+        imagPart = (double)newImagPart;
+    }
+
+    /**
+     * This method sets the imaginary part of this complex number to a given int value.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     */
+    public void setImag(int newImagPart)
+    {
+        imagPart = (double)newImagPart;
     }
 
     /**
