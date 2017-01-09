@@ -4,7 +4,7 @@ import java.lang.Math;
 
 /**
  * This class implements polar coordinates.
- * Created by reesede on 1/7/17.
+ * Created by reesede on 1/7/2017.
  * @author David E. Reese
  * @version 1.3.1
  * @since 1.3.1
@@ -115,6 +115,27 @@ public class PolarCoordinate
     public static double angleToStandardRange (double theAngle)
     {
         int multiplier = (int)(theAngle / Math.PI);
+
+        // Check if the angle is a multiplier of PI.
+
+        if (theAngle == (multiplier * Math.PI))
+        {
+            // Angle is a multiple of 2*PI, so it will be 0.0.
+
+            if ((multiplier % 2) == 0)
+                return 0.0;
+
+            // The multiplier is an odd number. If it is greater than 0, than the
+            // angle will be PI. If it is less than 0, then the angle will be -PI.
+
+            if (multiplier > 0)
+                return (Math.PI);
+            if (multiplier < 0)
+                return (-Math.PI);
+        }
+
+        // At this point, it is known that the angle is not a multiple of PI.
+
         if (multiplier < 0)
             multiplier = -multiplier;
 

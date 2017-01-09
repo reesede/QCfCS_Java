@@ -2,7 +2,7 @@ package qcfcs_math;
 
 /**
  * This class implements complex numbers.
- * Created by reesede on 1/4/17.
+ * Created by reesede on 1/4/2017.
  * @author David E. Reese
  * @since 1.1.1
  * @version 1.3.1
@@ -273,6 +273,44 @@ public class Complex
     }
 
     /**
+     * This method converts a complex number into its polar coordinate.
+     * @param theComplex    Complex number to convert to polar coordinates.
+     * @return              Polar coordinate representation of the complex number.
+     * @throws IllegalArgumentException Thrown if theComplex is null.
+     */
+    public static PolarCoordinate complexToPolarCoordinate (Complex theComplex) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null");
+
+        double theAngle = 0.0;
+        double theRadius = Math.sqrt(Math.pow(theComplex.realPart, 2.0) + Math.pow(theComplex.imagPart, 2.0));
+
+        // If the radius is 0, just return a 0 polar coordinate (radius of 0 and angle of 0).
+
+        if (theRadius == 0.0)
+            return new PolarCoordinate(0.0,0.0);
+
+        theRadius = Math.sqrt(Math.pow(theComplex.getReal(), 2.0) + Math.pow(theComplex.getImag(), 2.0));
+
+        if (theComplex.getImag() > 0.0)
+            theAngle = Math.atan(theComplex.getImag() / theComplex.getReal());
+
+        if ((theComplex.getImag() < 0.0) && (theComplex.getReal() >= 0.0))
+            theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) + Math.PI;
+
+        if ((theComplex.getImag() < 0.0) && (theComplex.getReal() < 0.0))
+            theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) - Math.PI;
+
+        if ((theComplex.getImag() == 0.0) && (theComplex.getReal() > 0.0))
+            theAngle = Math.PI / 2.0;
+
+        if ((theComplex.getImag() == 0.0) && (theComplex.getReal() < 0.0))
+            theAngle = -Math.PI / 2.0;
+
+        return new PolarCoordinate (theRadius, theAngle);
+    }
+
+    /**
      * This method returns the real part of this complex number.
      * @return  Real part of the complex number.
      */
@@ -484,5 +522,12 @@ public class Complex
      */
     public Complex divide (int num1) {return Complex.divide(this, new Complex ((double) num1));}
 
-
+    /**
+     * This method converts the complex number into its polar coordinate representation.
+     * @return  The polar coordinate representation of the complex number.
+     */
+    public PolarCoordinate toPolarCoordinate ()
+    {
+        return Complex.complexToPolarCoordinate(this);
+    }
 }

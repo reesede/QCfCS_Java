@@ -9,10 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.lang.IllegalArgumentException;
 
 /**
- * This class implements complex numbers.
- * Created by reesede on 1/7/17.
+ * This class implements unit tests for the Complex class.
+ * Created by reesede on 1/7/2017.
  * @author David E. Reese
- * @version 1.2.1
+ * @version 1.3.1
+ * @since 1.2.1
  */
 
 // Copyright 2017 David E. Reese
@@ -1035,6 +1036,11 @@ class ComplexTest
         assertThrows(IllegalArgumentException.class, () -> {
             Complex.isZero(null);
         });
+    }
+
+    @Test
+    void complexToPolarCoordinate ()
+    {
 
     }
 }
