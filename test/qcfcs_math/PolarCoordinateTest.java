@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 // History:
 //      20170108    D.E. Reese          Creation (Programming Drill 1.3.1).
+//      20170110    D.E. Reese          Added code to stubs for setAngle_getAngle() and setRadius_getRadius().
 //
 
 class PolarCoordinateTest
@@ -98,13 +99,81 @@ class PolarCoordinateTest
     @Test
     void setAngle_getAngle()
     {
+        // Test static methods.
 
+        PolarCoordinate theCoord = new PolarCoordinate();
+        assertEquals(0.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(0.0, PolarCoordinate.getRadius(theCoord));
+
+        PolarCoordinate.setAngle(theCoord, Math.PI/4.0);
+        assertEquals(Math.PI/4.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(0.0, PolarCoordinate.getRadius(theCoord));
+
+        PolarCoordinate.setAngle(theCoord, (float)0.75);
+        assertEquals(0.75, PolarCoordinate.getAngle(theCoord));
+        assertEquals(0.0, PolarCoordinate.getRadius(theCoord));
+
+        PolarCoordinate.setAngle(theCoord, (int)2);
+        assertEquals(2.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(0.0, PolarCoordinate.getRadius(theCoord));
+
+        // Test instance methods.
+
+        theCoord = new PolarCoordinate();
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        PolarCoordinate.setAngle(theCoord, Math.PI/4.0);
+        assertEquals(Math.PI/4.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        PolarCoordinate.setAngle(theCoord, (float)0.75);
+        assertEquals(0.75, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        PolarCoordinate.setAngle(theCoord, (int)2);
+        assertEquals(2.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
     }
 
     @Test
     void setRadius_getRadius()
     {
+        // Test static methods.
 
+        PolarCoordinate theCoord = new PolarCoordinate();
+        assertEquals(0.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(0.0, PolarCoordinate.getRadius(theCoord));
+
+        PolarCoordinate.setRadius(theCoord, 2.5);
+        assertEquals(0.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(2.5, PolarCoordinate.getRadius(theCoord));
+
+        PolarCoordinate.setRadius(theCoord, (float)0.75);
+        assertEquals(0.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(0.75, PolarCoordinate.getRadius(theCoord));
+
+        PolarCoordinate.setRadius(theCoord, (int)2);
+        assertEquals(0.0, PolarCoordinate.getAngle(theCoord));
+        assertEquals(2.0, PolarCoordinate.getRadius(theCoord));
+
+        // Test instance methods.
+
+        theCoord = new PolarCoordinate();
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        PolarCoordinate.setRadius(theCoord, 2.5);
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(2.5, theCoord.getRadius());
+
+        PolarCoordinate.setRadius(theCoord, (float)0.75);
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.75, theCoord.getRadius());
+
+        PolarCoordinate.setRadius(theCoord, (int)2);
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(2.0, theCoord.getRadius());
     }
 
     @Test
