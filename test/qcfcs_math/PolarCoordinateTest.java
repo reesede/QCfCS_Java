@@ -66,10 +66,10 @@ class PolarCoordinateTest
         assertEquals(Math.PI/2.0, newAngle);
 
         newAngle = PolarCoordinate.angleToStandardRange(5*Math.PI/4.0);
-        assertEquals(Math.PI/4.0, newAngle);
+        assertEquals(- 3.0*Math.PI/4.0, newAngle);
 
         newAngle = PolarCoordinate.angleToStandardRange(- 5*Math.PI/4.0);
-        assertEquals(-Math.PI/4.0, newAngle);
+        assertEquals(3.0*Math.PI/4.0, newAngle);
 
         newAngle = PolarCoordinate.angleToStandardRange(Math.PI);
         assertEquals(Math.PI, newAngle);
@@ -94,6 +94,12 @@ class PolarCoordinateTest
 
         newAngle = PolarCoordinate.angleToStandardRange(-4*Math.PI);
         assertEquals(0.0, newAngle);
+
+        newAngle = PolarCoordinate.angleToStandardRange(17.0*Math.PI/4.0);
+        assertEquals(Math.PI/4.0, newAngle, 0.0000001);
+
+        newAngle = PolarCoordinate.angleToStandardRange(-17.0*Math.PI/4.0);
+        assertEquals(-Math.PI/4.0, newAngle, 0.0000001);
     }
 
     @Test

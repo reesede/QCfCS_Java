@@ -114,38 +114,26 @@ public class PolarCoordinate
      */
     public static double angleToStandardRange (double theAngle)
     {
-        int multiplier = (int)(theAngle / Math.PI);
+        double theResult = theAngle;
 
-        // Check if the angle is a multiplier of PI.
+        // Convert the angle to be within the range -2*Pi...2*Pi.
 
-        if (theAngle == (multiplier * Math.PI))
+        theResult -= (double)((int)(theAngle / (2.0 * Math.PI))) * 2.0 * Math.PI;
+
+        // If the converted angle is greater than Pi, it is in the third or fourth quadrant, so it
+        // should be negative. If the converted angle is less than Pi, it is in the first or second
+        // quadrant, so should be positive.
+
+        if (theResult > Math.PI)
         {
-            // Angle is a multiple of 2*PI, so it will be 0.0.
-
-            if ((multiplier % 2) == 0)
-                return 0.0;
-
-            // The multiplier is an odd number. If it is greater than 0, than the
-            // angle will be PI. If it is less than 0, then the angle will be -PI.
-
-            if (multiplier > 0)
-                return (Math.PI);
-            if (multiplier < 0)
-                return (-Math.PI);
+            theResult -= 2.0 * Math.PI;
         }
-
-        // At this point, it is known that the angle is not a multiple of PI.
-
-        if (multiplier < 0)
-            multiplier = -multiplier;
-
-        double result;
-        if (theAngle >= 0.0)
-            result = theAngle - (double)multiplier * Math.PI;
         else
-            result = theAngle + (double)multiplier * Math.PI;
-
-        return result;
+        {
+            if (theResult < -Math.PI)
+                theResult += 2.0 * Math.PI;
+        }
+        return theResult;
     }
 
     /**
