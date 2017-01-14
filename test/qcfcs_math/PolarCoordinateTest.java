@@ -51,6 +51,63 @@ class PolarCoordinateTest
     }
 
     @Test
+    void constructors()
+    {
+        PolarCoordinate theCoord = new PolarCoordinate();
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(0.0, 0.0);
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(1.0, Math.PI/4.0);
+        assertEquals(Math.PI/4.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(1.0, 2.0*Math.PI + Math.PI/4.0);
+        assertEquals(Math.PI/4.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(0.0, -Math.PI/4.0);
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(1.0, -Math.PI/4.0);
+        assertEquals(-Math.PI/4.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(1.0, -2.0*Math.PI - Math.PI/4.0);
+        assertEquals(-Math.PI/4.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        assertThrows(IllegalArgumentException.class , () -> {
+            PolarCoordinate badCoord = new PolarCoordinate(-1.0, Math.PI/2.0);
+        });
+
+        theCoord = new PolarCoordinate(new Complex(0.0,0.0));
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(new Complex(1.0,0.0));
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(new Complex(0.0, 1.0));
+        assertEquals(Math.PI/2.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(new Complex(-1.0, 0.0));
+        assertEquals(Math.PI, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+        theCoord = new PolarCoordinate(new Complex(0.0, -1.0));
+        assertEquals(-Math.PI/2.0, theCoord.getAngle());
+        assertEquals(1.0, theCoord.getRadius());
+
+    }
+
+    @Test
     void angleToStandardRange()
     {
         double newAngle = PolarCoordinate.angleToStandardRange(0.0);

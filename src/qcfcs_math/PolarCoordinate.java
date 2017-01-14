@@ -86,20 +86,26 @@ public class PolarCoordinate
         {
             theRadius = Math.sqrt(Math.pow(theComplex.getReal(), 2.0) + Math.pow(theComplex.getImag(), 2.0));
 
-            if (theComplex.getImag() > 0.0)
+            if ((theComplex.getImag() > 0.0) && (theComplex.getReal() > 0.0))
                 theAngle = Math.atan(theComplex.getImag() / theComplex.getReal());
 
-            if ((theComplex.getImag() < 0.0) && (theComplex.getReal() >= 0.0))
+            if ((theComplex.getImag() < 0.0) && (theComplex.getReal() > 0.0))
                 theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) + Math.PI;
 
             if ((theComplex.getImag() < 0.0) && (theComplex.getReal() < 0.0))
                 theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) - Math.PI;
 
             if ((theComplex.getImag() == 0.0) && (theComplex.getReal() > 0.0))
-                theAngle = Math.PI / 2.0;
+                theAngle = 0.0;
 
             if ((theComplex.getImag() == 0.0) && (theComplex.getReal() < 0.0))
-                theAngle = -Math.PI / 2.0;
+                theAngle = Math.PI;
+
+            if ((theComplex.getImag() > 0.0) && (theComplex.getReal() == 0.0))
+                theAngle = Math.PI/2.0;
+
+            if ((theComplex.getImag() < 0.0) && (theComplex.getReal() == 0.0))
+                theAngle = -Math.PI/2.0;
         }
 
         radius = theRadius;
