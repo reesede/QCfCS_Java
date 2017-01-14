@@ -38,6 +38,7 @@ import java.lang.IllegalArgumentException;
 //                                      Added setReal_getReal() and setImag_getImag(). Added calls to setReal (),
 //                                      getReal (), setImag (), and getImag () after realPart and imagPart made
 //                                      private.
+//      20170113    D.E. Reese          Added constructors() to test constructor methods.
 //
 class ComplexTest
 {
@@ -54,13 +55,56 @@ class ComplexTest
     }
 
     @Test
+    void constructors()
+    {
+        Complex theNum = new Complex ();
+        assertEquals(0.0, Complex.getReal(theNum));
+        assertEquals(0.0, Complex.getImag(theNum));
+
+        theNum = new Complex (1.0);
+        assertEquals(1.0, theNum.getReal());
+        assertEquals(0.0, theNum.getImag());
+
+        theNum = new Complex(1.0,1.0);
+        assertEquals(1.0, theNum.getReal());
+        assertEquals(1.0, theNum.getImag());
+
+        theNum = new Complex(0.0, 2.0);
+        assertEquals(0.0, theNum.getReal());
+        assertEquals(2.0, theNum.getImag());
+
+        theNum = new Complex(new PolarCoordinate(0.0,0.0));
+        assertEquals(0.0, theNum.getReal());
+        assertEquals(0.0, theNum.getImag());
+
+        theNum = new Complex(new PolarCoordinate(1.0, Math.PI/4.0));
+        assertEquals(Math.sqrt(2.0)/2.0, theNum.getReal(), 0.00000001);
+        assertEquals(Math.sqrt(2.0)/2.0, theNum.getImag(), 0.00000001);
+
+        theNum = new Complex(new PolarCoordinate(1.0, -Math.PI/4.0));
+        assertEquals(Math.sqrt(2.0)/2.0, theNum.getReal(), 0.00000001);
+        assertEquals(-Math.sqrt(2.0)/2.0, theNum.getImag(), 0.00000001);
+
+        theNum = new Complex(new PolarCoordinate(1.0, 4.0*Math.PI+Math.PI/4.0));
+        assertEquals(Math.sqrt(2.0)/2.0, theNum.getReal(), 0.00000001);
+        assertEquals(Math.sqrt(2.0)/2.0, theNum.getImag(), 0.00000001);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex tComplex = new Complex((PolarCoordinate)null);
+        });
+
+        theNum = new Complex(1.0, 2.0);
+        Complex newNum = new Complex(theNum);
+        assertEquals(1.0, newNum.getReal());
+        assertEquals(2.0, theNum.getImag());
+    }
+
+    @Test
     void setReal_getReal()
     {
         // Test class methods.
 
         Complex theNum = new Complex ();
-        assertEquals(0.0, Complex.getReal(theNum));
-        assertEquals(0.0, Complex.getImag(theNum));
 
         Complex.setReal(theNum, 1.0);
         assertEquals(1.0, Complex.getReal(theNum));
@@ -95,8 +139,6 @@ class ComplexTest
         // Test class methods.
 
         Complex theNum = new Complex ();
-        assertEquals(0.0, Complex.getReal(theNum));
-        assertEquals(0.0, Complex.getImag(theNum));
 
         Complex.setImag(theNum, 1.0);
         assertEquals(0.0, Complex.getReal(theNum));
@@ -134,8 +176,6 @@ class ComplexTest
         // Test conjugate for 0 + 0I, which should be 0.
 
         theComplex = new Complex ();
-        assertEquals(0.0, theComplex.getReal());
-        assertEquals(0.0, theComplex.getImag());
 
         conjugatedComplex = Complex.conjugate(theComplex);
         assertEquals(0.0, theComplex.getReal());
@@ -152,8 +192,6 @@ class ComplexTest
         // Test conjugate for 1.0 + 0I, which should be 1.0 + 0I.
 
         theComplex = new Complex (1.0);
-        assertEquals(1.0, theComplex.getReal());
-        assertEquals(0.0, theComplex.getImag());
 
         conjugatedComplex = Complex.conjugate(theComplex);
         assertEquals(1.0, theComplex.getReal());
@@ -170,8 +208,6 @@ class ComplexTest
         // Test conjugate for 1.0 + 1.0I, which should be 1.0 - 1.0I.
 
         theComplex = new Complex(1.0,1.0);
-        assertEquals(1.0, theComplex.getReal());
-        assertEquals(1.0, theComplex.getImag());
 
         conjugatedComplex = Complex.conjugate(theComplex);
         assertEquals(1.0, theComplex.getReal());
@@ -203,10 +239,6 @@ class ComplexTest
 
         num1 = new Complex(1.0);
         num2 = new Complex(2.0);
-        assertEquals(1.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theSum = Complex.add(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -228,10 +260,6 @@ class ComplexTest
 
         num1 = new Complex(1.0);
         num2 = new Complex(0.0, 2.0);
-        assertEquals(1.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theSum = Complex.add(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -303,10 +331,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 1.0);
         num2 = new Complex(2.0, 2.0);
-        assertEquals(1.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theSum = Complex.add(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -328,10 +352,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 1.0);
         num2 = new Complex();
-        assertEquals(1.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theSum = Complex.add(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -353,10 +373,6 @@ class ComplexTest
 
         num1 = new Complex();
         num2 = new Complex(2.0, 2.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theSum = Complex.add(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -411,10 +427,6 @@ class ComplexTest
 
         num1 = new Complex(3.0);
         num2 = new Complex(2.0);
-        assertEquals(3.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(3.0, num1.getReal());
@@ -436,10 +448,6 @@ class ComplexTest
 
         num1 = new Complex(3.0);
         num2 = new Complex(0.0, 1.0);
-        assertEquals(3.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(1.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(3.0, num1.getReal());
@@ -461,10 +469,6 @@ class ComplexTest
 
         num1 = new Complex(0.0, 1.0);
         num2 = new Complex(2.0, 0.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -486,10 +490,6 @@ class ComplexTest
 
         num1 = new Complex(0.0, 1.0);
         num2 = new Complex(0.0, 2.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -511,10 +511,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 1.0);
         num2 = new Complex(2.0, 2.0);
-        assertEquals(1.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -536,10 +532,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 1.0);
         num2 = new Complex();
-        assertEquals(1.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -561,10 +553,6 @@ class ComplexTest
 
         num1 = new Complex();
         num2 = new Complex(2.0, 2.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theDifference = Complex.subtract(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -620,10 +608,6 @@ class ComplexTest
 
         num1 = new Complex(3.0);
         num2 = new Complex(2.0);
-        assertEquals(3.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(3.0, num1.getReal());
@@ -645,10 +629,6 @@ class ComplexTest
 
         num1 = new Complex(3.0);
         num2 = new Complex(0.0, 1.0);
-        assertEquals(3.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(1.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(3.0, num1.getReal());
@@ -670,10 +650,6 @@ class ComplexTest
 
         num1 = new Complex(0.0, 1.0);
         num2 = new Complex(2.0, 0.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -695,10 +671,6 @@ class ComplexTest
 
         num1 = new Complex(0.0, 1.0);
         num2 = new Complex(0.0, 2.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -720,10 +692,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 2.0);
         num2 = new Complex(2.0, 2.0);
-        assertEquals(1.0, num1.getReal());
-        assertEquals(2.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -745,10 +713,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 1.0);
         num2 = new Complex();
-        assertEquals(1.0, num1.getReal());
-        assertEquals(1.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -770,10 +734,6 @@ class ComplexTest
 
         num1 = new Complex();
         num2 = new Complex(2.0, 2.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theProduct = Complex.multiply(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -828,10 +788,6 @@ class ComplexTest
 
         num1 = new Complex(6.0);
         num2 = new Complex(2.0);
-        assertEquals(6.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theQuotient = Complex.divide(num1, num2);
         assertEquals(6.0, num1.getReal());
@@ -853,10 +809,6 @@ class ComplexTest
 
         num1 = new Complex(6.0);
         num2 = new Complex(0.0, 2.0);
-        assertEquals(6.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theQuotient = Complex.divide(num1, num2);
         assertEquals(6.0, num1.getReal());
@@ -878,10 +830,6 @@ class ComplexTest
 
         num1 = new Complex(0.0, 6.0);
         num2 = new Complex(2.0, 0.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(6.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(0.0, num2.getImag());
 
         theQuotient = Complex.divide(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -903,10 +851,6 @@ class ComplexTest
 
         num1 = new Complex(0.0, 6.0);
         num2 = new Complex(0.0, 3.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(6.0, num1.getImag());
-        assertEquals(0.0, num2.getReal());
-        assertEquals(3.0, num2.getImag());
 
         theQuotient = Complex.divide(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -928,10 +872,6 @@ class ComplexTest
 
         num1 = new Complex(1.0, 2.0);
         num2 = new Complex(2.0, 2.0);
-        assertEquals(1.0, num1.getReal());
-        assertEquals(2.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theQuotient = Complex.divide(num1, num2);
         assertEquals(1.0, num1.getReal());
@@ -953,10 +893,6 @@ class ComplexTest
 
         num1 = new Complex();
         num2 = new Complex(2.0, 2.0);
-        assertEquals(0.0, num1.getReal());
-        assertEquals(0.0, num1.getImag());
-        assertEquals(2.0, num2.getReal());
-        assertEquals(2.0, num2.getImag());
 
         theQuotient = Complex.divide(num1, num2);
         assertEquals(0.0, num1.getReal());
@@ -1041,6 +977,34 @@ class ComplexTest
     @Test
     void complexToPolarCoordinate ()
     {
+        Complex theComplex = new Complex(new PolarCoordinate(0.0,0.0));
+        PolarCoordinate theCoord = Complex.complexToPolarCoordinate(theComplex);
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
 
+        theComplex = new Complex (new PolarCoordinate(1.0, Math.PI/4.0));
+        theCoord = Complex.complexToPolarCoordinate(theComplex);
+        assertEquals(1.0, theCoord.getRadius());
+        assertEquals(Math.PI/4.0, theCoord.getAngle());
+
+        theComplex = new Complex (new PolarCoordinate(1.0, 4.0*Math.PI + Math.PI/4.0));
+        theCoord = Complex.complexToPolarCoordinate(theComplex);
+        assertEquals(1.0, theCoord.getRadius());
+        assertEquals(Math.PI/4.0, theCoord.getAngle(), 0.00000001);
+
+        theComplex = new Complex(new PolarCoordinate(0.0,0.0));
+        theCoord = theComplex.toPolarCoordinate();
+        assertEquals(0.0, theCoord.getAngle());
+        assertEquals(0.0, theCoord.getRadius());
+
+        theComplex = new Complex (new PolarCoordinate(1.0, Math.PI/4.0));
+        theCoord = theComplex.toPolarCoordinate();
+        assertEquals(1.0, theCoord.getRadius());
+        assertEquals(Math.PI/4.0, theCoord.getAngle());
+
+        theComplex = new Complex (new PolarCoordinate(1.0, 4.0*Math.PI + Math.PI/4.0));
+        theCoord = theComplex.toPolarCoordinate();
+        assertEquals(1.0, theCoord.getRadius());
+        assertEquals(Math.PI/4.0, theCoord.getAngle(), 0.00000001);
     }
 }

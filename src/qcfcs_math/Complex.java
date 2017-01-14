@@ -36,6 +36,8 @@ package qcfcs_math;
 //                                      dividing by doubles, floats, and ints.
 //                                      Made realPart and imagPart private and added getReal () and getImag ()
 //                                      methods.
+//      20170113    D.E. Reese          Added constructor to create a complex number from a polar coordinate.
+//      20170114    D.E. Reese          Added constructor to create a complex number from an existing complex number.
 //
 
 public class Complex
@@ -80,6 +82,32 @@ public class Complex
     {
         realPart = theReal;
         imagPart = theImag;
+    }
+
+    /**
+     * Constructor which sets the complex number to the values derived from a polar coordinate.
+     * @param theCoord  Polar coordinate whose values are used to form a new complex number.
+     * @throws IllegalArgumentException Thrown if theCoord is null.
+     */
+    public Complex(PolarCoordinate theCoord) throws IllegalArgumentException
+    {
+        if(theCoord == null) throw new IllegalArgumentException("theCoord is null");
+        Complex newNum = theCoord.toComplex();
+        realPart = newNum.realPart;
+        imagPart = newNum.imagPart;
+    }
+
+    /**
+     * Constructor to create a new complex number that has the same real and imaginary parts as an existing
+     * complex number.
+     * @param theNum    Complex number whose real and imaginary parts will be set to those of the new complex number.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public Complex (Complex theNum) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null");
+        this.realPart = theNum.realPart;
+        this.imagPart = theNum.imagPart;
     }
 
     /**

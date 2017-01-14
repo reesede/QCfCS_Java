@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // History:
 //      20170108    D.E. Reese          Creation (Programming Drill 1.3.1).
 //      20170110    D.E. Reese          Added code to stubs for setAngle_getAngle() and setRadius_getRadius().
+//      20170113    D.E. Reese          Added constructors() to test constructor methods.
 //
 
 class PolarCoordinateTest
@@ -242,6 +243,76 @@ class PolarCoordinateTest
     @Test
     void polarToComplex()
     {
+        PolarCoordinate theCoord = new PolarCoordinate();
+        Complex theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(0.0, theComplex.getReal());
+        assertEquals(0.0, theComplex.getImag());
+
+        theCoord = new PolarCoordinate(new Complex(1.0, 0.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(1.0, theComplex.getReal());
+        assertEquals(0.0, theComplex.getImag());
+
+        theCoord = new PolarCoordinate(new Complex(0.0, 1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(0.0, theComplex.getReal(), 0.00000001);
+        assertEquals(1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(-1.0, 0.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(-1.0, theComplex.getReal(), 0.00000001);
+        assertEquals(0.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(0.0, -1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(0.0, theComplex.getReal(), 0.00000001);
+        assertEquals(-1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(1.0, 1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(1.0, theComplex.getReal(), 0.00000001);
+        assertEquals(1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(-3.0, -1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(-3.0, theComplex.getReal(), 0.00000001);
+        assertEquals(-1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate();
+        theComplex = theCoord.toComplex();
+        assertEquals(0.0, theComplex.getReal());
+        assertEquals(0.0, theComplex.getImag());
+
+        theCoord = new PolarCoordinate(new Complex(1.0, 0.0));
+        theComplex = theCoord.toComplex();
+        assertEquals(1.0, theComplex.getReal());
+        assertEquals(0.0, theComplex.getImag());
+
+        theCoord = new PolarCoordinate(new Complex(0.0, 1.0));
+        theComplex = theCoord.toComplex();
+        assertEquals(0.0, theComplex.getReal(), 0.00000001);
+        assertEquals(1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(-1.0, 0.0));
+        theComplex = theCoord.toComplex();
+        assertEquals(-1.0, theComplex.getReal(), 0.00000001);
+        assertEquals(0.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(0.0, -1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(0.0, theComplex.getReal(), 0.00000001);
+        assertEquals(-1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(1.0, 1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(1.0, theComplex.getReal(), 0.00000001);
+        assertEquals(1.0, theComplex.getImag(), 0.00000001);
+
+        theCoord = new PolarCoordinate(new Complex(-3.0, -1.0));
+        theComplex = PolarCoordinate.polarToComplex(theCoord);
+        assertEquals(-3.0, theComplex.getReal(), 0.00000001);
+        assertEquals(-1.0, theComplex.getImag(), 0.00000001);
+
 
     }
 

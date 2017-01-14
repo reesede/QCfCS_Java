@@ -29,6 +29,8 @@ import java.lang.Math;
 //
 // History:
 //      20170107    D.E. Reese          Creation (Programming Drill 1.3.1)
+//      20170114    D.E. Reese          Added constructor for creating a PolarCoordinate from an existing
+//                                      PolarCoordinate.
 
 public class PolarCoordinate
 {
@@ -110,7 +112,18 @@ public class PolarCoordinate
 
         radius = theRadius;
         angle  = PolarCoordinate.angleToStandardRange(theAngle);
-        ;
+    }
+
+    /**
+     * Constructor to build a new PolarCoordinate with angle and radius the same as an existing PolarCoordinate.
+     * @param theCoord  PolarCoordinate whose angle and radius to copy into the new PolarCoordinate.
+     * @throws IllegalArgumentException Thrown if theCoord is null.
+     */
+    public PolarCoordinate(PolarCoordinate theCoord) throws IllegalArgumentException
+    {
+        if (theCoord == null) throw new IllegalArgumentException("theCoord is null");
+        this.radius = theCoord.radius;
+        this.angle = theCoord.angle;
     }
 
     /**
