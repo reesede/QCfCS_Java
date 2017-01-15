@@ -6,7 +6,7 @@ import java.lang.Math;
  * This class implements polar coordinates.
  * Created by reesede on 1/7/2017.
  * @author David E. Reese
- * @version 1.3.1
+ * @version 1.3.3
  * @since 1.3.1
  */
 
@@ -31,6 +31,7 @@ import java.lang.Math;
 //      20170107    D.E. Reese          Creation (Programming Drill 1.3.1)
 //      20170114    D.E. Reese          Added constructor for creating a PolarCoordinate from an existing
 //                                      PolarCoordinate.
+//                                      Added isZero, multiply, divide, and power operations.
 
 public class PolarCoordinate
 {
@@ -280,6 +281,72 @@ public class PolarCoordinate
     }
 
     /**
+     * This method returns true if the polar coordinate is zero (i.e., the radius is 0.0).
+     * @param theCoord    The polar coordinate to test.
+     * @return  true if the polar coordinate is 0 (i.e., the radius is 0.0); false otherwise.
+     * @throws IllegalArgumentException Thrown if theCoord is null.
+     */
+    public static boolean isZero(PolarCoordinate theCoord) throws IllegalArgumentException
+    {
+        if (theCoord == null) throw new IllegalArgumentException("theCoord is null.");
+        if (theCoord.radius == 0.0)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * This method multiplies two polar coordinates.
+     * @param num1  First number to multiply.
+     * @param num2  Second number to multiply.
+     * @return  Product of num1 and num2.
+     * @throws IllegalArgumentException Thrown if num1 is null or num2 is null.
+     */
+    public static PolarCoordinate multiply (PolarCoordinate num1, PolarCoordinate num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+        if (num2 == null) throw new IllegalArgumentException("num2 is null.");
+
+        double newRadius = num1.radius * num2.radius;
+        double newAngle = num1.angle + num2.angle;
+        return new PolarCoordinate(newRadius, newAngle);
+    }
+
+    /**
+     * This method divides two polar coordinates.
+     * @param num1  Polar coordinate to divide.
+     * @param num2  Polar coordinate by which to divide (must be non-zero).
+     * @return  Quotient of num1 / num2.
+     * @throws IllegalArgumentException Thrown if num1 is null, num2 is null, or num2 is 0.
+     */
+    public static PolarCoordinate divide (PolarCoordinate num1, PolarCoordinate num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+        if (num2 == null) throw new IllegalArgumentException("num2 is null.");
+        if (num2.isZero()) throw new IllegalArgumentException("num2 is 0.");
+
+        double newRadius = num1.radius / num2.radius;
+        double newAngle = num1.angle - num2.angle;
+        return new PolarCoordinate(newRadius, newAngle);
+    }
+
+    /**
+     * This method raises a polar coordinate to a power.
+     * @param theCoord  Polar coordinate to raise to a power.
+     * @param thePower  Power to which the polar coordinate is to be raised.
+     * @return  Result of raising theCoord to thePower (theCoord^thePower).
+     * @throws IllegalArgumentException Thrown if theCoord is null.
+     */
+    public static PolarCoordinate pow (PolarCoordinate theCoord, double thePower) throws IllegalArgumentException
+    {
+        if (theCoord == null) throw new IllegalArgumentException("theCoord is null.");
+
+        double newRadius = Math.pow(theCoord.radius, thePower);
+        double newAngle = theCoord.angle * thePower;
+        return new PolarCoordinate(newRadius, newAngle);
+    }
+
+    /**
      * This method returns the angle of the polar coordinate.
      * @return          Angle of the polar coordinate.
      */
@@ -367,4 +434,44 @@ public class PolarCoordinate
     {
         return PolarCoordinate.polarToComplex(this);
     }
+
+    /**
+     * This method tests if this polar coordinate is 0 (i.e., the radius is 0.0).
+     * @return  true if the polar coordinate is 0 (i.e., the radius is 0.0).
+     */
+    public boolean isZero()
+    {
+        return (PolarCoordinate.isZero(this));
+    }
+
+    /**
+     * This method multiplies the polar coordinate by another polar coordinate and returns the product.
+     * @param theCoord  Polar coordinate by which to multiply this polar coordinate.
+     * @return  Product of this polar coordinate and theCoord.
+     */
+    public PolarCoordinate multiply(PolarCoordinate theCoord)
+    {
+        return PolarCoordinate.multiply(this, theCoord);
+    }
+
+    /**
+     * This method divides this polar coordinate by another polar coordinate.
+     * @param theCoord  Polar coordinate by which to divide this polar coordinate.
+     * @return  Quotient of this polar coordinate / theCoord.
+     */
+    public PolarCoordinate divide(PolarCoordinate theCoord)
+    {
+        return PolarCoordinate.divide(this, theCoord);
+    }
+
+    /**
+     * This method raises this polar coordinate to a power.
+     * @param thePower  Power to which this polar coordinate is to be raised.
+     * @return  Result of raising this polar coordinate to thePower (this^thePower).
+     */
+    public PolarCoordinate pow(double thePower)
+    {
+        return PolarCoordinate.pow(this, thePower);
+    }
+
 }
