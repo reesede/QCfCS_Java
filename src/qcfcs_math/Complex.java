@@ -4,8 +4,8 @@ package qcfcs_math;
  * This class implements complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
+ * @version 1.3.3
  * @since 1.1.1
- * @version 1.3.1
  */
 
 // Copyright 2017 David E. Reese
@@ -301,6 +301,20 @@ public class Complex
     }
 
     /**
+     * This method raises a complex number to a power.
+     * @param theNum    Complex number to raise to a power.
+     * @param thePow    Power to which to raise theNum.
+     * @return  Result of raising theNum to thePow (i.e., theNum^thePow).
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public static Complex pow (Complex theNum, double thePow) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null.");
+
+        return theNum.toPolarCoordinate().pow(thePow).toComplex();
+    }
+
+    /**
      * This method converts a complex number into its polar coordinate.
      * @param theComplex    Complex number to convert to polar coordinates.
      * @return              Polar coordinate representation of the complex number.
@@ -549,6 +563,16 @@ public class Complex
      * @return      Result of division by num1.
      */
     public Complex divide (int num1) {return Complex.divide(this, new Complex ((double) num1));}
+
+    /**
+     * This method raises this complex number to a power.
+     * @param thePow    Power to which this complex number is to be raised.
+     * @return  Result of raising this complex number to thePow (i.e., this^thePow).
+     */
+    public Complex pow (double thePow)
+    {
+        return Complex.pow(this, thePow);
+    }
 
     /**
      * This method converts the complex number into its polar coordinate representation.

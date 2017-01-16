@@ -31,7 +31,10 @@ import java.lang.Math;
 //      20170107    D.E. Reese          Creation (Programming Drill 1.3.1)
 //      20170114    D.E. Reese          Added constructor for creating a PolarCoordinate from an existing
 //                                      PolarCoordinate.
-//                                      Added isZero, multiply, divide, and power operations.
+//                                      Added isZero, multiply, divide, and power operations (Programming Drill 1.3.3).
+//      20170115    D.E. Reese          Converted standard range of angles from -PI...PI to 0...2*PI.
+//                                      Added check to angleToStandardRange for -0.0. In this case, convert it to 0.0.
+//
 
 public class PolarCoordinate
 {
@@ -144,15 +147,19 @@ public class PolarCoordinate
         // should be negative. If the converted angle is less than Pi, it is in the first or second
         // quadrant, so should be positive.
 
-        if (theResult > Math.PI)
+        if (theResult > 2.0 * Math.PI)
         {
             theResult -= 2.0 * Math.PI;
         }
         else
         {
-            if (theResult < -Math.PI)
+            if (theResult < 0)
                 theResult += 2.0 * Math.PI;
         }
+
+        if (theResult == -0.0)
+            theResult = 0.0;
+
         return theResult;
     }
 

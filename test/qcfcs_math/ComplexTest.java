@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException;
  * This class implements unit tests for the Complex class.
  * Created by reesede on 1/7/2017.
  * @author David E. Reese
- * @version 1.3.1
+ * @version 1.3.3
  * @since 1.2.1
  */
 
@@ -39,6 +39,7 @@ import java.lang.IllegalArgumentException;
 //                                      getReal (), setImag (), and getImag () after realPart and imagPart made
 //                                      private.
 //      20170113    D.E. Reese          Added constructors() to test constructor methods.
+//      20170115    D.E. Reese          Added tests for pow().
 //
 class ComplexTest
 {
@@ -938,6 +939,49 @@ class ComplexTest
         assertThrows(IllegalArgumentException.class, () -> {
             Complex.divide(theNum, zeroNum);
         });
+    }
+
+    @Test
+    void pow()
+    {
+        Complex theNum = new Complex ();
+        Complex result = Complex.pow(theNum, 0.0);
+        assertEquals(1.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        result = Complex.pow(theNum, 1.0);
+        assertEquals(0.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(0.0, 1.0);
+        result = Complex.pow(theNum, 1.0);
+        assertEquals(0.0, result.getReal(), 0.00000001);
+        assertEquals(1.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(0.0, 1.0);
+        result = Complex.pow(theNum, 2.0);
+        assertEquals(-1.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(0.0, 1.0);
+        result = Complex.pow(theNum, 3.0);
+        assertEquals(0.0, result.getReal(), 0.00000001);
+        assertEquals(-1.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(0.0, 1.0);
+        result = Complex.pow(theNum, 4.0);
+        assertEquals(1.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(4.0, 0.0);
+        result = Complex.pow(theNum, 1.0/2.0);
+        assertEquals(2.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(4.0, 0.0);
+        result = Complex.pow(theNum, -1.0/2.0);
+        assertEquals(1.0/2.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
     }
 
     @Test
