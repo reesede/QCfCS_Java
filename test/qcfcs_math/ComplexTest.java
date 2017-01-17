@@ -982,6 +982,21 @@ class ComplexTest
         result = Complex.pow(theNum, -1.0/2.0);
         assertEquals(1.0/2.0, result.getReal(), 0.00000001);
         assertEquals(0.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(0.0, 4.0);
+        result = Complex.pow(theNum, 2.0);
+        assertEquals(-16.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
+
+        theNum = new Complex(0.0, 4.0);
+        result = Complex.pow(theNum, 1.0/2.0);
+        assertEquals(Math.sqrt(2.0), result.getReal(), 0.00000001);
+        assertEquals(Math.sqrt(2.0), result.getImag(), 0.00000001);
+
+        theNum = new Complex(0.0, 4.0);
+        result = Complex.pow(theNum, -1.0/2.0);
+        assertEquals(1.0/Math.sqrt(8.0), result.getReal(), 0.00000001);
+        assertEquals(-1.0/Math.sqrt(8.0), result.getImag(), 0.00000001);
     }
 
     @Test

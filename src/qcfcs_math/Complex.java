@@ -38,6 +38,7 @@ package qcfcs_math;
 //                                      methods.
 //      20170113    D.E. Reese          Added constructor to create a complex number from a polar coordinate.
 //      20170114    D.E. Reese          Added constructor to create a complex number from an existing complex number.
+//      20170117    D.E. Reese          Fixed bug in complexToPolarCoordinate() for points on real and imaginary axes.
 //
 
 public class Complex
@@ -332,22 +333,26 @@ public class Complex
         if (theRadius == 0.0)
             return new PolarCoordinate(0.0,0.0);
 
-        theRadius = Math.sqrt(Math.pow(theComplex.getReal(), 2.0) + Math.pow(theComplex.getImag(), 2.0));
-
         if (theComplex.getImag() > 0.0)
             theAngle = Math.atan(theComplex.getImag() / theComplex.getReal());
 
-        if ((theComplex.getImag() < 0.0) && (theComplex.getReal() >= 0.0))
+        if ((theComplex.getImag() < 0.0) && (theComplex.getReal() > 0.0))
             theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) + Math.PI;
 
         if ((theComplex.getImag() < 0.0) && (theComplex.getReal() < 0.0))
             theAngle = Math.atan(theComplex.getImag() / theComplex.getReal()) - Math.PI;
 
-        if ((theComplex.getImag() == 0.0) && (theComplex.getReal() > 0.0))
-            theAngle = Math.PI / 2.0;
+        if ((theComplex.getReal() > 0.0) && (theComplex.getImag() == 0.0))
+            theAngle = 0.0;
 
-        if ((theComplex.getImag() == 0.0) && (theComplex.getReal() < 0.0))
-            theAngle = -Math.PI / 2.0;
+        if ((theComplex.getReal() < 0.0) && (theComplex.getImag() == 0.0))
+            theAngle = Math.PI;
+
+        if ((theComplex.getReal() == 0.0) && (theComplex.getImag() > 0.0))
+            theAngle = Math.PI/2.0;
+
+        if ((theComplex.getReal() == 0.0) && (theComplex.getImag() < 0.0))
+            theAngle = 3.0*Math.PI/2.0;
 
         return new PolarCoordinate (theRadius, theAngle);
     }
