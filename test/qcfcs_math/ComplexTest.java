@@ -997,6 +997,43 @@ class ComplexTest
         result = Complex.pow(theNum, -1.0/2.0);
         assertEquals(1.0/Math.sqrt(8.0), result.getReal(), 0.00000001);
         assertEquals(-1.0/Math.sqrt(8.0), result.getImag(), 0.00000001);
+
+        theNum = new Complex(1.0, 1.0);
+        result = Complex.pow(theNum, 2.0);
+        assertEquals(0.0, result.getReal(), 0.00000001);
+        assertEquals(2.0, result.getImag(), 0.00000001);
+
+        result = Complex.pow(theNum, 3.0);
+        assertEquals(-2.0, result.getReal(), 0.00000001);
+        assertEquals(2.0, result.getImag(), 0.00000001);
+
+        result = Complex.pow(theNum, 4.0);
+        assertEquals(-4.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
+
+        result = Complex.pow(theNum, 5.0);
+        assertEquals(-4.0, result.getReal(), 0.00000001);
+        assertEquals(-4.0, result.getImag(), 0.00000001);
+
+        result = Complex.pow(theNum, 6.0);
+        assertEquals(0.0, result.getReal(), 0.00000001);
+        assertEquals(-8.0, result.getImag(), 0.00000001);
+
+        result = Complex.pow(theNum, 7.0);
+        assertEquals(8.0, result.getReal(), 0.00000001);
+        assertEquals(-8.0, result.getImag(), 0.00000001);
+
+        result = Complex.pow(theNum, 8.0);
+        assertEquals(16.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.pow(null, 3.0);
+        });
+
+        result = theNum.pow(4.0);
+        assertEquals(-4.0, result.getReal(), 0.00000001);
+        assertEquals(0.0, result.getImag(), 0.00000001);
     }
 
     @Test
