@@ -5,3 +5,9 @@ History:
 20170104    D.E. Reese          Creation.
 20170107    D.E. Reese          Added Programming Drill 1.2.1.
 20170114    D.E. Reese          Added Programming Drill 1.3.1.
+20170115    D.E. Reese          Added Programming Drill 1.3.3.
+20170119    D.E. Reese          Added Programming Drill 2.1.1.
+
+
+Programming Drills not included:
+    Programming Drill 1.3.2.
