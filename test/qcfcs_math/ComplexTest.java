@@ -40,6 +40,7 @@ import java.lang.IllegalArgumentException;
 //                                      private.
 //      20170113    D.E. Reese          Added constructors() to test constructor methods.
 //      20170115    D.E. Reese          Added tests for pow().
+//      20170121    D.E. Reese          Added stubs for tests for abs() and equals().
 //
 class ComplexTest
 {
@@ -1102,5 +1103,17 @@ class ComplexTest
         theCoord = theComplex.toPolarCoordinate();
         assertEquals(1.0, theCoord.getRadius());
         assertEquals(Math.PI/4.0, theCoord.getAngle(), 0.00000001);
+    }
+
+    @Test
+    void abs()
+    {
+        //TODO: add tests for abs().
+    }
+
+    @Test
+    void equals()
+    {
+        //TODO: add tests for equals().
     }
 }

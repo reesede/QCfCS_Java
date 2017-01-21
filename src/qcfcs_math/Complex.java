@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 1.3.3
+ * @version 2.1.1
  * @since 1.1.1
  */
 
@@ -39,6 +39,7 @@ package qcfcs_math;
 //      20170113    D.E. Reese          Added constructor to create a complex number from a polar coordinate.
 //      20170114    D.E. Reese          Added constructor to create a complex number from an existing complex number.
 //      20170117    D.E. Reese          Fixed bug in complexToPolarCoordinate() for points on real and imaginary axes.
+//      20170121    D.E. Reese          Added abs().
 //
 
 public class Complex
@@ -100,7 +101,7 @@ public class Complex
 
     /**
      * Constructor to create a new complex number that has the same real and imaginary parts as an existing
-     * complex number.
+     * complex number. Note that this is a deep copy.
      * @param theNum    Complex number whose real and imaginary parts will be set to those of the new complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
@@ -218,6 +219,27 @@ public class Complex
         if ((theNum.realPart == 0.0) && (theNum.imagPart == 0.0))
             return true;
         return false;
+    }
+
+    /**
+     * This method checks if two complex numbers are arithmetically equal (i.e., their real parts are the same and
+     * their imaginary parts are the same).
+     * @param num1  First number to compare.
+     * @param num2  Second number to compare.
+     * @return  true if the real parts of the two complex numbers and the imaginary parts of the two complex numbers
+     * have the same value.
+     * @throws IllegalArgumentException Thrown if num1 is null or num2 is null.
+     */
+    public static boolean equals(Complex num1, Complex num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+        if (num2 == null) throw new IllegalArgumentException("num2 is null.");
+
+        if (num1.realPart != num2.realPart)
+            return false;
+        if (num1.imagPart != num2.imagPart)
+            return false;
+        return true;
     }
 
     /**
@@ -358,6 +380,19 @@ public class Complex
     }
 
     /**
+     * This method calculates the absolute value of the complex number (i.e., its radius).
+     * @param theComplex    Number whose absolute value is to be calculated.
+     * @return  Absolute value of theComplex.
+     * @throws IllegalArgumentException Thrown if theComplex is null.
+     */
+    public static double abs(Complex theComplex) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
+
+        return Math.sqrt(Math.pow(theComplex.realPart, 2.0) + Math.pow(theComplex.imagPart, 2.0));
+    }
+
+    /**
      * This method returns the real part of this complex number.
      * @return  Real part of the complex number.
      */
@@ -437,6 +472,25 @@ public class Complex
         if ((realPart == 0.0) && (imagPart == 0.0))
             return true;
         return false;
+    }
+
+    /**
+     * This method checks if a complex number is arithmetically equal to this one (i.e., their real parts are the same and
+     * their imaginary parts are the same).
+     * @param theNum  Number to compare to this complex number.
+     * @return  true if the real parts of the two complex numbers and the imaginary parts of the two complex numbers
+     * have the same value.
+     * @throws IllegalArgumentException Thrown if theNum is null.
+     */
+    public boolean equals(Complex theNum) throws IllegalArgumentException
+    {
+        if (theNum == null) throw new IllegalArgumentException("theNum is null.");
+
+        if (this.realPart != theNum.realPart)
+            return false;
+        if (this.imagPart != theNum.imagPart)
+            return false;
+        return true;
     }
 
     /**
@@ -586,5 +640,14 @@ public class Complex
     public PolarCoordinate toPolarCoordinate ()
     {
         return Complex.complexToPolarCoordinate(this);
+    }
+
+    /**
+     * This method returns the absolute value (i.e., radius) of this complex number.
+     * @return  Absolute value of this complex number.
+     */
+    public double abs()
+    {
+        return Complex.abs(this);
     }
 }
