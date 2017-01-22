@@ -41,6 +41,7 @@ import java.lang.IllegalArgumentException;
 //      20170113    D.E. Reese          Added constructors() to test constructor methods.
 //      20170115    D.E. Reese          Added tests for pow().
 //      20170121    D.E. Reese          Added stubs for tests for abs() and equals().
+//      20170122    D.E. Reese          Added stub for test for negate().
 //
 class ComplexTest
 {
@@ -1115,5 +1116,11 @@ class ComplexTest
     void equals()
     {
         //TODO: add tests for equals().
+    }
+
+    @Test
+    void negate()
+    {
+        //TODO: add tests for negate().
     }
 }

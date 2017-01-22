@@ -304,11 +304,56 @@ public class Complex
     }
 
     /**
-     * This method divides two complex numbers.
-     * @param num1  Dividend
-     * @param num2  Divisor
-     * @return      Quotiant of num1 / num2.
-     * @throws  IllegalArgumentException if either parameter is null or if num2 is 0.
+     * This method multiplies a complex number by a double. This scales both the real and imaginary parts
+     * of the complex number.
+     * @param num1  Complex number to be multiplied.
+     * @param num2  Number by which num1 is to be scaled.
+     * @return  Product of num1 * num2, with both real and imaginary parts of num1 multiplied by num2.
+     * @throws IllegalArgumentException Thrown if num1 is null.
+     */
+    public static Complex multiply (Complex num1, double num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+
+        return new Complex(num1.realPart * num2, num1.imagPart * num2);
+    }
+
+    /**
+     * This method multiplies a complex number by a float. This scales both the real and imaginary parts
+     * of the complex number.
+     * @param num1  Complex number to be multiplied.
+     * @param num2  Number by which num1 is to be scaled.
+     * @return  Product of num1 * num2, with both real and imaginary parts of num1 multiplied by num2.
+     * @throws IllegalArgumentException Thrown if num1 is null.
+     */
+    public static Complex multiply (Complex num1, float num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+
+        return new Complex(num1.realPart * num2, num1.imagPart * num2);
+    }
+
+    /**
+     * This method multiplies a complex number by an integer. This scales both the real and imaginary parts
+     * of the complex number.
+     * @param num1  Complex number to be multiplied.
+     * @param num2  Number by which num1 is to be scaled.
+     * @return  Product of num1 * num2, with both real and imaginary parts of num1 multiplied by num2.
+     * @throws IllegalArgumentException Thrown if num1 is null.
+     */
+    public static Complex multiply (Complex num1, int num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+
+        return new Complex(num1.realPart * num2, num1.imagPart * num2);
+    }
+
+    /**
+     * This method divides a complex number by another complex number.
+     * @param num1  Complex number to be divided.
+     * @param num2  Number by which num1 s to be divided.
+     * @return  Quotient of num1 / num2.
+     * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
      */
     public static Complex divide (Complex num1, Complex num2) throws IllegalArgumentException
     {
@@ -321,6 +366,54 @@ public class Complex
         result.realPart /= divisor;
         result.imagPart /= divisor;
         return result;
+    }
+
+    /**
+     * This method divides a complex number by a double. This scales both the real and imaginary parts
+     * of the complex number.
+     * @param num1  Complex number to be divided.
+     * @param num2  Number by which num1 is to be scaled.
+     * @return  Product of num1 / num2, with both real and imaginary parts of num1 divided by num2.
+     * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
+     */
+    public static Complex divide (Complex num1, double num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+        if (num2 == 0.0) throw new IllegalArgumentException("num2 == 0");
+
+        return new Complex(num1.realPart / num2, num1.imagPart / num2);
+    }
+
+    /**
+     * This method divides a complex number by a float. This scales both the real and imaginary parts
+     * of the complex number.
+     * @param num1  Complex number to be divided.
+     * @param num2  Number by which num1 is to be scaled.
+     * @return  Product of num1 / num2, with both real and imaginary parts of num1 divided by num2.
+     * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
+     */
+    public static Complex divide (Complex num1, float num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+        if (num2 == 0.0) throw new IllegalArgumentException("num2 == 0");
+
+        return new Complex(num1.realPart / (double)num2, num1.imagPart / (double)num2);
+    }
+
+    /**
+     * This method divides a complex number by an integer. This scales both the real and imaginary parts
+     * of the complex number.
+     * @param num1  Complex number to be divided.
+     * @param num2  Number by which num1 is to be scaled.
+     * @return  Product of num1 / num2, with both real and imaginary parts of num1 divided by num2.
+     * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
+     */
+    public static Complex divide (Complex num1, int num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+        if (num2 == 0) throw new IllegalArgumentException("num2 == 0");
+
+        return new Complex(num1.realPart / (double)num2, num1.imagPart / (double)num2);
     }
 
     /**
@@ -390,6 +483,19 @@ public class Complex
         if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
 
         return Math.sqrt(Math.pow(theComplex.realPart, 2.0) + Math.pow(theComplex.imagPart, 2.0));
+    }
+
+    /**
+     * This method returns the negative of a complex number, i.e., the number multiplied by -1.
+     * @param theComplex    Complex number to be negated.
+     * @return  Negative of theComplex.
+     * @throws IllegalArgumentException Thrown if theComplex is null.
+     */
+    public static Complex negate(Complex theComplex) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
+
+        return new Complex(-(theComplex.realPart), -(theComplex.imagPart));
     }
 
     /**
@@ -579,21 +685,21 @@ public class Complex
      * @param num1  number to multiply to the complex number.
      * @return      Result of multiplying num1 to the complex number.
      */
-    public Complex multiply (double num1) { return Complex.multiply(this, new Complex (num1));}
+    public Complex multiply (double num1) { return Complex.multiply(this, num1);}
 
     /**
      * This method multiplies a float real number to this complex number.
      * @param num1  number to multiply to the complex number.
      * @return      Result of multiplying num1 to the complex number.
      */
-    public Complex multiply (float num1) {return Complex.multiply(this, new Complex ((double)num1));}
+    public Complex multiply (float num1) {return Complex.multiply(this, num1);}
 
     /**
      * This method multiplies an integer real number to this complex number.
      * @param num1  number to multiply to the complex number.
      * @return      Result of multiplying num1 to the complex number.
      */
-    public Complex multiply (int num1) {return Complex.multiply(this, new Complex ((double) num1));}
+    public Complex multiply (int num1) {return Complex.multiply(this, num1);}
 
     /**
      * This method divides this complex number by another complex number.
@@ -607,21 +713,21 @@ public class Complex
      * @param num1  number by which to divide this complex number.
      * @return      Result of division by num1.
      */
-    public Complex divide (double num1) { return Complex.divide(this, new Complex (num1));}
+    public Complex divide (double num1) { return Complex.divide(this, num1);}
 
     /**
      * This method divides this complex number by a float.
      * @param num1  number by which to divide this complex number.
      * @return      Result of division by num1.
      */
-    public Complex divide (float num1) {return Complex.divide(this, new Complex ((double)num1));}
+    public Complex divide (float num1) {return Complex.divide(this, num1);}
 
     /**
      * This method divides this complex number by an integer.
      * @param num1  number by which to divide this complex number.
      * @return      Result of division by num1.
      */
-    public Complex divide (int num1) {return Complex.divide(this, new Complex ((double) num1));}
+    public Complex divide (int num1) {return Complex.divide(this, num1);}
 
     /**
      * This method raises this complex number to a power.
@@ -649,5 +755,14 @@ public class Complex
     public double abs()
     {
         return Complex.abs(this);
+    }
+
+    /**
+     * This method returns the negative of a complex number, i.e., the number multiplied by -1.
+     * @return
+     */
+    public Complex negate()
+    {
+        return Complex.negate(this);
     }
 }

@@ -1,7 +1,5 @@
 package qcfcs_math;
 
-import java.util.ArrayList;
-
 /**
  * This class implements a matrix of complex numbers.
  * Created by reesede on 1/4/2017.
@@ -31,6 +29,7 @@ import java.util.ArrayList;
 //      20170118    D.E. Reese          Creation (Programming Drill 2.1.1).
 //      20170119    D.E. Reese          Added set () (Programming Drill 2.1.1).
 //      20170121    D.E. Reese          Added static get(), set(), and clone() methods (Programming Drill 2.1.1).
+//      20170122    D.E. Reese          Added add(), subtract() (Programming Drill 2.1.1).
 //
 
 public class ComplexMatrix implements Cloneable
@@ -138,7 +137,138 @@ public class ComplexMatrix implements Cloneable
         Complex currentValue = theMatrix.theData[row][column];
         theMatrix.theData[row][column] = element;
         return currentValue;
+    }
 
+    /**
+     * This method adds two complex matrices and returns the sum. The corresponding elements of each matrix are added.
+     * @param matrix1   First matrix to add.
+     * @param matrix2   Second matrix to add.
+     * @return  New matrix with element [i][j] the sum of matrix1[i][j] + matrix2[i][j].
+     * @throws IllegalArgumentException Thrown if matrix1 is null, matrix2 is null, or matrix1 and matrix2 are not the same size.
+     */
+    public static ComplexMatrix add(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
+    {
+        if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
+        if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
+        if (matrix1.numRows != matrix2.numRows) throw new IllegalArgumentException("matrix1 not the same size as matrix2");
+        if (matrix1.numColumns != matrix2.numColumns) throw new IllegalArgumentException("matrix1 not the same size as matrix2");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(matrix1.numRows, matrix1.numColumns);
+        for(int i = 0; i < matrix1.numRows; i++)
+            for(int j = 0; j < matrix1.numColumns; j++)
+                newMatrix.theData[i][j] = new Complex(Complex.add(matrix1.get(i,j), matrix2.get(i,j)));
+        return newMatrix;
+    }
+
+    /**
+     * This method subtracts two complex matrices and returns the sum. The corresponding elements of each matrix are subtracted.
+     * @param matrix1   First matrix from which matrix2 is to be subtracted.
+     * @param matrix2   Second matrix to subtract from matrix1.
+     * @return  New matrix with element [i][j] the sum of matrix1[i][j] - matrix2[i][j].
+     * @throws IllegalArgumentException Thrown if matrix1 is null, matrix2 is null, or matrix1 and matrix2 are not the same size.
+     */
+    public static ComplexMatrix subtract(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
+    {
+        if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
+        if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
+        if (matrix1.numRows != matrix2.numRows) throw new IllegalArgumentException("matrix1 not the same size as matrix2");
+        if (matrix1.numColumns != matrix2.numColumns) throw new IllegalArgumentException("matrix1 not the same size as matrix2");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(matrix1.numRows, matrix1.numColumns);
+        for(int i = 0; i < matrix1.numRows; i++)
+            for(int j = 0; j < matrix1.numColumns; j++)
+                newMatrix.theData[i][j] = new Complex(Complex.subtract(matrix1.get(i,j), matrix2.get(i,j)));
+        return newMatrix;
+    }
+
+    /**
+     * This method performs scalar multiplication on a complex matrix, i.e., multiplying each element by a scalar.
+     * @param theMatrix Matrix to be multiplier by multiplier.
+     * @param multiplier    Complex scalar by which to multiply each element of theMatrix.
+     * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
+     * @throws IllegalArgumentException Thrown if theMatrix is null or multiplier is null.
+     */
+    public static ComplexMatrix multiply(ComplexMatrix theMatrix, Complex multiplier) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+        if (multiplier == null) throw new IllegalArgumentException("multiplier is null.");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(theMatrix.numRows, theMatrix.numColumns);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                newMatrix.theData[i][j] = theMatrix.theData[i][j].multiply(multiplier);
+        return newMatrix;
+    }
+
+    /**
+     * This method performs scalar multiplication on a complex matrix, i.e., multiplying each element by a scalar.
+     * @param theMatrix Matrix to be multiplier by multiplier.
+     * @param multiplier    Double scalar by which to multiply each element of theMatrix.
+     * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static ComplexMatrix multiply(ComplexMatrix theMatrix, double multiplier) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(theMatrix.numRows, theMatrix.numColumns);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                newMatrix.theData[i][j] = theMatrix.theData[i][j].multiply(multiplier);
+        return newMatrix;
+    }
+
+    /**
+     * This method performs scalar multiplication on a complex matrix, i.e., multiplying each element by a scalar.
+     * @param theMatrix Matrix to be multiplier by multiplier.
+     * @param multiplier    Float scalar by which to multiply each element of theMatrix.
+     * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static ComplexMatrix multiply(ComplexMatrix theMatrix, float multiplier) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(theMatrix.numRows, theMatrix.numColumns);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                newMatrix.theData[i][j] = theMatrix.theData[i][j].multiply(multiplier);
+        return newMatrix;
+    }
+
+    /**
+     * This method performs scalar multiplication on a complex matrix, i.e., multiplying each element by a scalar.
+     * @param theMatrix Matrix to be multiplier by multiplier.
+     * @param multiplier    Int scalar by which to multiply each element of theMatrix.
+     * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static ComplexMatrix multiply(ComplexMatrix theMatrix, int multiplier) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(theMatrix.numRows, theMatrix.numColumns);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                newMatrix.theData[i][j] = theMatrix.theData[i][j].multiply(multiplier);
+        return newMatrix;
+    }
+
+    /**
+     * This method negates a complex matrix, i.e., multiplies each element by -1.
+     * @param theMatrix Matrix to be negated.
+     * @return  The arithmetic inverse of the matrix, i.e., each element multiplied by -1.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static ComplexMatrix negate(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        ComplexMatrix newMatrix = new ComplexMatrix(theMatrix.numRows, theMatrix.numColumns);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                newMatrix.theData[i][j] = theMatrix.theData[i][j].negate();
+        return newMatrix;
     }
 
     /**
@@ -233,5 +363,74 @@ public class ComplexMatrix implements Cloneable
             for (int j = 0; j < numColumns; j++)
                 newMatrix.theData[i][j] = new Complex(this.theData[i][j].getReal(), this.theData[i][j].getImag());
         return newMatrix;
+    }
+
+    /**
+     * This method adds a complex matrix to this complex matrix and returns the sum.
+     * @param matrix1   Matrix to add to this matrix.
+     * @return  Sum of this matrix and matrix1.
+     */
+    public ComplexMatrix add(ComplexMatrix matrix1)
+    {
+        return ComplexMatrix.add(this, matrix1);
+    }
+
+    /**
+     * This method subtract a complex matrix from this complex matrix and returns the sum.
+     * @param matrix1   Matrix to subtract from this matrix.
+     * @return  Differance of this matrix and matrix1.
+     */
+    public ComplexMatrix subtract(ComplexMatrix matrix1)
+    {
+        return ComplexMatrix.subtract(this, matrix1);
+    }
+
+    /**
+     * This method multiplies this complex number by a scalar, i.e., each element is multiplied by the same scalar.
+     * @param multiplier    Complex scalar by which to multiply the matrix.
+     * @return  Product of scalar multiplication of this matrix by multiplier.
+     */
+    public ComplexMatrix multiply(Complex multiplier)
+    {
+        return ComplexMatrix.multiply(this, multiplier);
+    }
+
+    /**
+     * This method multiplies this complex matrix by a scalar, i.e., each element is multiplied by the same scalar.
+     * @param multiplier    Double scalar by which to multiply the matrix.
+     * @return  Product of scalar multiplication of this matrix by multiplier.
+     */
+    public ComplexMatrix multiply(double multiplier)
+    {
+        return ComplexMatrix.multiply(this, multiplier);
+    }
+
+    /**
+     * This method multiplies this complex matrix by a scalar, i.e., each element is multiplied by the same scalar.
+     * @param multiplier    Float scalar by which to multiply the matrix.
+     * @return  Product of scalar multiplication of this matrix by multiplier.
+     */
+    public ComplexMatrix multiply(float multiplier)
+    {
+        return ComplexMatrix.multiply(this, multiplier);
+    }
+
+    /**
+     * This method multiplies this complex matrix by a scalar, i.e., each element is multiplied by the same scalar.
+     * @param multiplier    Int scalar by which to multiply the matrix.
+     * @return  Product of scalar multiplication of this matrix by multiplier.
+     */
+    public ComplexMatrix multiply(int multiplier)
+    {
+        return ComplexMatrix.multiply(this, multiplier);
+    }
+
+    /**
+     * This method returns the arithmetic inverse of this matrix, i.e., each element multiplied by -1.
+     * @return
+     */
+    public ComplexMatrix negate()
+    {
+        return ComplexMatrix.negate(this);
     }
 }
