@@ -42,6 +42,7 @@ import java.lang.IllegalArgumentException;
 //      20170115    D.E. Reese          Added tests for pow().
 //      20170121    D.E. Reese          Added stubs for tests for abs() and equals().
 //      20170122    D.E. Reese          Added stub for test for negate().
+//      20170123    D.E. Reese          Added code to abs() stub.
 //
 class ComplexTest
 {
@@ -1110,6 +1111,34 @@ class ComplexTest
     void abs()
     {
         //TODO: add tests for abs().
+
+        Complex theComplex = new Complex();
+        double theAbs = Complex.abs(theComplex);
+        assertEquals(0.0, theAbs);
+
+        theComplex = new Complex(1.0,0.0);
+        theAbs = Complex.abs(theComplex);
+        assertEquals(1.0, theAbs);
+
+        theComplex = new Complex(1.0, 1.0);
+        theAbs = Complex.abs(theComplex);
+        assertEquals(Math.sqrt(2.0), theAbs);
+
+        theComplex = new Complex(-1.0, 1.0);
+        theAbs = Complex.abs(theComplex);
+        assertEquals(Math.sqrt(2.0), theAbs);
+
+        theComplex = new Complex(0, 1.0);
+        theAbs = Complex.abs(theComplex);
+        assertEquals(1.0, theAbs);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.abs(null);
+        });
+
+        theComplex = new Complex(1.0,1.0);
+        theAbs = theComplex.abs();
+        assertEquals(Math.sqrt(2.0), theAbs);
     }
 
     @Test
