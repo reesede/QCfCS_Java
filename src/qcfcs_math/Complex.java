@@ -40,6 +40,7 @@ package qcfcs_math;
 //      20170114    D.E. Reese          Added constructor to create a complex number from an existing complex number.
 //      20170117    D.E. Reese          Fixed bug in complexToPolarCoordinate() for points on real and imaginary axes.
 //      20170121    D.E. Reese          Added abs().
+//      20170124    D.E. Reese          Fixed -0.0 bug in negate().
 //
 
 public class Complex
@@ -495,7 +496,14 @@ public class Complex
     {
         if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
 
-        return new Complex(-(theComplex.realPart), -(theComplex.imagPart));
+        double resultReal = 0.0;
+        double resultImag = 0.0;
+
+        if (theComplex.realPart != 0.0)
+            resultReal = -(theComplex.realPart);
+        if (theComplex.imagPart != 0.0)
+            resultImag = -(theComplex.imagPart);
+        return new Complex(resultReal, resultImag);
     }
 
     /**

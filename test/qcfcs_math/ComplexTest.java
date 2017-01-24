@@ -43,6 +43,7 @@ import java.lang.IllegalArgumentException;
 //      20170121    D.E. Reese          Added stubs for tests for abs() and equals().
 //      20170122    D.E. Reese          Added stub for test for negate().
 //      20170123    D.E. Reese          Added code to abs() stub.
+//      20170124    D.E. Reese          Added code to equals() and negate() stubs.
 //
 class ComplexTest
 {
@@ -1144,12 +1145,86 @@ class ComplexTest
     @Test
     void equals()
     {
-        //TODO: add tests for equals().
+        Complex num1 = new Complex();
+        Complex num2 = new Complex();
+        boolean result = Complex.equals(num1, num2);
+        assertEquals(true, result);
+
+        num1 = new Complex(1.0, 1.0);
+        result = Complex.equals(num1, num2);
+        assertEquals(false, result);
+
+        num2 = new Complex(1.0,1.0);
+        result = Complex.equals(num1, num2);
+        assertEquals(true, result);
+
+        num1 = new Complex(1.0);
+        result = Complex.equals(num1, num2);
+        assertEquals(false, result);
+
+        result = Complex.equals(num2, num1);
+        assertEquals(false, result);
+
+        num2 = new Complex(1.0);
+        result = Complex.equals(num1, num2);
+        assertEquals(true, result);
+
+        result = Complex.equals(num2, num1);
+        assertEquals(true, result);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.equals(null,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.equals(new Complex(1.0,1.0),null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.equals(null,new Complex(1.0,1.0));
+        });
+
+        num1 = new Complex(1.0, 1.0);
+        num2 = new Complex(1.0);
+        result = num1.equals(num2);
+        assertEquals(false, result);
+
+        num2 = new Complex(1.0,1.0);
+        result = num1.equals(num2);
+        assertEquals(true, result);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Complex(1.0, 1.0).equals(null);
+        });
     }
 
     @Test
     void negate()
     {
-        //TODO: add tests for negate().
+        Complex theNum = new Complex();
+        Complex result = Complex.negate(theNum);
+        assertEquals(0.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(1.0);
+        result = Complex.negate(theNum);
+        assertEquals(-1.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(-1.0);
+        result = Complex.negate(theNum);
+        assertEquals(1.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(0.0, 1.0);
+        result = Complex.negate(theNum);
+        assertEquals(0.0, result.getReal());
+        assertEquals(-1.0, result.getImag());
+
+        theNum = new Complex(0.0, -1.0);
+        result = Complex.negate(theNum);
+        assertEquals(0.0, result.getReal());
+        assertEquals(1.0, result.getImag());
+
     }
 }
