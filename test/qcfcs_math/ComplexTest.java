@@ -44,6 +44,7 @@ import java.lang.IllegalArgumentException;
 //      20170122    D.E. Reese          Added stub for test for negate().
 //      20170123    D.E. Reese          Added code to abs() stub.
 //      20170124    D.E. Reese          Added code to equals() and negate() stubs.
+//      20170125    D.E. Reese          Added code to test equals() for double, float, and int.
 //
 class ComplexTest
 {
@@ -1172,6 +1173,38 @@ class ComplexTest
         result = Complex.equals(num2, num1);
         assertEquals(true, result);
 
+        result = Complex.equals(num1, (double)1.0);
+        assertEquals(true, result);
+
+        result = Complex.equals(num1, (double)2.0);
+        assertEquals(false, result);
+
+        num1 = new Complex(1.0, 1.0);
+        result = Complex.equals(num1, (double)1.0);
+        assertEquals(false, result);
+
+        num1 = new Complex(1.0);
+        result = Complex.equals(num1, (float)1.0);
+        assertEquals(true, result);
+
+        result = Complex.equals(num1, (float)2.0);
+        assertEquals(false, result);
+
+        num1 = new Complex(1.0, 1.0);
+        result = Complex.equals(num1, (float)1.0);
+        assertEquals(false, result);
+
+        num1 = new Complex(1.0);
+        result = Complex.equals(num1, (int)1.0);
+        assertEquals(true, result);
+
+        result = Complex.equals(num1, (int)2.0);
+        assertEquals(false, result);
+
+        num1 = new Complex(1.0, 1.0);
+        result = Complex.equals(num1, (int)1.0);
+        assertEquals(false, result);
+
         assertThrows(IllegalArgumentException.class, () -> {
             Complex.equals(null,null);
         });
@@ -1192,6 +1225,19 @@ class ComplexTest
         num2 = new Complex(1.0,1.0);
         result = num1.equals(num2);
         assertEquals(true, result);
+
+        num1 = new Complex(1.0);
+        assertEquals(true, num1.equals((double)1.0));
+        assertEquals(false, num1.equals((double)2.0));
+        assertEquals(true, num1.equals((float)1.0));
+        assertEquals(false, num1.equals((float)2.0));
+        assertEquals(true, num1.equals(1));
+        assertEquals(false, num1.equals(2));
+
+        num1 = new Complex(1.0,1.0);
+        assertEquals(false, num1.equals((double)1.0));
+        assertEquals(false, num1.equals((float)1.0));
+        assertEquals(false, num1.equals((int)1.0));
 
         assertThrows(IllegalArgumentException.class, () -> {
             new Complex(1.0, 1.0).equals(null);

@@ -41,6 +41,7 @@ package qcfcs_math;
 //      20170117    D.E. Reese          Fixed bug in complexToPolarCoordinate() for points on real and imaginary axes.
 //      20170121    D.E. Reese          Added abs().
 //      20170124    D.E. Reese          Fixed -0.0 bug in negate().
+//      20170125    D.E. Reese          Added equals() methods to compare a complex to double, float, and int.
 //
 
 public class Complex
@@ -239,6 +240,63 @@ public class Complex
         if (num1.realPart != num2.realPart)
             return false;
         if (num1.imagPart != num2.imagPart)
+            return false;
+        return true;
+    }
+
+    /**
+     * This method checks if a complex number is equal to a double (i.e., the real part of the complex equals the
+     * double and the imaginary part of the complex is 0.0).
+     * @param num1  Complex number to compare to num2.
+     * @param num2  Double to compare to num1.
+     * @return  true if the real part of num1 equals num2 and the imaginary part of num1 is 0.0; false otherwise.
+     * @throws IllegalArgumentException Thrown if num1 is null.
+     */
+    public static boolean equals(Complex num1, double num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+
+        if (num1.realPart != num2)
+            return false;
+        if (num1.imagPart != 0.0)
+            return false;
+        return true;
+    }
+
+    /**
+     * This method checks if a complex number is equal to a float (i.e., the real part of the complex equals the
+     * double and the imaginary part of the complex is 0.0).
+     * @param num1  Complex number to compare to num2.
+     * @param num2  Float to compare to num1.
+     * @return  true if the real part of num1 equals num2 and the imaginary part of num1 is 0.0; false otherwise.
+     * @throws IllegalArgumentException Thrown if num1 is null.
+     */
+    public static boolean equals(Complex num1, float num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+
+        if (num1.realPart != (double)num2)
+            return false;
+        if (num1.imagPart != 0.0)
+            return false;
+        return true;
+    }
+
+    /**
+     * This method checks if a complex number is equal to a int (i.e., the real part of the complex equals the
+     * double and the imaginary part of the complex is 0.0).
+     * @param num1  Complex number to compare to num2.
+     * @param num2  int to compare to num1.
+     * @return  true if the real part of num1 equals num2 and the imaginary part of num1 is 0.0; false otherwise.
+     * @throws IllegalArgumentException Thrown if num1 is null.
+     */
+    public static boolean equals(Complex num1, int num2) throws IllegalArgumentException
+    {
+        if (num1 == null) throw new IllegalArgumentException("num1 is null.");
+
+        if (num1.realPart != (double)num2)
+            return false;
+        if (num1.imagPart != 0.0)
             return false;
         return true;
     }
@@ -599,12 +657,40 @@ public class Complex
     public boolean equals(Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null.");
+        return Complex.equals(this, theNum);
+    }
 
-        if (this.realPart != theNum.realPart)
-            return false;
-        if (this.imagPart != theNum.imagPart)
-            return false;
-        return true;
+    /**
+     * This method checks if a double is arithmetically equal to this complex number. The real part of the complex
+     * number is checked to see if it is equal to theNum, and the imaginary part is checked to see that it is 0.0.
+     * @param theNum    Number to compare to this one.
+     * @return  true if theNum is arithmetically equal to this complex number.
+     */
+    public boolean equals(double theNum)
+    {
+        return Complex.equals(this, theNum);
+    }
+
+    /**
+     * This method checks if a float is arithmetically equal to this complex number. The real part of the complex
+     * number is checked to see if it is equal to theNum, and the imaginary part is checked to see that it is 0.0.
+     * @param theNum    Number to compare to this one.
+     * @return  true if theNum is arithmetically equal to this complex number.
+     */
+    public boolean equals(float theNum)
+    {
+        return Complex.equals(this, theNum);
+    }
+
+    /**
+     * This method checks if an int is arithmetically equal to this complex number. The real part of the complex
+     * number is checked to see if it is equal to theNum, and the imaginary part is checked to see that it is 0.0.
+     * @param theNum    Number to compare to this one.
+     * @return  true if theNum is arithmetically equal to this complex number.
+     */
+    public boolean equals(int theNum)
+    {
+        return Complex.equals(this, theNum);
     }
 
     /**
