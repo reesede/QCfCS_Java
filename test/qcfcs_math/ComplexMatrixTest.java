@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 // History:
 //      20170122    D.E. Reese          Creation (Programming Drill 1.2.1)
+//      20170126    D.E. Reese          Merged get() and set() into setAndGet() and added tests to stub.
 //
 
 class ComplexMatrixTest
@@ -50,14 +51,37 @@ class ComplexMatrixTest
     }
 
     @Test
-    void get()
+    void setAndGet()
     {
+        ComplexMatrix theMatrix = new ComplexMatrix(2,2);
+        assertEquals(0.0, theMatrix.get(0,0).getReal());
+        assertEquals(0.0, theMatrix.get(0,0).getImag());
+        assertEquals(0.0, theMatrix.get(0,1).getReal());
+        assertEquals(0.0, theMatrix.get(0,1).getImag());
+        assertEquals(0.0, theMatrix.get(1,0).getReal());
+        assertEquals(0.0, theMatrix.get(1,0).getImag());
+        assertEquals(0.0, theMatrix.get(1,1).getReal());
+        assertEquals(0.0, theMatrix.get(1,1).getImag());
 
-    }
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        assertEquals(1.0, theMatrix.get(0,0).getReal());
+        assertEquals(1.0, theMatrix.get(0,0).getImag());
 
-    @Test
-    void set()
-    {
+        theMatrix.set(0,1, (double)2.0);
+        assertEquals(2.0, theMatrix.get(0,1).getReal());
+        assertEquals(0.0, theMatrix.get(0,1).getImag());
+
+        theMatrix.set(1,0,(float)3.0);
+        assertEquals(3.0, theMatrix.get(1,0).getReal());
+        assertEquals(0.0, theMatrix.get(1,0).getImag());
+
+        theMatrix.set(1,1,4);
+        assertEquals(4.0, theMatrix.get(1,1).getReal());
+        assertEquals(0.0, theMatrix.get(1,1).getImag());
+
+        theMatrix.set(0,0, new PolarCoordinate(4.0, Math.PI/4.0));
+        assertEquals(2.0*Math.sqrt(2.0), theMatrix.get(0,0).getReal(), 0.00000001);
+        assertEquals(2.0*Math.sqrt(2.0), theMatrix.get(0,0).getImag(), 0.00000001);
 
     }
 
