@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 // History:
 //      20170122    D.E. Reese          Creation (Programming Drill 1.2.1)
+//      20170128    D.E. Reese          Added code for setAndGet().
 //
 
 class ComplexVectorTest
@@ -50,20 +51,84 @@ class ComplexVectorTest
     }
 
     @Test
-    void get()
+    void setAndGet()
     {
+        // Test class methods.
 
-    }
+        ComplexVector theVec = new ComplexVector(2);
+        assertEquals(0.0, ComplexVector.get(theVec, 0).getReal());
+        assertEquals(0.0, ComplexVector.get(theVec, 0).getImag());
+        assertEquals(0.0, ComplexVector.get(theVec, 1).getReal());
+        assertEquals(0.0, ComplexVector.get(theVec, 1).getImag());
 
-    @Test
-    void set()
-    {
+        ComplexVector.set(theVec, 0, new Complex(1.0, 1.0));
+        ComplexVector.set(theVec, 1, new Complex(2.0, 2.0));
+        assertEquals(1.0, ComplexVector.get(theVec, 0).getReal());
+        assertEquals(1.0, ComplexVector.get(theVec, 0).getImag());
+        assertEquals(2.0, ComplexVector.get(theVec, 1).getReal());
+        assertEquals(2.0, ComplexVector.get(theVec, 1).getImag());
 
+        ComplexVector.set(theVec, 0, (double)3.0);
+        ComplexVector.set(theVec,1, (float)4.0);
+        assertEquals(3.0, ComplexVector.get(theVec, 0).getReal());
+        assertEquals(0.0, ComplexVector.get(theVec, 0).getImag());
+        assertEquals(4.0, ComplexVector.get(theVec, 1).getReal());
+        assertEquals(0.0, ComplexVector.get(theVec, 1).getImag());
+
+        ComplexVector.set(theVec, 0, (int)5);
+        ComplexVector.set(theVec, 1, new PolarCoordinate(4.0, Math.PI/4.0));
+        assertEquals(5.0, ComplexVector.get(theVec, 0).getReal());
+        assertEquals(0.0, ComplexVector.get(theVec, 0).getImag());
+        assertEquals(2.0*Math.sqrt(2.0), ComplexVector.get(theVec, 1).getReal(), 0.00000001);
+        assertEquals(2.0*Math.sqrt(2.0), ComplexVector.get(theVec, 1).getImag(), 0.00000001);
+
+        // Test instance methods.
+
+        theVec = new ComplexVector(2);
+        assertEquals(0.0, theVec.get(0).getReal());
+        assertEquals(0.0, theVec.get(0).getImag());
+        assertEquals(0.0, theVec.get(1).getReal());
+        assertEquals(0.0, theVec.get(1).getImag());
+
+        theVec.set(0, new Complex(1.0, 1.0));
+        theVec.set(1, new Complex(2.0, 2.0));
+        assertEquals(1.0, theVec.get(0).getReal());
+        assertEquals(1.0, theVec.get(0).getImag());
+        assertEquals(2.0, theVec.get(1).getReal());
+        assertEquals(2.0, theVec.get(1).getImag());
+
+        ComplexVector.set(theVec, 0, (double)3.0);
+        ComplexVector.set(theVec,1, (float)4.0);
+        assertEquals(3.0, theVec.get(0).getReal());
+        assertEquals(0.0, theVec.get(0).getImag());
+        assertEquals(4.0, theVec.get(1).getReal());
+        assertEquals(0.0, theVec.get(1).getImag());
+
+        theVec.set(0, (int)5);
+        theVec.set(1, new PolarCoordinate(4.0, Math.PI/4.0));
+        assertEquals(5.0, theVec.get(0).getReal());
+        assertEquals(0.0, theVec.get(0).getImag());
+        assertEquals(2.0*Math.sqrt(2.0), theVec.get(1).getReal(), 0.00000001);
+        assertEquals(2.0*Math.sqrt(2.0), theVec.get(1).getImag(), 0.00000001);
     }
 
     @Test
     void add()
     {
+        ComplexVector vec1 = new ComplexVector(2);
+        ComplexVector vec2 = new ComplexVector(2);
+        ComplexVector sum;
+
+        vec1.set(0, new Complex(1.0, 1.0));
+        vec1.set(1, new Complex(2.0, 2.0));
+        vec2.set(0, new Complex(3.0, 3.0));
+        vec2.set(1, new Complex(4.0, 4.0));
+
+        sum = ComplexVector.add(vec1, vec2);
+        assertEquals(4.0, sum.get(0).getReal());
+        assertEquals(4.0, sum.get(0).getImag());
+        assertEquals(6.0, sum.get(1).getReal());
+        assertEquals(6.0, sum.get(1).getImag());
 
     }
 
@@ -85,4 +150,9 @@ class ComplexVectorTest
 
     }
 
+    @Test
+    void cloneTest()
+    {
+
+    }
 }

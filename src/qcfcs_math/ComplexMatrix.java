@@ -272,6 +272,30 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method returns the number of rows in a complex matrix.
+     * @param theMatrix Matrix whose number of rows is to be returned.
+     * @return  Number of rows in the matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static int getNumRows(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+        return theMatrix.numRows;
+    }
+
+    /**
+     * This method returns the number of columns in a complex matrix.
+     * @param theMatrix Matrix whose number of columns is to be returned.
+     * @return  Number of rows in the matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static int getNumColumns(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+        return theMatrix.numColumns;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -432,5 +456,23 @@ public class ComplexMatrix implements Cloneable
     public ComplexMatrix negate()
     {
         return ComplexMatrix.negate(this);
+    }
+
+    /**
+     * This method returns the number of rows in a complex matrix.
+     * @return  Number of rows in the matrix.
+     */
+    public int getNumRows()
+    {
+        return this.numRows;
+    }
+
+    /**
+     * This method returns the number of columns in a complex matrix.
+     * @return  Number of columns in the matrix.
+     */
+    public int getNumColumns()
+    {
+        return this.numColumns;
     }
 }

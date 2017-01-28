@@ -1,7 +1,8 @@
 package qcfcs_math;
 
 /**
- * This class implements complex numbers.
+ * This class implements complex numbers. Note that the real part and imaginary part of the complex number always
+ * convert -0.0 to 0.0.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
  * @version 2.1.1
@@ -42,6 +43,8 @@ package qcfcs_math;
 //      20170121    D.E. Reese          Added abs().
 //      20170124    D.E. Reese          Fixed -0.0 bug in negate().
 //      20170125    D.E. Reese          Added equals() methods to compare a complex to double, float, and int.
+//      20170128    D.E. Reese          Added fixZero() method to convert -0.0 to 0.0 and modified all methods that
+//                                      set the real or imaginary parts to call it on it.
 //
 
 public class Complex
@@ -72,7 +75,7 @@ public class Complex
      */
     public Complex(double theReal)
     {
-        realPart = theReal;
+        realPart = Complex.fixZero(theReal);
         imagPart = 0.0;
     }
 
@@ -84,8 +87,8 @@ public class Complex
 
     public Complex (double theReal, double theImag)
     {
-        realPart = theReal;
-        imagPart = theImag;
+        realPart = Complex.fixZero(theReal);
+        imagPart = Complex.fixZero(theImag);
     }
 
     /**
@@ -97,8 +100,8 @@ public class Complex
     {
         if(theCoord == null) throw new IllegalArgumentException("theCoord is null");
         Complex newNum = theCoord.toComplex();
-        realPart = newNum.realPart;
-        imagPart = newNum.imagPart;
+        realPart = Complex.fixZero(newNum.realPart);
+        imagPart = Complex.fixZero(newNum.imagPart);
     }
 
     /**
@@ -110,8 +113,21 @@ public class Complex
     public Complex (Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        this.realPart = theNum.realPart;
-        this.imagPart = theNum.imagPart;
+        this.realPart = Complex.fixZero(theNum.realPart);
+        this.imagPart = Complex.fixZero(theNum.imagPart);
+    }
+
+    /**
+     * This method takes a double and returns it back unchanged, unless that number is -0.0. In this case, it
+     * converts the -0.0 to 0.0.
+     * @param theNum    Double to be checked and converted to 0.0 if -0.0.
+     * @return  theNum unless theNum == -0.0, in which case it returns 0.0.
+     */
+    private static double fixZero(double theNum)
+    {
+        if (theNum == -0.0)
+            return 0.0;
+        return theNum;
     }
 
     /**
@@ -123,7 +139,7 @@ public class Complex
     public static double getReal (Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        return theNum.realPart;
+        return Complex.fixZero(theNum.realPart);
     }
 
     /**
@@ -135,7 +151,7 @@ public class Complex
     public static double getImag (Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        return theNum.imagPart;
+        return Complex.fixZero(theNum.imagPart);
     }
 
     /**
@@ -147,7 +163,7 @@ public class Complex
     public static void setReal (Complex theNum, double newRealPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        theNum.realPart = newRealPart;
+        theNum.realPart = Complex.fixZero(newRealPart);
     }
 
     /**
@@ -159,7 +175,7 @@ public class Complex
     public static void setReal (Complex theNum, float newRealPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        theNum.realPart = (double)newRealPart;
+        theNum.realPart = Complex.fixZero((double)newRealPart);
     }
 
     /**
@@ -171,7 +187,7 @@ public class Complex
     public static void setReal (Complex theNum, int newRealPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        theNum.realPart = (double)newRealPart;
+        theNum.realPart = Complex.fixZero((double)newRealPart);
     }
 
     /**
@@ -183,7 +199,7 @@ public class Complex
     public static void setImag (Complex theNum, double newImagPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        theNum.imagPart = newImagPart;
+        theNum.imagPart = Complex.fixZero(newImagPart);
     }
 
     /**
@@ -195,7 +211,7 @@ public class Complex
     public static void setImag (Complex theNum, float newImagPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        theNum.imagPart = (double)newImagPart;
+        theNum.imagPart = Complex.fixZero((double)newImagPart);
     }
 
     /**
@@ -207,7 +223,7 @@ public class Complex
     public static void setImag (Complex theNum, int newImagPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
-        theNum.imagPart = (double)newImagPart;
+        theNum.imagPart = Complex.fixZero((double)newImagPart);
     }
 
     /**
@@ -311,8 +327,7 @@ public class Complex
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         Complex newComplex = new Complex (theNum.realPart, theNum.imagPart);
-        if (newComplex.imagPart != 0.0)
-            newComplex.imagPart = - newComplex.imagPart;
+        newComplex.imagPart = Complex.fixZero(- newComplex.imagPart);
         return newComplex;
     }
 
@@ -357,8 +372,8 @@ public class Complex
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
 
         Complex newComplex = new Complex ();
-        newComplex.realPart = num1.realPart * num2.realPart - num1.imagPart * num2.imagPart;
-        newComplex.imagPart = num1.realPart * num2.imagPart + num1.imagPart * num2.realPart;
+        newComplex.realPart = Complex.fixZero(num1.realPart * num2.realPart - num1.imagPart * num2.imagPart);
+        newComplex.imagPart = Complex.fixZero(num1.realPart * num2.imagPart + num1.imagPart * num2.realPart);
         return newComplex;
     }
 
@@ -422,8 +437,8 @@ public class Complex
 
         double divisor = multiply(num2, num2.conjugate()).realPart;
         Complex result = multiply(num1, num2.conjugate());
-        result.realPart /= divisor;
-        result.imagPart /= divisor;
+        result.realPart = Complex.fixZero(result.realPart / divisor);
+        result.imagPart = Complex.fixZero(result.imagPart / divisor);
         return result;
     }
 
@@ -561,7 +576,7 @@ public class Complex
             resultReal = -(theComplex.realPart);
         if (theComplex.imagPart != 0.0)
             resultImag = -(theComplex.imagPart);
-        return new Complex(resultReal, resultImag);
+        return new Complex(-(theComplex.realPart), -(theComplex.imagPart));
     }
 
     /**
@@ -588,7 +603,7 @@ public class Complex
      */
     public void setReal(double newRealPart)
     {
-        realPart = newRealPart;
+        realPart = Complex.fixZero(newRealPart);
     }
 
     /**
@@ -597,7 +612,7 @@ public class Complex
      */
     public void setReal(float newRealPart)
     {
-        realPart = (double)newRealPart;
+        realPart = Complex.fixZero((double)newRealPart);
     }
 
     /**
@@ -606,7 +621,7 @@ public class Complex
      */
     public void setReal(int newRealPart)
     {
-        realPart = (double)newRealPart;
+        realPart = Complex.fixZero((double)newRealPart);
     }
 
     /**
@@ -615,7 +630,7 @@ public class Complex
      */
     public void setImag(double newImagPart)
     {
-        imagPart = newImagPart;
+        imagPart = Complex.fixZero(newImagPart);
     }
 
     /**
@@ -624,7 +639,7 @@ public class Complex
      */
     public void setImag(float newImagPart)
     {
-        imagPart = (double)newImagPart;
+        imagPart = Complex.fixZero((double)newImagPart);
     }
 
     /**
@@ -633,7 +648,7 @@ public class Complex
      */
     public void setImag(int newImagPart)
     {
-        imagPart = (double)newImagPart;
+        imagPart = Complex.fixZero((double)newImagPart);
     }
 
     /**
