@@ -2,11 +2,13 @@ package qcfcs_math;
 
 /**
  * This class implements a (column) vector of complex numbers.
- * Created by reesede on 1/4/2017.
+ * Created by reesede on 1/22/2017.
  * @author David E. Reese
  * @version 2.1.1
  * @since 2.1.1
  */
+
+// TODO: Convert conversion routines from shallow copy to deep copy.
 
 // Copyright 2017 David E. Reese
 //
@@ -126,6 +128,71 @@ public class ComplexVector extends ComplexMatrix
     }
 
     /**
+     * This method subtracts two complex vectors.
+     * @param vector1   Vector from which vector2 is to be subtracted.
+     * @param vector2   Vector to subtract from vector1.
+     * @return  Difference of the two vectors.
+     */
+    public static ComplexVector subtract(ComplexVector vector1, ComplexVector vector2)
+    {
+        return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.subtract(vector1, vector2));
+    }
+
+    /**
+     * This method multiplies a vector by a complex scalar.
+     * @param theVector     Vector to multiply.
+     * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
+     * @return  Product of scalar multiplication of theVector by theScalar.
+     */
+    public static ComplexVector multiply(ComplexVector theVector, Complex theScalar)
+    {
+        return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
+    }
+
+    /**
+     * This method multiplies a vector by a double scalar.
+     * @param theVector     Vector to multiply.
+     * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
+     * @return  Product of scalar multiplication of theVector by theScalar.
+     */
+    public static ComplexVector multiply(ComplexVector theVector, double theScalar)
+    {
+        return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
+    }
+
+    /**
+     * This method multiplies a vector by a float scalar.
+     * @param theVector     Vector to multiply.
+     * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
+     * @return  Product of scalar multiplication of theVector by theScalar.
+     */
+    public static ComplexVector multiply(ComplexVector theVector, float theScalar)
+    {
+        return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
+    }
+
+    /**
+     * This method multiplies a vector by a int scalar.
+     * @param theVector     Vector to multiply.
+     * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
+     * @return  Product of scalar multiplication of theVector by theScalar.
+     */
+    public static ComplexVector multiply(ComplexVector theVector, int theScalar)
+    {
+        return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
+    }
+
+    /**
+     * This method negates a complex vector, i.e., it multiplies each element of the vector by -1.0.
+     * @param theVector Vector to be negated.
+     * @return  Negated vector.
+     */
+    public static ComplexVector negate(ComplexVector theVector)
+    {
+        return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.negate(theVector));
+    }
+
+    /**
      * This method converts a ComplexMatrix with 1 column into a ComplexVector. Note that the method does not copy
      * the elements of the matrix into the vector: the source matrix and the target vector will share elements.
      * @param theMatrix Source matrix.
@@ -236,6 +303,65 @@ public class ComplexVector extends ComplexMatrix
     }
 
     /**
+     * This method subtracts a vector from this vector and returns the difference.
+     * @param theVec    Vector to subtract from this vector.
+     * @return  Difference of this vector and theVec.
+     */
+    public ComplexVector subtract (ComplexVector theVec)
+    {
+        return ComplexVector.subtract(this, theVec);
+    }
+
+    /**
+     * This method performs scalar multiplication of a complex vector with a complex scalar.
+     * @param theScalar Scalar by which this complex vector is to be multiplied.
+     * @return  Product of scalar multiplication of the vector and theScalar.
+     */
+    public ComplexVector multiply (Complex theScalar)
+    {
+        return ComplexVector.multiply(this, theScalar);
+    }
+
+    /**
+     * This method performs scalar multiplication of a complex vector with a double scalar.
+     * @param theScalar Scalar by which this complex vector is to be multiplied.
+     * @return  Product of scalar multiplication of the vector and theScalar.
+     */
+    public ComplexVector multiply (double theScalar)
+    {
+        return ComplexVector.multiply(this, theScalar);
+    }
+
+    /**
+     * This method performs scalar multiplication of a complex vector with a float scalar.
+     * @param theScalar Scalar by which this complex vector is to be multiplied.
+     * @return  Product of scalar multiplication of the vector and theScalar.
+     */
+    public ComplexVector multiply (float theScalar)
+    {
+        return ComplexVector.multiply(this, theScalar);
+    }
+
+    /**
+     * This method performs scalar multiplication of a complex vector with a complex scalar.
+     * @param theScalar Scalar by which this complex vector is to be multiplied.
+     * @return  Product of scalar multiplication of the vector and theScalar.
+     */
+    public ComplexVector multiply (int theScalar)
+    {
+        return ComplexVector.multiply(this, theScalar);
+    }
+
+    /**
+     * This method negates a complex vector, i.e., it multiplies each element of the vector by -1.0.
+     * @return  Negated vector.
+     */
+    public ComplexVector negate()
+    {
+        return ComplexVector.negate(this);
+    }
+
+    /**
      * This method returns a complex matrix of the same size as the complex vector and with the same elements.
      * @return  A ComplexMatrix with the same elements as the source ComplexVector.
      */
@@ -243,4 +369,5 @@ public class ComplexVector extends ComplexMatrix
     {
         return ComplexVector.convertComplexVectorToMatrix(this);
     }
+
 }
