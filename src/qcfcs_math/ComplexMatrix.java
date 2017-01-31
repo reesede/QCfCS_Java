@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a matrix of complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.1.1
+ * @version 2.2.2
  * @since 2.1.1
  */
 
@@ -30,6 +30,7 @@ package qcfcs_math;
 //      20170119    D.E. Reese          Added set () (Programming Drill 2.1.1).
 //      20170121    D.E. Reese          Added static get(), set(), and clone() methods (Programming Drill 2.1.1).
 //      20170122    D.E. Reese          Added add(), subtract() (Programming Drill 2.1.1).
+//      20170131    D.E. Reese          Added multiply() for two ComplexMatrices (Programming Drill 2.2.2).
 //
 
 public class ComplexMatrix implements Cloneable
@@ -252,6 +253,19 @@ public class ComplexMatrix implements Cloneable
             for(int j = 0; j < theMatrix.numColumns; j++)
                 newMatrix.theData[i][j] = theMatrix.theData[i][j].multiply(multiplier);
         return newMatrix;
+    }
+
+    public static ComplexMatrix multiply(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
+    {
+        if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
+        if (matrix1 == null) throw new IllegalArgumentException("matrix2 is null.");
+        if (matrix1.numColumns != matrix2.numRows) throw new IllegalArgumentException("matrix1.numColumns != matrix2.numRows.");
+
+        ComplexMatrix result = new ComplexMatrix(matrix1.numRows, matrix2.numColumns);
+
+        //TODO:
+
+        return result;
     }
 
     /**
