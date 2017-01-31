@@ -68,14 +68,14 @@ class ComplexVectorTest
         assertEquals(2.0, ComplexVector.get(theVec, 1).getReal());
         assertEquals(2.0, ComplexVector.get(theVec, 1).getImag());
 
-        ComplexVector.set(theVec, 0, (double)3.0);
+        ComplexVector.set(theVec, 0, 3.0);
         ComplexVector.set(theVec,1, (float)4.0);
         assertEquals(3.0, ComplexVector.get(theVec, 0).getReal());
         assertEquals(0.0, ComplexVector.get(theVec, 0).getImag());
         assertEquals(4.0, ComplexVector.get(theVec, 1).getReal());
         assertEquals(0.0, ComplexVector.get(theVec, 1).getImag());
 
-        ComplexVector.set(theVec, 0, (int)5);
+        ComplexVector.set(theVec, 0, 5);
         ComplexVector.set(theVec, 1, new PolarCoordinate(4.0, Math.PI/4.0));
         assertEquals(5.0, ComplexVector.get(theVec, 0).getReal());
         assertEquals(0.0, ComplexVector.get(theVec, 0).getImag());
@@ -97,14 +97,14 @@ class ComplexVectorTest
         assertEquals(2.0, theVec.get(1).getReal());
         assertEquals(2.0, theVec.get(1).getImag());
 
-        ComplexVector.set(theVec, 0, (double)3.0);
+        ComplexVector.set(theVec, 0, 3.0);
         ComplexVector.set(theVec,1, (float)4.0);
         assertEquals(3.0, theVec.get(0).getReal());
         assertEquals(0.0, theVec.get(0).getImag());
         assertEquals(4.0, theVec.get(1).getReal());
         assertEquals(0.0, theVec.get(1).getImag());
 
-        theVec.set(0, (int)5);
+        theVec.set(0, 5);
         theVec.set(1, new PolarCoordinate(4.0, Math.PI/4.0));
         assertEquals(5.0, theVec.get(0).getReal());
         assertEquals(0.0, theVec.get(0).getImag());
@@ -236,7 +236,7 @@ class ComplexVectorTest
         assertEquals(0.0, product.get(1).getReal());
         assertEquals(4.0, product.get(1).getImag());
 
-        product = ComplexVector.multiply(vec1, (double)2.0);
+        product = ComplexVector.multiply(vec1, 2.0);
         assertEquals(2.0, product.get(0).getReal());
         assertEquals(2.0, product.get(0).getImag());
         assertEquals(4.0, product.get(1).getReal());
@@ -269,7 +269,7 @@ class ComplexVectorTest
         assertEquals(0.0, product.get(1).getReal());
         assertEquals(4.0, product.get(1).getImag());
 
-        product = vec1.multiply((double)2.0);
+        product = vec1.multiply(2.0);
         assertEquals(2.0, product.get(0).getReal());
         assertEquals(2.0, product.get(0).getImag());
         assertEquals(4.0, product.get(1).getReal());
