@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170126    D.E. Reese          Merged get() and set() into setAndGet() and added tests to stub.
 //      20170127    D.E. Reese          Added additional tests to setAndGet() and added tests to add() stub.
 //      20170128    D.E. Reese          Added code to stubs for negate(), multiply() (scalar only), and cloneTest().
+//      20170201    D.E. Reese          Renamed multiply() to multiplyScalar() and added multiplyMatrix() test.
 //
 
 class ComplexMatrixTest
@@ -362,16 +363,15 @@ class ComplexMatrixTest
     }
 
     @Test
-    void multiply()
+    void multiplyScalar()
     {
-        ComplexMatrix matrix1;
-        ComplexMatrix matrix2;
+        ComplexMatrix theMatrix;
         ComplexMatrix product;
 
         // Verify scalar multiplication.
 
-        matrix1 = new ComplexMatrix(2,2);
-        product = ComplexMatrix.multiply(matrix1, (double)2.0);
+        theMatrix = new ComplexMatrix(2,2);
+        product = ComplexMatrix.multiply(theMatrix, (double)2.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -381,7 +381,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, (float)2.0);
+        product = ComplexMatrix.multiply(theMatrix, (float)2.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -391,7 +391,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, 2);
+        product = ComplexMatrix.multiply(theMatrix, 2);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -401,11 +401,11 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        matrix1.set(0,0, new Complex(1.0, 1.0));
-        matrix1.set(0, 1, new Complex(2.0,0.0));
-        matrix1.set(1,0, new Complex(0.0, 3.0));
-        matrix1.set(1, 1, new Complex());
-        product = ComplexMatrix.multiply(matrix1, 0.0);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        theMatrix.set(0, 1, new Complex(2.0,0.0));
+        theMatrix.set(1,0, new Complex(0.0, 3.0));
+        theMatrix.set(1, 1, new Complex());
+        product = ComplexMatrix.multiply(theMatrix, 0.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -415,7 +415,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, (float)0.0);
+        product = ComplexMatrix.multiply(theMatrix, (float)0.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -425,7 +425,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, 0);
+        product = ComplexMatrix.multiply(theMatrix, 0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -435,7 +435,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, (double)(-5.0));
+        product = ComplexMatrix.multiply(theMatrix, (double)(-5.0));
         assertEquals(-5.0, product.get(0,0).getReal());
         assertEquals(-5.0, product.get(0,0).getImag());
         assertEquals(-10.0, product.get(0,1).getReal());
@@ -445,7 +445,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, (float)(-5.0));
+        product = ComplexMatrix.multiply(theMatrix, (float)(-5.0));
         assertEquals(-5.0, product.get(0,0).getReal());
         assertEquals(-5.0, product.get(0,0).getImag());
         assertEquals(-10.0, product.get(0,1).getReal());
@@ -455,7 +455,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = ComplexMatrix.multiply(matrix1, -5);
+        product = ComplexMatrix.multiply(theMatrix, -5);
         assertEquals(-5.0, product.get(0,0).getReal());
         assertEquals(-5.0, product.get(0,0).getImag());
         assertEquals(-10.0, product.get(0,1).getReal());
@@ -471,8 +471,8 @@ class ComplexMatrixTest
 
         // Check scalar multiplication with instance methods.
 
-        matrix1 = new ComplexMatrix(2,2);
-        product = matrix1.multiply((double)2.0);
+        theMatrix = new ComplexMatrix(2,2);
+        product = theMatrix.multiply((double)2.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -482,7 +482,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply((float)2.0);
+        product = theMatrix.multiply((float)2.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -492,7 +492,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply(2);
+        product = theMatrix.multiply(2);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -502,11 +502,11 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        matrix1.set(0,0, new Complex(1.0, 1.0));
-        matrix1.set(0, 1, new Complex(2.0,0.0));
-        matrix1.set(1,0, new Complex(0.0, 3.0));
-        matrix1.set(1, 1, new Complex());
-        product = matrix1.multiply(0.0);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        theMatrix.set(0, 1, new Complex(2.0,0.0));
+        theMatrix.set(1,0, new Complex(0.0, 3.0));
+        theMatrix.set(1, 1, new Complex());
+        product = theMatrix.multiply(0.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -516,7 +516,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply((float)0.0);
+        product = theMatrix.multiply((float)0.0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -526,7 +526,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply(0);
+        product = theMatrix.multiply(0);
         assertEquals(0.0, product.get(0,0).getReal());
         assertEquals(0.0, product.get(0,0).getImag());
         assertEquals(0.0, product.get(0,1).getReal());
@@ -536,7 +536,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply((double)(-5.0));
+        product = theMatrix.multiply((double)(-5.0));
         assertEquals(-5.0, product.get(0,0).getReal());
         assertEquals(-5.0, product.get(0,0).getImag());
         assertEquals(-10.0, product.get(0,1).getReal());
@@ -546,7 +546,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply((float)(-5.0));
+        product = theMatrix.multiply((float)(-5.0));
         assertEquals(-5.0, product.get(0,0).getReal());
         assertEquals(-5.0, product.get(0,0).getImag());
         assertEquals(-10.0, product.get(0,1).getReal());
@@ -556,7 +556,7 @@ class ComplexMatrixTest
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
 
-        product = matrix1.multiply(-5);
+        product = theMatrix.multiply(-5);
         assertEquals(-5.0, product.get(0,0).getReal());
         assertEquals(-5.0, product.get(0,0).getImag());
         assertEquals(-10.0, product.get(0,1).getReal());
@@ -565,6 +565,36 @@ class ComplexMatrixTest
         assertEquals(-15.0, product.get(1,0).getImag());
         assertEquals(0.0, product.get(1,1).getReal());
         assertEquals(0.0, product.get(1,1).getImag());
+    }
+
+    @Test
+    void multiplyMatrix()
+    {
+        ComplexMatrix matrix1 = new ComplexMatrix(3,3);
+        ComplexMatrix matrix2 = new ComplexMatrix(3,3);
+        ComplexMatrix product;
+
+        // Test multiplying two zero matrices of the same dimension.
+
+        product = ComplexMatrix.multiply(matrix1, matrix2);
+        assertEquals(0.0, product.get(0,0).getReal());
+        assertEquals(0.0, product.get(0,0).getImag());
+        assertEquals(0.0, product.get(0,1).getReal());
+        assertEquals(0.0, product.get(0,1).getImag());
+        assertEquals(0.0, product.get(0,2).getReal());
+        assertEquals(0.0, product.get(0,2).getImag());
+        assertEquals(0.0, product.get(1,0).getReal());
+        assertEquals(0.0, product.get(1,0).getImag());
+        assertEquals(0.0, product.get(1,1).getReal());
+        assertEquals(0.0, product.get(1,1).getImag());
+        assertEquals(0.0, product.get(1,2).getReal());
+        assertEquals(0.0, product.get(1,2).getImag());
+        assertEquals(0.0, product.get(2,0).getReal());
+        assertEquals(0.0, product.get(2,0).getImag());
+        assertEquals(0.0, product.get(2,1).getReal());
+        assertEquals(0.0, product.get(2,1).getImag());
+        assertEquals(0.0, product.get(2,2).getReal());
+        assertEquals(0.0, product.get(2,2).getImag());
     }
 
     @Test

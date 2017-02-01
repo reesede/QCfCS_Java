@@ -31,6 +31,7 @@ package qcfcs_math;
 //      20170121    D.E. Reese          Added static get(), set(), and clone() methods (Programming Drill 2.1.1).
 //      20170122    D.E. Reese          Added add(), subtract() (Programming Drill 2.1.1).
 //      20170131    D.E. Reese          Added multiply() for two ComplexMatrices (Programming Drill 2.2.2).
+//      20170201    D.E. Reese          Added code to stub multiply() of two matrices and added instance multiply().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -255,6 +256,13 @@ public class ComplexMatrix implements Cloneable
         return newMatrix;
     }
 
+    /**
+     * This method multiplies two complex matrices.
+     * @param matrix1   First matrix to multiply.
+     * @param matrix2   Second matrix to multiply.
+     * @return  The product of matrix1 * matrix2.
+     * @throws IllegalArgumentException Thrown if matrix1 is null, matrix2 is null, or the dimensions of the matrices do not allow matrix multiplication.
+     */
     public static ComplexMatrix multiply(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
     {
         if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
@@ -263,8 +271,16 @@ public class ComplexMatrix implements Cloneable
 
         ComplexMatrix result = new ComplexMatrix(matrix1.numRows, matrix2.numColumns);
 
-        //TODO:
-
+        for (int i = 0; i < result.numRows; i++)
+            for (int j = 0; j < result.numColumns; j++)
+            {
+                Complex theElement = new Complex();
+                for (int l = 0; l < matrix1.numColumns; l++)
+                {
+                    theElement = theElement.add(matrix1.get(i, l).multiply(matrix2.get(l, j)));
+                }
+                result.set(i, j, theElement);
+            }
         return result;
     }
 
@@ -459,6 +475,16 @@ public class ComplexMatrix implements Cloneable
      * @return  Product of scalar multiplication of this matrix by multiplier.
      */
     public ComplexMatrix multiply(int multiplier)
+    {
+        return ComplexMatrix.multiply(this, multiplier);
+    }
+
+    /**
+     * This method multiplies a complex matrix by another complex matrix.
+     * @param multiplier    Matrix by which this matrix is to be multiplied.
+     * @return  Product of this matrix multiplied by multiplier.
+     */
+    public ComplexMatrix multiply(ComplexMatrix multiplier)
     {
         return ComplexMatrix.multiply(this, multiplier);
     }

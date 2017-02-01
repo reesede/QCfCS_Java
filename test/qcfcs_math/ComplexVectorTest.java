@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // History:
 //      20170122    D.E. Reese          Creation (Programming Drill 1.2.1)
 //      20170128    D.E. Reese          Added code for setAndGet().
+//      20170201    D.E. Reese          Fixed ambiguous null pointers in multiply().
 //
 
 class ComplexVectorTest
@@ -255,7 +256,7 @@ class ComplexVectorTest
         assertEquals(4.0, product.get(1).getImag());
 
         assertThrows(IllegalArgumentException.class, () -> {
-            ComplexVector.multiply(new ComplexVector(2), null);
+            ComplexVector.multiply(new ComplexVector(2), (Complex)null);
         });
 
         // Test instance methods for scalar multiplication.
@@ -288,7 +289,7 @@ class ComplexVectorTest
         assertEquals(4.0, product.get(1).getImag());
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new ComplexVector(2).multiply(null);
+            new ComplexVector(2).multiply((Complex)null);
         });
 
     }
