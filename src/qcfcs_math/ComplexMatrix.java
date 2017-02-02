@@ -32,6 +32,10 @@ package qcfcs_math;
 //      20170122    D.E. Reese          Added add(), subtract() (Programming Drill 2.1.1).
 //      20170131    D.E. Reese          Added multiply() for two ComplexMatrices (Programming Drill 2.2.2).
 //      20170201    D.E. Reese          Added code to stub multiply() of two matrices and added instance multiply().
+//      20170202    D.E. Reese          Corrected bug in multiply() of two complex matrices where test for matrix2
+//                                      being null tested matrix1 (resulted in NullPointerException instead of
+//                                      IllegalArgumentException).
+//                                      Added is1By1() and convert1By1ToScalar().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -266,7 +270,7 @@ public class ComplexMatrix implements Cloneable
     public static ComplexMatrix multiply(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
     {
         if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
-        if (matrix1 == null) throw new IllegalArgumentException("matrix2 is null.");
+        if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
         if (matrix1.numColumns != matrix2.numRows) throw new IllegalArgumentException("matrix1.numColumns != matrix2.numRows.");
 
         ComplexMatrix result = new ComplexMatrix(matrix1.numRows, matrix2.numColumns);
@@ -323,6 +327,35 @@ public class ComplexMatrix implements Cloneable
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         return theMatrix.numColumns;
+    }
+
+    /**
+     * This method determines if a ComplexMatrix is a 1x1 matrix (i.e., it's really a scalar).
+     * @param theMatrix Matrix to test.
+     * @return  true if theMatrix has 1 row and 1 column; false otherwise.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static boolean is1By1(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        if ((theMatrix.numRows == 1) && (theMatrix.numColumns == 1))
+            return true;
+        return false;
+    }
+
+    /**
+     * This method converts a 1x1 ComplexMatrix into a scalar.
+     * @param theMatrix Matrix to be converted into a scalar.
+     * @return  Complex number set to the value of the only element in the matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null, theMatrix is not 1x1.
+     */
+    public static Complex convert1By1ToScalar(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+        if ((theMatrix.numRows != 1) || (theMatrix.numColumns != 1))
+            throw new IllegalArgumentException("theMatrix is not 1x1.");
+        return new Complex(theMatrix.theData[0][0]);
     }
 
     /**
@@ -514,5 +547,23 @@ public class ComplexMatrix implements Cloneable
     public int getNumColumns()
     {
         return this.numColumns;
+    }
+
+    /**
+     * This method determines if a ComplexMatrix is 1x1 (i.e., it's really a scalar).
+     * @return  true if this matrix is 1x1; false otherwise.
+     */
+    public boolean is1By1()
+    {
+        return ComplexMatrix.is1By1(this);
+    }
+
+    /**
+     * This method converts a 1x1 ComplexMatrix into a scalar (a Complex with the same value of the sole element).
+     * @return  A Complex that has the same value as the sole element in the matrix.
+     */
+    public Complex convert1By1ToScalar()
+    {
+        return ComplexMatrix.convert1By1ToScalar(this);
     }
 }
