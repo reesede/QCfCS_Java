@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170127    D.E. Reese          Added additional tests to setAndGet() and added tests to add() stub.
 //      20170128    D.E. Reese          Added code to stubs for negate(), multiply() (scalar only), and cloneTest().
 //      20170201    D.E. Reese          Renamed multiply() to multiplyScalar() and added multiplyMatrix() test.
+//      20170203    D.E. Reese          Added code to testAndConvert1x1Matrix().
 //
 
 class ComplexMatrixTest
@@ -1059,8 +1060,50 @@ class ComplexMatrixTest
         theMatrix.set(0,0, new Complex(1.0, 1.0));
 
         assertTrue(ComplexMatrix.is1By1(theMatrix));
+
         theScalar = ComplexMatrix.convert1By1ToScalar(theMatrix);
         assertEquals(1.0, theScalar.getReal());
         assertEquals(1.0, theScalar.getImag());
+
+        theMatrix = new ComplexMatrix(2,1);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        theMatrix.set(1,0, new Complex(1.0, 1.0));
+
+        assertFalse(ComplexMatrix.is1By1(theMatrix));
+
+        final ComplexMatrix testMatrix = theMatrix;
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.convert1By1ToScalar(testMatrix);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.is1By1(null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.convert1By1ToScalar(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+
+        assertTrue(theMatrix.is1By1());
+
+        theScalar = theMatrix.convert1By1ToScalar();
+        assertEquals(1.0, theScalar.getReal());
+        assertEquals(1.0, theScalar.getImag());
+
+        theMatrix = new ComplexMatrix(2,1);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        theMatrix.set(1,0, new Complex(1.0, 1.0));
+
+        assertFalse(theMatrix.is1By1());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testMatrix.convert1By1ToScalar();
+        });
     }
 }
