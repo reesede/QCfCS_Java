@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexMatrix class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.1.1
+ * @version 2.2.2
  * @since 2.1.1
  */
 

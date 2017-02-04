@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexVector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.1.1
+ * @version 2.2.2
  * @since 2.1.1
  */
 
@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170122    D.E. Reese          Creation (Programming Drill 1.2.1)
 //      20170128    D.E. Reese          Added code for setAndGet().
 //      20170201    D.E. Reese          Fixed ambiguous null pointers in multiply().
+//      20170204    D.E. Reese          Added multiplyMatrix().
 //
 
 class ComplexVectorTest
@@ -290,6 +291,42 @@ class ComplexVectorTest
 
         assertThrows(IllegalArgumentException.class, () -> {
             new ComplexVector(2).multiply((Complex)null);
+        });
+    }
+
+    @Test
+    void multiplyMatrix()
+    {
+        ComplexVector theVector = new ComplexVector(3);
+        ComplexMatrix theMatrix = new ComplexMatrix(3,3);
+        ComplexMatrix theProduct;
+
+        theVector.set(0, new Complex(1.0,1.0));
+        theVector.set(1, new Complex(1.0));
+        theVector.set(2, new Complex(2.0));
+
+        theMatrix.set(0,0, new Complex(1.0));
+        theMatrix.set(0,2, new Complex(1.0));
+        theMatrix.set(1,1, new Complex(1.0));
+        theMatrix.set(2,0, new Complex(1.0));
+        theMatrix.set(2,2, new Complex(1.0));
+
+        theProduct = theMatrix.multiply(theVector);
+        assertEquals(3, theProduct.getNumRows());
+        assertEquals(1, theProduct.getNumColumns());
+        assertEquals(3, theProduct.get(0,0).getReal());
+        assertEquals(1, theProduct.get(0,0).getImag());
+        assertEquals(1, theProduct.get(1,0).getReal());
+        assertEquals(0, theProduct.get(1,0).getImag());
+        assertEquals(3, theProduct.get(2,0).getReal());
+        assertEquals(1, theProduct.get(2,0).getImag());
+
+
+        final ComplexVector vector1 = theVector;
+        final ComplexMatrix matrix1 = theMatrix;
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            vector1.multiply(matrix1);
         });
 
     }

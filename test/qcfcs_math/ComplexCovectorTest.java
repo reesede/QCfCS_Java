@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexCovector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.1.1
+ * @version 2.2.2
  * @since 2.1.1
  */
 
@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170122    D.E. Reese          Creation (Programming Drill 1.2.1)
 //      20170131    D.E. Reese          Added code to stubs, copying from ComplexVectorTest.
 //      20170201    D.E. Reese          Fixed ambiguous null pointers in multiply().
+//      20170204    D.E. Reese          Added multiplyMatrix().
 //
 
 class ComplexCovectorTest
@@ -221,7 +222,7 @@ class ComplexCovectorTest
     }
 
     @Test
-    void multiply()
+    void multiplyScalar()
     {
         // Test class methods for scalar multiplication.
 
@@ -290,6 +291,43 @@ class ComplexCovectorTest
 
         assertThrows(IllegalArgumentException.class, () -> {
             new ComplexCovector(2).multiply((Complex)null);
+        });
+
+    }
+
+    @Test
+    void multiplyMatrix()
+    {
+        ComplexCovector theCovector = new ComplexCovector(3);
+        ComplexMatrix theMatrix = new ComplexMatrix(3,3);
+        ComplexMatrix theProduct;
+
+        theCovector.set(0, new Complex(1.0,1.0));
+        theCovector.set(1, new Complex(1.0));
+        theCovector.set(2, new Complex(2.0));
+
+        theMatrix.set(0,0, new Complex(1.0));
+        theMatrix.set(0,2, new Complex(1.0));
+        theMatrix.set(1,1, new Complex(1.0));
+        theMatrix.set(2,0, new Complex(1.0));
+        theMatrix.set(2,2, new Complex(1.0));
+
+        theProduct = theCovector.multiply(theMatrix);
+        assertEquals(1, theProduct.getNumRows());
+        assertEquals(3, theProduct.getNumColumns());
+        assertEquals(3, theProduct.get(0,0).getReal());
+        assertEquals(1, theProduct.get(0,0).getImag());
+        assertEquals(1, theProduct.get(0,1).getReal());
+        assertEquals(0, theProduct.get(0,1).getImag());
+        assertEquals(3, theProduct.get(0,2).getReal());
+        assertEquals(1, theProduct.get(0,2).getImag());
+
+
+        final ComplexCovector covec1 = theCovector;
+        final ComplexMatrix matrix1 = theMatrix;
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            matrix1.multiply(covec1);
         });
 
     }
