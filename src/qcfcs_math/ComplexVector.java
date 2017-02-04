@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a (column) vector of complex numbers.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.1.1
+ * @version 2.4.1
  * @since 2.1.1
  */
 
@@ -31,6 +31,7 @@ package qcfcs_math;
 //      20170122    D.E. Reese          Creation (Programming Drill 2.1.1).
 //      20170128    D.E. Reese          Added set(), get(), add(), convertComplexMatrixToVector(),
 //                                      and convertComplexVectorToMatrix() methods.
+//      20170204    D.E. Reese          Added transpose(), transposeConjugate().
 //
 
 public class ComplexVector extends ComplexMatrix
@@ -228,6 +229,38 @@ public class ComplexVector extends ComplexMatrix
     }
 
     /**
+     * This method transposes a ComplexVector into a ComplexCovector.
+     * @param theVector Vector to be transposed.
+     * @return  ComplexCovector with elements that have the same values as the corresponding elements in theVector.
+     * @throws IllegalArgumentException Thrown if theVector is null.
+     */
+    public static ComplexCovector transpose (ComplexVector theVector) throws IllegalArgumentException
+    {
+        if (theVector == null) throw new IllegalArgumentException("theVector is null.");
+
+        ComplexCovector result = new ComplexCovector(theVector.getNumRows());
+        for (int i = 0; i < theVector.getNumRows(); i++)
+            result.set(i, new Complex(theVector.get(i)));
+        return result;
+    }
+
+    /**
+     * This method takes the transpose conjugate of a ComplexVector into a ComplexCovector.
+     * @param theVector Vector whose complex conjugate is to be returned.
+     * @return  ComplexCovector with elements that are the complex conjugate of the corresponding elements in theVector.
+     * @throws IllegalArgumentException Thrown if theVector is null.
+     */
+    public static ComplexCovector transposeConjugate (ComplexVector theVector) throws IllegalArgumentException
+    {
+        if (theVector == null) throw new IllegalArgumentException("theVector is null.");
+
+        ComplexCovector result = new ComplexCovector(theVector.getNumRows());
+        for (int i = 0; i < theVector.getNumRows(); i++)
+            result.set(i, new Complex(theVector.get(i).conjugate()));
+        return result;
+    }
+
+    /**
      * This method sets an element in a complex vector to a new complex value.
      * @param index     Index of element to be set.
      * @param newValue  New value of the element to be set.
@@ -370,4 +403,21 @@ public class ComplexVector extends ComplexMatrix
         return ComplexVector.convertComplexVectorToMatrix(this);
     }
 
+    /**
+     * This method returns the transpose of this ComplexVector.
+     * @return  ComplexCovector with elements that have the values of the corresponding elements in this ComplexVector.
+     */
+    public ComplexCovector transpose()
+    {
+        return ComplexVector.transpose(this);
+    }
+
+    /**
+     * This method returns the transpose conjugate of this ComplexVector.
+     * @return  ComplexCovector with elements that have the complex conjugate of the corresponding elements in this ComplexVector.
+     */
+    public ComplexCovector transposeConjugate()
+    {
+        return ComplexVector.transposeConjugate(this);
+    }
 }
