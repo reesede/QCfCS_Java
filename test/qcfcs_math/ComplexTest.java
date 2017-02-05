@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException;
  * This class implements unit tests for the Complex class.
  * Created by reesede on 1/7/2017.
  * @author David E. Reese
- * @version 1.3.3
+ * @version 2.4.1
  * @since 1.2.1
  */
 
@@ -45,6 +45,7 @@ import java.lang.IllegalArgumentException;
 //      20170123    D.E. Reese          Added code to abs() stub.
 //      20170124    D.E. Reese          Added code to equals() and negate() stubs.
 //      20170125    D.E. Reese          Added code to test equals() for double, float, and int.
+//      20170205    D.E. Reese          Added transpose() and transposeConjugate().
 //
 class ComplexTest
 {
@@ -1271,6 +1272,18 @@ class ComplexTest
         result = Complex.negate(theNum);
         assertEquals(0.0, result.getReal());
         assertEquals(1.0, result.getImag());
+
+    }
+
+    @Test
+    void transpose()
+    {
+
+    }
+
+    @Test
+    void transposeConjugate()
+    {
 
     }
 }

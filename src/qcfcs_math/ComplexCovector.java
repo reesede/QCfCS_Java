@@ -30,7 +30,8 @@ package qcfcs_math;
 // History:
 //      20170122    D.E. Reese          Creation (Programming Drill 2.1.1).
 //      20170130    D.E. Reese          Added code, copying from ComplexVector and modifying.
-//      20170204    D.E. Reese          Added transpose(), transposeConjugate().
+//      20170204    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct().
+//      20170205    D.E. Reese          Added size(). Converted conversion routines to deep copies.
 //
 
 public class ComplexCovector extends ComplexMatrix
@@ -207,7 +208,7 @@ public class ComplexCovector extends ComplexMatrix
 
         ComplexCovector theResult = new ComplexCovector(theMatrix.getNumColumns());
         for(int i = 0; i < theMatrix.getNumColumns(); i++)
-            theResult.set(i, theMatrix.get(0, i));
+            theResult.set(i, new Complex(theMatrix.get(0, i)));
         return theResult;
     }
 
@@ -224,7 +225,7 @@ public class ComplexCovector extends ComplexMatrix
 
         ComplexMatrix theResult = new ComplexMatrix(1, theCovector.getNumColumns());
         for(int i = 0; i < theCovector.getNumColumns(); i++)
-            theResult.set(0, i, theCovector.get(i));
+            theResult.set(0, i, new Complex(theCovector.get(i)));
         return theResult;
     }
 
@@ -258,6 +259,39 @@ public class ComplexCovector extends ComplexMatrix
         for (int i = 0; i < theCovector.getNumColumns(); i++)
             result.set(i, new Complex(theCovector.get(i).conjugate()));
         return result;
+    }
+
+    /**
+     * This method takes the inner product of a ComplexCovector and a ComplexVector. Note that it does not take the
+     * complex conjugate of the ComplexCovector.
+     * @param theCovector   ComplexCovector whose inner product is to be found with theVector.
+     * @param theVector ComplexVector whose inner product is to be found with theCovector.
+     * @return  Inner product of theCovector and theVector (sum of the product of each corresponding element).
+     * @throws IllegalArgumentException Thrown if theCovector is null, theVector is null, or theCovector and theVector are not the same size.
+     */
+    public static Complex innerProduct(ComplexCovector theCovector, ComplexVector theVector) throws IllegalArgumentException
+    {
+        if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
+        if (theVector == null) throw new IllegalArgumentException("theVector is null.");
+        if (theCovector.getNumColumns() != theVector.getNumRows()) throw new IllegalArgumentException("theCovector and theVector are not the same size.");
+
+        Complex theResult = new Complex();
+
+        for(int i = 0; i < theCovector.getNumColumns(); i++)
+            theResult = theResult.add(theCovector.get(i).multiply(theVector.get(i)));
+        return (theResult);
+    }
+
+    /**
+     * This method returns the size (number of elements) of a ComplexCovector.
+     * @param theCovector ComplexCovector whose size is to be found.
+     * @return  Size of the covector, i.e., the number of columns.
+     * @throws IllegalArgumentException Thrown if theCovector is null.
+     */
+    public static int size(ComplexCovector theCovector) throws IllegalArgumentException
+    {
+        if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
+        return theCovector.getNumColumns();
     }
 
     /**
@@ -419,5 +453,25 @@ public class ComplexCovector extends ComplexMatrix
     public ComplexVector transposeConjugate()
     {
         return ComplexCovector.transposeConjugate(this);
+    }
+
+    /**
+     * This method finds the inner product of this ComplexCovector and a ComplexVector. Note that it does not take the
+     * complex conjugate of this ComplexCovector before taking the inner product.
+     * @param theVector ComplexVector whose inner product is to be found with this ComplexCovector.
+     * @return  Inner product of this ComplexCovector and theVector (i.e., the sum of the product of corresponding elements).
+     */
+    public Complex innerProduct(ComplexVector theVector)
+    {
+        return ComplexCovector.innerProduct(this, theVector);
+    }
+
+    /**
+     * This method returns the size (number of columns or elements) of this ComplexCovector.
+     * @return  Size of the covector (i.e., number of elements or number of columns).
+     */
+    public int size()
+    {
+        return ComplexCovector.size(this);
     }
 }

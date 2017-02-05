@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a matrix of complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.2.2
+ * @version 2.4.1
  * @since 2.1.1
  */
 
@@ -36,6 +36,7 @@ package qcfcs_math;
 //                                      being null tested matrix1 (resulted in NullPointerException instead of
 //                                      IllegalArgumentException).
 //                                      Added is1By1() and convert1By1ToScalar().
+//      20170205    D.E. Reese          Added transpose() and transposeConjugate().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -359,6 +360,42 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method returns the transpose of a matrix, i.e., the result matrix is result[j,i] = theMatrix[i,j]. Note
+     * that this is a deep copy, i.e., each element of the result is a copy of the source element.
+     * @param theMatrix Matrix whose transpose is to be found.
+     * @return  Transpose of the matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static ComplexMatrix transpose(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        ComplexMatrix theResult = new ComplexMatrix(theMatrix.numColumns, theMatrix.numRows);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                theResult.theData[j][i] = new Complex(theMatrix.theData[i][j]);
+        return theResult;
+    }
+
+    /**
+     * This method returns the transpose conjugate of a matrix, i.e., the result matrix is result[j,i] = theMatrix[i,j]*.
+     * Note that this is a deep copy, i.e., each element of the result is a copy of the source element.
+     * @param theMatrix Matrix whose transpose conjugate is to be found.
+     * @return  Transpose conjugate of the matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static ComplexMatrix transposeConjugate(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        ComplexMatrix theResult = new ComplexMatrix(theMatrix.numColumns, theMatrix.numRows);
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                theResult.theData[j][i] = new Complex(theMatrix.theData[i][j]).conjugate();
+        return theResult;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -565,5 +602,23 @@ public class ComplexMatrix implements Cloneable
     public Complex convert1By1ToScalar()
     {
         return ComplexMatrix.convert1By1ToScalar(this);
+    }
+
+    /**
+     * This method returns the transpose of the matrix.
+     * @return  Transpose of the matrix.
+     */
+    public ComplexMatrix transpose()
+    {
+        return ComplexMatrix.transpose(this);
+    }
+
+    /**
+     * This method returns the transpose conjugate (i.e., complex conjugate of the transpose matrix) of a matrix.
+     * @return  Transpose conjugate of the matrix.
+     */
+    public ComplexMatrix transposeConjugate()
+    {
+        return ComplexMatrix.transposeConjugate(this);
     }
 }

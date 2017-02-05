@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexCovector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.2.2
+ * @version 2.4.1
  * @since 2.1.1
  */
 
@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170131    D.E. Reese          Added code to stubs, copying from ComplexVectorTest.
 //      20170201    D.E. Reese          Fixed ambiguous null pointers in multiply().
 //      20170204    D.E. Reese          Added multiplyMatrix().
+//      20170205    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct(), size()
 //
 
 class ComplexCovectorTest
@@ -379,4 +380,27 @@ class ComplexCovectorTest
         assertEquals(-2.0, result.get(1).getImag());
     }
 
+    @Test
+    void transpose()
+    {
+
+    }
+
+    @Test
+    void transposeConjugate()
+    {
+
+    }
+
+    @Test
+    void innerProduct()
+    {
+
+    }
+
+    @Test
+    void size()
+    {
+
+    }
 }

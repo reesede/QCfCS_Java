@@ -8,8 +8,6 @@ package qcfcs_math;
  * @since 2.1.1
  */
 
-// TODO: Convert conversion routines from shallow copy to deep copy.
-
 // Copyright 2017 David E. Reese
 //
 // This file is part of QCfCS_java.
@@ -31,7 +29,8 @@ package qcfcs_math;
 //      20170122    D.E. Reese          Creation (Programming Drill 2.1.1).
 //      20170128    D.E. Reese          Added set(), get(), add(), convertComplexMatrixToVector(),
 //                                      and convertComplexVectorToMatrix() methods.
-//      20170204    D.E. Reese          Added transpose(), transposeConjugate().
+//      20170204    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct().
+//      20170205    D.E. Reese          Added size(). Made conversion routines deep copies.
 //
 
 public class ComplexVector extends ComplexMatrix
@@ -207,7 +206,7 @@ public class ComplexVector extends ComplexMatrix
 
         ComplexVector theResult = new ComplexVector(theMatrix.getNumRows());
         for(int i = 0; i < theMatrix.getNumRows(); i++)
-            theResult.set(i, theMatrix.get(i, 0));
+            theResult.set(i, new Complex(theMatrix.get(i, 0)));
         return theResult;
     }
 
@@ -224,7 +223,7 @@ public class ComplexVector extends ComplexMatrix
 
         ComplexMatrix theResult = new ComplexMatrix(theVector.getNumRows(), 1);
         for(int i = 0; i < theVector.getNumRows(); i++)
-            theResult.set(i, 0, theVector.get(i));
+            theResult.set(i, 0, new Complex(theVector.get(i)));
         return theResult;
     }
 
@@ -258,6 +257,41 @@ public class ComplexVector extends ComplexMatrix
         for (int i = 0; i < theVector.getNumRows(); i++)
             result.set(i, new Complex(theVector.get(i).conjugate()));
         return result;
+    }
+
+    /**
+     * This method takes the inner product of two ComplexVectors. The product is the sum of the products of the
+     * elements of the conjugate transpose of the first vector with the corresponding elements of the second
+     * vector.
+     * @param vector1   First vector of the inner product, whose conjugate transpose will be used.
+     * @param vector2   Second vector of the inner product.
+     * @return  Inner product of the two vectors.
+     * @throws IllegalArgumentException Thrown if vector1 is null, vector2 is null, or the two vectors are not the same size.
+     */
+    public static Complex innerProduct(ComplexVector vector1, ComplexVector vector2) throws IllegalArgumentException
+    {
+        if (vector1 == null) throw new IllegalArgumentException("vector1 is null.");
+        if (vector2 == null) throw new IllegalArgumentException("vector2 is null.");
+        if (vector1.getNumRows() != vector2.getNumRows()) throw new IllegalArgumentException("vector1 and vector2 are not the same size.");
+
+        Complex theResult = new Complex();
+        ComplexCovector covector1 = vector1.transposeConjugate();
+
+        for(int i = 0; i < vector1.getNumRows(); i++)
+            theResult = theResult.add(covector1.get(i).multiply(vector2.get(i)));
+        return (theResult);
+    }
+
+    /**
+     * This method returns the size (number of elements) of a ComplexVector.
+     * @param theVector ComplexVector whose size is to be found.
+     * @return  Size of the vector, i.e., the number of rows.
+     * @throws IllegalArgumentException Thrown if theVector is null.
+     */
+    public static int size(ComplexVector theVector) throws IllegalArgumentException
+    {
+        if (theVector == null) throw new IllegalArgumentException("theVector is null.");
+        return theVector.getNumRows();
     }
 
     /**
@@ -419,5 +453,28 @@ public class ComplexVector extends ComplexMatrix
     public ComplexCovector transposeConjugate()
     {
         return ComplexVector.transposeConjugate(this);
+    }
+
+    /**
+     * This method takes the inner product of this vector and another. The product is the sum of the products of the
+     * elements of the conjugate transpose of this vector with the corresponding elements of the second
+     * vector.
+     * @param theVector   Vector to be used to find the inner product with this vector.
+     * @return  Inner product of the two vectors.
+     * @throws IllegalArgumentException Thrown if vector1 is null, vector2 is null, or the two vectors are not the same size.
+     */
+
+    public Complex innerProduct(ComplexVector theVector)
+    {
+        return ComplexVector.innerProduct(this, theVector);
+    }
+
+    /**
+     * This method returns the size (number of rows or elements) of this ComplexVector.
+     * @return  Size of the vector (i.e., number of elements or number of rows).
+     */
+    public int size()
+    {
+        return ComplexVector.size(this);
     }
 }
