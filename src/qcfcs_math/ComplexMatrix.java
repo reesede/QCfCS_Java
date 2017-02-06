@@ -36,7 +36,7 @@ package qcfcs_math;
 //                                      being null tested matrix1 (resulted in NullPointerException instead of
 //                                      IllegalArgumentException).
 //                                      Added is1By1() and convert1By1ToScalar().
-//      20170205    D.E. Reese          Added transpose() and transposeConjugate().
+//      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -396,6 +396,19 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method determines if a matrix is square, i.e., the number of rows equals the number of columns.
+     * @param theMatrix Matrix to be tested.
+     * @return  true if theMatrix is square; false otherwise.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static boolean isSquare(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+        if (theMatrix.numRows == theMatrix.numColumns) return true;
+        return false;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -620,5 +633,14 @@ public class ComplexMatrix implements Cloneable
     public ComplexMatrix transposeConjugate()
     {
         return ComplexMatrix.transposeConjugate(this);
+    }
+
+    /**
+     * This method determines if a matrix is square, i.e., if the number of rows equals the number of columns.
+     * @return  true if the matrix is square; false otherwise.
+     */
+    public boolean isSquare()
+    {
+        return ComplexMatrix.isSquare(this);
     }
 }

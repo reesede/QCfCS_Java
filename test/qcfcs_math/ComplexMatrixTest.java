@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexMatrix class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.2.2
+ * @version 2.4.1
  * @since 2.1.1
  */
 
@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170128    D.E. Reese          Added code to stubs for negate(), multiply() (scalar only), and cloneTest().
 //      20170201    D.E. Reese          Renamed multiply() to multiplyScalar() and added multiplyMatrix() test.
 //      20170203    D.E. Reese          Added code to testAndConvert1x1Matrix().
+//      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
 //
 
 class ComplexMatrixTest
@@ -1105,5 +1106,317 @@ class ComplexMatrixTest
         assertThrows(IllegalArgumentException.class, () -> {
             testMatrix.convert1By1ToScalar();
         });
+    }
+
+    @Test
+    void transpose()
+    {
+        ComplexMatrix theMatrix;
+        ComplexMatrix result;
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        result = ComplexMatrix.transpose(theMatrix);
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(1.0,1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(0,2, new Complex(3.0,3.0));
+        theMatrix.set(1,0, new Complex(4.0,4.0));
+        theMatrix.set(1,1, new Complex(5.0,5.0));
+        theMatrix.set(1,2, new Complex(6.0,6.0));
+        theMatrix.set(2,0, new Complex(7.0,7.0));
+        theMatrix.set(2,1, new Complex(8.0,8.0));
+        theMatrix.set(2,2, new Complex(9.0,9.0));
+        result = ComplexMatrix.transpose(theMatrix);
+        assertEquals(3, result.getNumRows());
+        assertEquals(3, result.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(0,2).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(1,2).equals(new Complex(6.0,6.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(7.0,7.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(8.0,8.0)));
+        assertTrue(theMatrix.get(2,2).equals(new Complex(9.0,9.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(4.0,4.0)));
+        assertTrue(result.get(0,2).equals(new Complex(7.0,7.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(5.0,5.0)));
+        assertTrue(result.get(1,2).equals(new Complex(8.0,8.0)));
+        assertTrue(result.get(2,0).equals(new Complex(3.0,3.0)));
+        assertTrue(result.get(2,1).equals(new Complex(6.0,6.0)));
+        assertTrue(result.get(2,2).equals(new Complex(9.0,9.0)));
+
+        theMatrix = new ComplexMatrix(3,2);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(1,0, new Complex(3.0,3.0));
+        theMatrix.set(1,1, new Complex(4.0,4.0));
+        theMatrix.set(2,0, new Complex(5.0,5.0));
+        theMatrix.set(2,1, new Complex(6.0,6.0));
+        result = ComplexMatrix.transpose(theMatrix);
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(6.0,6.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(3.0,3.0)));
+        assertTrue(result.get(0,2).equals(new Complex(5.0,5.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(4.0,4.0)));
+        assertTrue(result.get(1,2).equals(new Complex(6.0,6.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.transpose(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        result = theMatrix.transpose();
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(1.0,1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(0,2, new Complex(3.0,3.0));
+        theMatrix.set(1,0, new Complex(4.0,4.0));
+        theMatrix.set(1,1, new Complex(5.0,5.0));
+        theMatrix.set(1,2, new Complex(6.0,6.0));
+        theMatrix.set(2,0, new Complex(7.0,7.0));
+        theMatrix.set(2,1, new Complex(8.0,8.0));
+        theMatrix.set(2,2, new Complex(9.0,9.0));
+        result = theMatrix.transpose();
+        assertEquals(3, result.getNumRows());
+        assertEquals(3, result.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(0,2).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(1,2).equals(new Complex(6.0,6.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(7.0,7.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(8.0,8.0)));
+        assertTrue(theMatrix.get(2,2).equals(new Complex(9.0,9.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(4.0,4.0)));
+        assertTrue(result.get(0,2).equals(new Complex(7.0,7.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(5.0,5.0)));
+        assertTrue(result.get(1,2).equals(new Complex(8.0,8.0)));
+        assertTrue(result.get(2,0).equals(new Complex(3.0,3.0)));
+        assertTrue(result.get(2,1).equals(new Complex(6.0,6.0)));
+        assertTrue(result.get(2,2).equals(new Complex(9.0,9.0)));
+
+        theMatrix = new ComplexMatrix(3,2);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(1,0, new Complex(3.0,3.0));
+        theMatrix.set(1,1, new Complex(4.0,4.0));
+        theMatrix.set(2,0, new Complex(5.0,5.0));
+        theMatrix.set(2,1, new Complex(6.0,6.0));
+        result = theMatrix.transpose();
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(6.0,6.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(3.0,3.0)));
+        assertTrue(result.get(0,2).equals(new Complex(5.0,5.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(4.0,4.0)));
+        assertTrue(result.get(1,2).equals(new Complex(6.0,6.0)));
+    }
+
+    @Test
+    void transposeConjugate()
+    {
+        ComplexMatrix theMatrix;
+        ComplexMatrix result;
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        result = ComplexMatrix.transposeConjugate(theMatrix);
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(1.0,-1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(0,2, new Complex(3.0,3.0));
+        theMatrix.set(1,0, new Complex(4.0,4.0));
+        theMatrix.set(1,1, new Complex(5.0,5.0));
+        theMatrix.set(1,2, new Complex(6.0,6.0));
+        theMatrix.set(2,0, new Complex(7.0,7.0));
+        theMatrix.set(2,1, new Complex(8.0,8.0));
+        theMatrix.set(2,2, new Complex(9.0,9.0));
+        result = ComplexMatrix.transposeConjugate(theMatrix);
+        assertEquals(3, result.getNumRows());
+        assertEquals(3, result.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(0,2).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(1,2).equals(new Complex(6.0,6.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(7.0,7.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(8.0,8.0)));
+        assertTrue(theMatrix.get(2,2).equals(new Complex(9.0,9.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,-1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(4.0,-4.0)));
+        assertTrue(result.get(0,2).equals(new Complex(7.0,-7.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,-2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(5.0,-5.0)));
+        assertTrue(result.get(1,2).equals(new Complex(8.0,-8.0)));
+        assertTrue(result.get(2,0).equals(new Complex(3.0,-3.0)));
+        assertTrue(result.get(2,1).equals(new Complex(6.0,-6.0)));
+        assertTrue(result.get(2,2).equals(new Complex(9.0,-9.0)));
+
+        theMatrix = new ComplexMatrix(3,2);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(1,0, new Complex(3.0,3.0));
+        theMatrix.set(1,1, new Complex(4.0,4.0));
+        theMatrix.set(2,0, new Complex(5.0,5.0));
+        theMatrix.set(2,1, new Complex(6.0,6.0));
+        result = ComplexMatrix.transposeConjugate(theMatrix);
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(6.0,6.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,-1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(3.0,-3.0)));
+        assertTrue(result.get(0,2).equals(new Complex(5.0,-5.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,-2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(4.0,-4.0)));
+        assertTrue(result.get(1,2).equals(new Complex(6.0,-6.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.transpose(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        result = theMatrix.transposeConjugate();
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(1.0,-1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(0,2, new Complex(3.0,3.0));
+        theMatrix.set(1,0, new Complex(4.0,4.0));
+        theMatrix.set(1,1, new Complex(5.0,5.0));
+        theMatrix.set(1,2, new Complex(6.0,6.0));
+        theMatrix.set(2,0, new Complex(7.0,7.0));
+        theMatrix.set(2,1, new Complex(8.0,8.0));
+        theMatrix.set(2,2, new Complex(9.0,9.0));
+        result = theMatrix.transposeConjugate();
+        assertEquals(3, result.getNumRows());
+        assertEquals(3, result.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(0,2).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(1,2).equals(new Complex(6.0,6.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(7.0,7.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(8.0,8.0)));
+        assertTrue(theMatrix.get(2,2).equals(new Complex(9.0,9.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,-1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(4.0,-4.0)));
+        assertTrue(result.get(0,2).equals(new Complex(7.0,-7.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,-2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(5.0,-5.0)));
+        assertTrue(result.get(1,2).equals(new Complex(8.0,-8.0)));
+        assertTrue(result.get(2,0).equals(new Complex(3.0,-3.0)));
+        assertTrue(result.get(2,1).equals(new Complex(6.0,-6.0)));
+        assertTrue(result.get(2,2).equals(new Complex(9.0,-9.0)));
+
+        theMatrix = new ComplexMatrix(3,2);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(2.0,2.0));
+        theMatrix.set(1,0, new Complex(3.0,3.0));
+        theMatrix.set(1,1, new Complex(4.0,4.0));
+        theMatrix.set(2,0, new Complex(5.0,5.0));
+        theMatrix.set(2,1, new Complex(6.0,6.0));
+        result = theMatrix.transposeConjugate();
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,1.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(2.0,2.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(3.0,3.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(4.0,4.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(5.0,5.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(6.0,6.0)));
+        assertTrue(result.get(0,0).equals(new Complex(1.0,-1.0)));
+        assertTrue(result.get(0,1).equals(new Complex(3.0,-3.0)));
+        assertTrue(result.get(0,2).equals(new Complex(5.0,-5.0)));
+        assertTrue(result.get(1,0).equals(new Complex(2.0,-2.0)));
+        assertTrue(result.get(1,1).equals(new Complex(4.0,-4.0)));
+        assertTrue(result.get(1,2).equals(new Complex(6.0,-6.0)));
+    }
+
+    @Test
+    void isSquare()
+    {
+        ComplexMatrix theMatrix;
+
+        // Test class method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        assertTrue(ComplexMatrix.isSquare(theMatrix));
+
+        theMatrix = new ComplexMatrix(2,2);
+        theMatrix.set(0,0, new Complex(1.0));
+        theMatrix.set(0,1, new Complex(0.0,1.0));
+        theMatrix.set(1,0, new Complex(0.0, 1.0));
+        theMatrix.set(1,1, new Complex(1.0, 0.0));
+        assertTrue(ComplexMatrix.isSquare(theMatrix));
+
+        theMatrix = new ComplexMatrix(1,2);
+        assertFalse(ComplexMatrix.isSquare(theMatrix));
+
+        theMatrix = new ComplexMatrix(2,1);
+        assertFalse(ComplexMatrix.isSquare(theMatrix));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.isSquare(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        assertTrue(theMatrix.isSquare());
+
+        theMatrix = new ComplexMatrix(2,2);
+        theMatrix.set(0,0, new Complex(1.0));
+        theMatrix.set(0,1, new Complex(0.0,1.0));
+        theMatrix.set(1,0, new Complex(0.0, 1.0));
+        theMatrix.set(1,1, new Complex(1.0, 0.0));
+        assertTrue(theMatrix.isSquare());
+
+        theMatrix = new ComplexMatrix(1,2);
+        assertFalse(theMatrix.isSquare());
+
+        theMatrix = new ComplexMatrix(2,1);
+        assertFalse(theMatrix.isSquare());
     }
 }
