@@ -8,6 +8,8 @@ package qcfcs_math;
  * @since 2.1.1
  */
 
+//TODO: add trace() and innerProduct().
+
 // Copyright 2017 David E. Reese
 //
 // This file is part of QCfCS_java.
