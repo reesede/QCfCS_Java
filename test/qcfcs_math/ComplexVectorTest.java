@@ -521,18 +521,92 @@ class ComplexVectorTest
         ComplexVector vector2;
         Complex result;
 
+        // Test class method.
+
         vector1 = new ComplexVector(1);
         vector1.set(0, new Complex(1.0, 1.0));
         vector2 = new ComplexVector(1);
         vector2.set(0, new Complex(2.0,1.0));
         result = ComplexVector.innerProduct(vector1, vector2);
         assertTrue(result.equals(new Complex(3.0, -1.0)));
+
+        vector1 = new ComplexVector(3);
+        vector1.set(0, new Complex(1.0, 1.0));
+        vector1.set(1, new Complex(2.0,2.0));
+        vector1.set(2, new Complex(3.0,3.0));
+        result = ComplexVector.innerProduct(vector1, vector1);
+        assertTrue(result.equals(new Complex(28.0, 0.0)));
+
+        final ComplexVector testVector1 = new ComplexVector(3);
+        final ComplexVector testVector2 = new ComplexVector(4);
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.innerProduct(testVector1, testVector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.innerProduct(testVector1,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.innerProduct(null, testVector1);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.innerProduct(null,null);
+        });
+
+        // Test instance method.
+
+        vector1 = new ComplexVector(1);
+        vector1.set(0, new Complex(1.0, 1.0));
+        vector2 = new ComplexVector(1);
+        vector2.set(0, new Complex(2.0,1.0));
+        result = vector1.innerProduct(vector2);
+        assertTrue(result.equals(new Complex(3.0, -1.0)));
+
+        vector1 = new ComplexVector(3);
+        vector1.set(0, new Complex(1.0, 1.0));
+        vector1.set(1, new Complex(2.0,2.0));
+        vector1.set(2, new Complex(3.0,3.0));
+        result = vector1.innerProduct(vector1);
+        assertTrue(result.equals(new Complex(28.0, 0.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testVector1.innerProduct(testVector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testVector1.innerProduct(null);
+        });
+
     }
 
     @Test
     void size()
     {
+        ComplexVector theVector;
 
+        // Test class method.
+
+        theVector = new ComplexVector(1);
+        theVector.set(0, new Complex(1.0, 1.0));
+        assertEquals(1, ComplexVector.size(theVector));
+
+        theVector = new ComplexVector(3);
+        assertEquals(3, ComplexVector.size(theVector));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.size(null);
+        });
+
+        // Test instance method.
+
+        theVector = new ComplexVector(1);
+        theVector.set(0, new Complex(1.0, 1.0));
+        assertEquals(1, theVector.size());
+
+        theVector = new ComplexVector(3);
+        assertEquals(3, theVector.size());
     }
 
     @Test

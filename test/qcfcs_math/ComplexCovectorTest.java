@@ -383,24 +383,237 @@ class ComplexCovectorTest
     @Test
     void transpose()
     {
+        ComplexCovector theCovector;
+        ComplexVector result;
 
+        // Test class instance.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex (1.0, 1.0));
+        result = ComplexCovector.transpose(theCovector);
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(1, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, 1.0)));
+
+        theCovector = new ComplexCovector(3);
+        theCovector.set(0, new Complex(1.0, 1.0));
+        theCovector.set(1, new Complex(2.0, 2.0));
+        theCovector.set(2, new Complex(3.0, 3.0));
+        result = ComplexCovector.transpose(theCovector);
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(3, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertTrue(theCovector.get(1).equals(new Complex(2.0, 2.0)));
+        assertTrue(theCovector.get(2).equals(new Complex(3.0, 3.0)));
+        assertEquals(3, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, 1.0)));
+        assertTrue(result.get(1).equals(new Complex(2.0, 2.0)));
+        assertTrue(result.get(2).equals(new Complex(3.0, 3.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.transpose(null);
+        });
+
+        // Test instance instance.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex (1.0, 1.0));
+        result = theCovector.transpose();
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(1, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, 1.0)));
+
+        theCovector = new ComplexCovector(3);
+        theCovector.set(0, new Complex(1.0, 1.0));
+        theCovector.set(1, new Complex(2.0, 2.0));
+        theCovector.set(2, new Complex(3.0, 3.0));
+        result = theCovector.transpose();
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(3, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertTrue(theCovector.get(1).equals(new Complex(2.0, 2.0)));
+        assertTrue(theCovector.get(2).equals(new Complex(3.0, 3.0)));
+        assertEquals(3, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, 1.0)));
+        assertTrue(result.get(1).equals(new Complex(2.0, 2.0)));
+        assertTrue(result.get(2).equals(new Complex(3.0, 3.0)));
     }
 
     @Test
     void transposeConjugate()
     {
+        ComplexCovector theCovector;
+        ComplexVector result;
 
+        // Test class instance.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex (1.0, 1.0));
+        result = ComplexCovector.transposeConjugate(theCovector);
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(1, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, -1.0)));
+
+        theCovector = new ComplexCovector(3);
+        theCovector.set(0, new Complex(1.0, 1.0));
+        theCovector.set(1, new Complex(2.0, 2.0));
+        theCovector.set(2, new Complex(3.0, 3.0));
+        result = ComplexCovector.transposeConjugate(theCovector);
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(3, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertTrue(theCovector.get(1).equals(new Complex(2.0, 2.0)));
+        assertTrue(theCovector.get(2).equals(new Complex(3.0, 3.0)));
+        assertEquals(3, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, -1.0)));
+        assertTrue(result.get(1).equals(new Complex(2.0, -2.0)));
+        assertTrue(result.get(2).equals(new Complex(3.0, -3.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.transpose(null);
+        });
+
+        // Test instance instance.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex (1.0, 1.0));
+        result = theCovector.transposeConjugate();
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(1, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, -1.0)));
+
+        theCovector = new ComplexCovector(3);
+        theCovector.set(0, new Complex(1.0, 1.0));
+        theCovector.set(1, new Complex(2.0, 2.0));
+        theCovector.set(2, new Complex(3.0, 3.0));
+        result = theCovector.transposeConjugate();
+        assertEquals(1, theCovector.getNumRows());
+        assertEquals(3, theCovector.getNumColumns());
+        assertTrue(theCovector.get(0).equals(new Complex(1.0, 1.0)));
+        assertTrue(theCovector.get(1).equals(new Complex(2.0, 2.0)));
+        assertTrue(theCovector.get(2).equals(new Complex(3.0, 3.0)));
+        assertEquals(3, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0).equals(new Complex(1.0, -1.0)));
+        assertTrue(result.get(1).equals(new Complex(2.0, -2.0)));
+        assertTrue(result.get(2).equals(new Complex(3.0, -3.0)));
     }
 
     @Test
     void innerProduct()
     {
+        ComplexCovector covector1;
+        ComplexVector vector2;
+        Complex result;
+
+        // Test class method.
+
+        covector1 = new ComplexCovector(1);
+        covector1.set(0, new Complex(1.0, -1.0));
+        vector2 = new ComplexVector(1);
+        vector2.set(0, new Complex(2.0,1.0));
+        result = ComplexCovector.innerProduct(covector1, vector2);
+        assertTrue(result.equals(new Complex(3.0, -1.0)));
+
+        covector1 = new ComplexCovector(3);
+        covector1.set(0, new Complex(1.0, -1.0));
+        covector1.set(1, new Complex(2.0,-2.0));
+        covector1.set(2, new Complex(3.0,-3.0));
+        vector2 = new ComplexVector(3);
+        vector2.set(0, new Complex(1.0, 1.0));
+        vector2.set(1, new Complex(2.0,2.0));
+        vector2.set(2, new Complex(3.0,3.0));
+        result = ComplexCovector.innerProduct(covector1, vector2);
+        assertTrue(result.equals(new Complex(28.0, 0.0)));
+
+        final ComplexCovector testCovector1 = new ComplexCovector(3);
+        final ComplexVector testVector2 = new ComplexVector(4);
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.innerProduct(testCovector1, testVector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.innerProduct(testCovector1,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.innerProduct(null, testVector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.innerProduct(null,null);
+        });
+
+        // Test instance method.
+
+        covector1 = new ComplexCovector(1);
+        covector1.set(0, new Complex(1.0, -1.0));
+        vector2 = new ComplexVector(1);
+        vector2.set(0, new Complex(2.0,1.0));
+        result = covector1.innerProduct(vector2);
+        assertTrue(result.equals(new Complex(3.0, -1.0)));
+
+        covector1 = new ComplexCovector(3);
+        covector1.set(0, new Complex(1.0,-1.0));
+        covector1.set(1, new Complex(2.0,-2.0));
+        covector1.set(2, new Complex(3.0,-3.0));
+        vector2 = new ComplexVector(3);
+        vector2.set(0, new Complex(1.0,1.0));
+        vector2.set(1, new Complex(2.0,2.0));
+        vector2.set(2, new Complex(3.0,3.0));
+        result = covector1.innerProduct(vector2);
+        assertTrue(result.equals(new Complex(28.0, 0.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testCovector1.innerProduct(testVector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testCovector1.innerProduct(null);
+        });
 
     }
 
     @Test
     void size()
     {
+        ComplexCovector theCovector;
 
+        // Test class method.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex(1.0, 1.0));
+        assertEquals(1, ComplexCovector.size(theCovector));
+
+        theCovector = new ComplexCovector(3);
+        assertEquals(3, ComplexCovector.size(theCovector));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.size(null);
+        });
+
+        // Test instance method.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex(1.0, 1.0));
+        assertEquals(1, theCovector.size());
+
+        theCovector = new ComplexCovector(3);
+        assertEquals(3, theCovector.size());
     }
 }
