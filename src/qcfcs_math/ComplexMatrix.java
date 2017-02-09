@@ -8,7 +8,7 @@ package qcfcs_math;
  * @since 2.1.1
  */
 
-//TODO: add trace() and innerProduct().
+//TODO: add innerProduct().
 
 // Copyright 2017 David E. Reese
 //
@@ -39,6 +39,7 @@ package qcfcs_math;
 //                                      IllegalArgumentException).
 //                                      Added is1By1() and convert1By1ToScalar().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
+//      20170209    D.E. Reese          Added trace().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -411,6 +412,23 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method returns the trace of a square matrix, i.e., the sum of the diagonal elements.
+     * @param theMatrix Matrix whose trace is to be found.
+     * @return  Trace of the matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null or theMatrix is not square.
+     */
+    public static Complex trace(ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+        if (!(theMatrix.isSquare())) throw new IllegalArgumentException("theMatrix is not square.");
+
+        Complex result = new Complex();
+        for(int i = 0; i < theMatrix.numRows; i++)
+            result = result.add(theMatrix.theData[i][i]);
+        return result;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -644,5 +662,14 @@ public class ComplexMatrix implements Cloneable
     public boolean isSquare()
     {
         return ComplexMatrix.isSquare(this);
+    }
+
+    /**
+     * This method returns the trace of a square matrix, i.e., the sum of the diagonal elements.
+     * @return  Trace of this matrix.
+     */
+    public Complex trace()
+    {
+        return ComplexMatrix.trace(this);
     }
 }

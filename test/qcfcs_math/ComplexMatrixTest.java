@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170201    D.E. Reese          Renamed multiply() to multiplyScalar() and added multiplyMatrix() test.
 //      20170203    D.E. Reese          Added code to testAndConvert1x1Matrix().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
+//      20170209    D.E. Reese          Added trace().
 //
 
 class ComplexMatrixTest
@@ -1418,5 +1419,35 @@ class ComplexMatrixTest
 
         theMatrix = new ComplexMatrix(2,1);
         assertFalse(theMatrix.isSquare());
+    }
+
+    @Test
+    void trace()
+    {
+        ComplexMatrix theMatrix;
+
+        // Test class method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        assertTrue(ComplexMatrix.trace(theMatrix).equals(new Complex(1.0,1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(1,1, new Complex(2.0,2.0));
+        theMatrix.set(2,2, new Complex(-5.0,-4.0));
+        assertTrue(ComplexMatrix.trace(theMatrix).equals(new Complex(-2.0,-1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(10.0,1.0));
+        theMatrix.set(0,2, new Complex(1.0,10.0));
+        theMatrix.set(1,0, new Complex(-5.0,3.0));
+        theMatrix.set(1,1, new Complex(2.0,2.0));
+        theMatrix.set(1,2, new Complex(2.0,-2.0));
+        theMatrix.set(2,0, new Complex(7.0,6.0));
+        theMatrix.set(2,1, new Complex(8.0,3.0));
+        theMatrix.set(2,2, new Complex(-5.0,-4.0));
+        assertTrue(ComplexMatrix.trace(theMatrix).equals(new Complex(-2.0,-1.0)));
     }
 }
