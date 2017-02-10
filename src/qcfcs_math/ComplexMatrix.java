@@ -8,8 +8,6 @@ package qcfcs_math;
  * @since 2.1.1
  */
 
-//TODO: add innerProduct().
-
 // Copyright 2017 David E. Reese
 //
 // This file is part of QCfCS_java.
@@ -40,6 +38,7 @@ package qcfcs_math;
 //                                      Added is1By1() and convert1By1ToScalar().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
 //      20170209    D.E. Reese          Added trace().
+//      20170210    D.E. Reese          Added innerProduct(). Finalized method parameters.
 //
 
 public class ComplexMatrix implements Cloneable
@@ -65,7 +64,7 @@ public class ComplexMatrix implements Cloneable
      * @param columns   Number of columns in matrix.
      * @throws IllegalArgumentException Thrown if rows <= 0 or columns <= 0.
      */
-    public ComplexMatrix(int rows, int columns) throws IllegalArgumentException
+    public ComplexMatrix(final int rows, final int columns) throws IllegalArgumentException
     {
         // Verify that the rows and columns are valid.
 
@@ -92,7 +91,7 @@ public class ComplexMatrix implements Cloneable
      * @param theMatrix Matrix of complex numbers to be copied to the new matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null or has internal data inconsistencies.
      */
-    public ComplexMatrix(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public ComplexMatrix(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         // Verify that theMatrix is correct.
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
@@ -118,7 +117,7 @@ public class ComplexMatrix implements Cloneable
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      * @throws IndexOutOfBoundsException    Thrown if row or column are out of bounds.
      */
-    public static Complex get (ComplexMatrix theMatrix, int row, int column) throws IllegalArgumentException, IndexOutOfBoundsException
+    public static Complex get (final ComplexMatrix theMatrix, final int row, final int column) throws IllegalArgumentException, IndexOutOfBoundsException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if ((row < 0) || (row >= theMatrix.numRows)) throw new IndexOutOfBoundsException("row < 0 or row >= theMatrix.numRows");
@@ -156,7 +155,7 @@ public class ComplexMatrix implements Cloneable
      * @return  New matrix with element [i][j] the sum of matrix1[i][j] + matrix2[i][j].
      * @throws IllegalArgumentException Thrown if matrix1 is null, matrix2 is null, or matrix1 and matrix2 are not the same size.
      */
-    public static ComplexMatrix add(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
+    public static ComplexMatrix add(final ComplexMatrix matrix1, final ComplexMatrix matrix2) throws IllegalArgumentException
     {
         if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
         if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
@@ -177,7 +176,7 @@ public class ComplexMatrix implements Cloneable
      * @return  New matrix with element [i][j] the sum of matrix1[i][j] - matrix2[i][j].
      * @throws IllegalArgumentException Thrown if matrix1 is null, matrix2 is null, or matrix1 and matrix2 are not the same size.
      */
-    public static ComplexMatrix subtract(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
+    public static ComplexMatrix subtract(final ComplexMatrix matrix1, final ComplexMatrix matrix2) throws IllegalArgumentException
     {
         if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
         if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
@@ -198,7 +197,7 @@ public class ComplexMatrix implements Cloneable
      * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
      * @throws IllegalArgumentException Thrown if theMatrix is null or multiplier is null.
      */
-    public static ComplexMatrix multiply(ComplexMatrix theMatrix, Complex multiplier) throws IllegalArgumentException
+    public static ComplexMatrix multiply(final ComplexMatrix theMatrix, final Complex multiplier) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if (multiplier == null) throw new IllegalArgumentException("multiplier is null.");
@@ -217,7 +216,7 @@ public class ComplexMatrix implements Cloneable
      * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static ComplexMatrix multiply(ComplexMatrix theMatrix, double multiplier) throws IllegalArgumentException
+    public static ComplexMatrix multiply(final ComplexMatrix theMatrix, final double multiplier) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -235,7 +234,7 @@ public class ComplexMatrix implements Cloneable
      * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static ComplexMatrix multiply(ComplexMatrix theMatrix, float multiplier) throws IllegalArgumentException
+    public static ComplexMatrix multiply(final ComplexMatrix theMatrix, final float multiplier) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -253,7 +252,7 @@ public class ComplexMatrix implements Cloneable
      * @return  New matrix whose elements are the elements of theMatrix multiplied by multiplier.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static ComplexMatrix multiply(ComplexMatrix theMatrix, int multiplier) throws IllegalArgumentException
+    public static ComplexMatrix multiply(final ComplexMatrix theMatrix, final int multiplier) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -271,7 +270,7 @@ public class ComplexMatrix implements Cloneable
      * @return  The product of matrix1 * matrix2.
      * @throws IllegalArgumentException Thrown if matrix1 is null, matrix2 is null, or the dimensions of the matrices do not allow matrix multiplication.
      */
-    public static ComplexMatrix multiply(ComplexMatrix matrix1, ComplexMatrix matrix2) throws IllegalArgumentException
+    public static ComplexMatrix multiply(final ComplexMatrix matrix1, final ComplexMatrix matrix2) throws IllegalArgumentException
     {
         if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
         if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
@@ -298,7 +297,7 @@ public class ComplexMatrix implements Cloneable
      * @return  The arithmetic inverse of the matrix, i.e., each element multiplied by -1.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static ComplexMatrix negate(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static ComplexMatrix negate(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -315,7 +314,7 @@ public class ComplexMatrix implements Cloneable
      * @return  Number of rows in the matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static int getNumRows(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static int getNumRows(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         return theMatrix.numRows;
@@ -327,7 +326,7 @@ public class ComplexMatrix implements Cloneable
      * @return  Number of rows in the matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static int getNumColumns(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static int getNumColumns(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         return theMatrix.numColumns;
@@ -339,7 +338,7 @@ public class ComplexMatrix implements Cloneable
      * @return  true if theMatrix has 1 row and 1 column; false otherwise.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static boolean is1By1(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static boolean is1By1(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -354,7 +353,7 @@ public class ComplexMatrix implements Cloneable
      * @return  Complex number set to the value of the only element in the matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null, theMatrix is not 1x1.
      */
-    public static Complex convert1By1ToScalar(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static Complex convert1By1ToScalar(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if ((theMatrix.numRows != 1) || (theMatrix.numColumns != 1))
@@ -369,7 +368,7 @@ public class ComplexMatrix implements Cloneable
      * @return  Transpose of the matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static ComplexMatrix transpose(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static ComplexMatrix transpose(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -387,7 +386,7 @@ public class ComplexMatrix implements Cloneable
      * @return  Transpose conjugate of the matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static ComplexMatrix transposeConjugate(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static ComplexMatrix transposeConjugate(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
 
@@ -404,7 +403,7 @@ public class ComplexMatrix implements Cloneable
      * @return  true if theMatrix is square; false otherwise.
      * @throws IllegalArgumentException Thrown if theMatrix is null.
      */
-    public static boolean isSquare(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static boolean isSquare(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if (theMatrix.numRows == theMatrix.numColumns) return true;
@@ -417,7 +416,7 @@ public class ComplexMatrix implements Cloneable
      * @return  Trace of the matrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null or theMatrix is not square.
      */
-    public static Complex trace(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static Complex trace(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if (!(theMatrix.isSquare())) throw new IllegalArgumentException("theMatrix is not square.");
@@ -429,12 +428,31 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method returns the inner product of two square complex matrices of the same size, i.e. the trace of the
+     * product of multiplying the transpose conjugate of matrix1 times matrix2.
+     * @param matrix1   First matrix for finding inner product.
+     * @param matrix2   Second matrix for finding inner product.
+     * @return  Complex which represents the inner product of the two matrices.
+     * @throws IllegalArgumentException Thrown if either matrix is null, either is not square, or their dimensions are different.
+     */
+    public static Complex innerProduct(final ComplexMatrix matrix1, final ComplexMatrix matrix2) throws IllegalArgumentException
+    {
+        if (matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
+        if (matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
+        if (!matrix1.isSquare()) throw new IllegalArgumentException("matrix1 is not square.");
+        if (!matrix2.isSquare()) throw new IllegalArgumentException("matrix2 is not square.");
+        if (matrix1.numRows != matrix2.numRows) throw new IllegalArgumentException("matrix1 and matrix2 are not the same dimension.");
+
+        return matrix1.transposeConjugate().multiply(matrix2).trace();
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
      * @return  Element at this[row][column]
      */
-    public Complex get(int row, int column)
+    public Complex get(final int row, final int column)
     {
         return ComplexMatrix.get(this, row, column);
     }
@@ -446,7 +464,7 @@ public class ComplexMatrix implements Cloneable
      * @param element   New value of the specified element.
      * @return  Previous value of the element.
      */
-    public Complex set(int row, int column, Complex element)
+    public Complex set(final int row, final int column, final Complex element)
     {
         return ComplexMatrix.set(this, row, column, element);
     }
@@ -459,7 +477,7 @@ public class ComplexMatrix implements Cloneable
      * @param element   New value of the specified element.
      * @return  Previous value of the element.
      */
-    public Complex set(int row, int column, double element)
+    public Complex set(final int row, final int column, final double element)
     {
         return ComplexMatrix.set(this, row, column, new Complex(element));
     }
@@ -472,7 +490,7 @@ public class ComplexMatrix implements Cloneable
      * @param element   New value of the specified element.
      * @return  Previous value of the element.
      */
-    public Complex set(int row, int column, float element) throws IndexOutOfBoundsException
+    public Complex set(final int row, final int column, final float element) throws IndexOutOfBoundsException
     {
         return ComplexMatrix.set(this, row, column, new Complex(element));
     }
@@ -485,7 +503,7 @@ public class ComplexMatrix implements Cloneable
      * @param element   New value of the specified element.
      * @return  Previous value of the element.
      */
-    public Complex set(int row, int column, int element) throws IndexOutOfBoundsException
+    public Complex set(final int row, final int column, final int element) throws IndexOutOfBoundsException
     {
         return ComplexMatrix.set(this, row, column, new Complex(element));
     }
@@ -497,7 +515,7 @@ public class ComplexMatrix implements Cloneable
      * @param element   New value of the specified element.
      * @return  Previous value of the element.
      */
-    public Complex set(int row, int column, PolarCoordinate element)
+    public Complex set(final int row, final int column, final PolarCoordinate element)
     {
         return ComplexMatrix.set(this, row, column, new Complex(element));
     }
@@ -527,7 +545,7 @@ public class ComplexMatrix implements Cloneable
      * @param matrix1   Matrix to add to this matrix.
      * @return  Sum of this matrix and matrix1.
      */
-    public ComplexMatrix add(ComplexMatrix matrix1)
+    public ComplexMatrix add(final ComplexMatrix matrix1)
     {
         return ComplexMatrix.add(this, matrix1);
     }
@@ -537,7 +555,7 @@ public class ComplexMatrix implements Cloneable
      * @param matrix1   Matrix to subtract from this matrix.
      * @return  Differance of this matrix and matrix1.
      */
-    public ComplexMatrix subtract(ComplexMatrix matrix1)
+    public ComplexMatrix subtract(final ComplexMatrix matrix1)
     {
         return ComplexMatrix.subtract(this, matrix1);
     }
@@ -547,7 +565,7 @@ public class ComplexMatrix implements Cloneable
      * @param multiplier    Complex scalar by which to multiply the matrix.
      * @return  Product of scalar multiplication of this matrix by multiplier.
      */
-    public ComplexMatrix multiply(Complex multiplier)
+    public ComplexMatrix multiply(final Complex multiplier)
     {
         return ComplexMatrix.multiply(this, multiplier);
     }
@@ -557,7 +575,7 @@ public class ComplexMatrix implements Cloneable
      * @param multiplier    Double scalar by which to multiply the matrix.
      * @return  Product of scalar multiplication of this matrix by multiplier.
      */
-    public ComplexMatrix multiply(double multiplier)
+    public ComplexMatrix multiply(final double multiplier)
     {
         return ComplexMatrix.multiply(this, multiplier);
     }
@@ -567,7 +585,7 @@ public class ComplexMatrix implements Cloneable
      * @param multiplier    Float scalar by which to multiply the matrix.
      * @return  Product of scalar multiplication of this matrix by multiplier.
      */
-    public ComplexMatrix multiply(float multiplier)
+    public ComplexMatrix multiply(final float multiplier)
     {
         return ComplexMatrix.multiply(this, multiplier);
     }
@@ -577,7 +595,7 @@ public class ComplexMatrix implements Cloneable
      * @param multiplier    Int scalar by which to multiply the matrix.
      * @return  Product of scalar multiplication of this matrix by multiplier.
      */
-    public ComplexMatrix multiply(int multiplier)
+    public ComplexMatrix multiply(final int multiplier)
     {
         return ComplexMatrix.multiply(this, multiplier);
     }
@@ -587,7 +605,7 @@ public class ComplexMatrix implements Cloneable
      * @param multiplier    Matrix by which this matrix is to be multiplied.
      * @return  Product of this matrix multiplied by multiplier.
      */
-    public ComplexMatrix multiply(ComplexMatrix multiplier)
+    public ComplexMatrix multiply(final ComplexMatrix multiplier)
     {
         return ComplexMatrix.multiply(this, multiplier);
     }
@@ -671,5 +689,16 @@ public class ComplexMatrix implements Cloneable
     public Complex trace()
     {
         return ComplexMatrix.trace(this);
+    }
+
+    /**
+     * This method finds the inner product between this matrix and another matrix. Note that this matrix is
+     * transposed.
+     * @param matrix2   Matrix to find the inner product with this matrix.
+     * @return  Inner product of this matrix and matrix2.
+     */
+    public Complex innerProduct(final ComplexMatrix matrix2)
+    {
+        return ComplexMatrix.innerProduct(this, matrix2);
     }
 }

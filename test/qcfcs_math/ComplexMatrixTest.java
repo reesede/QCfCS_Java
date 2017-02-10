@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170203    D.E. Reese          Added code to testAndConvert1x1Matrix().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
 //      20170209    D.E. Reese          Added trace().
+//      20170210    D.E. Reese          Finished trace(). Added innerProduct().
 //
 
 class ComplexMatrixTest
@@ -1449,5 +1450,53 @@ class ComplexMatrixTest
         theMatrix.set(2,1, new Complex(8.0,3.0));
         theMatrix.set(2,2, new Complex(-5.0,-4.0));
         assertTrue(ComplexMatrix.trace(theMatrix).equals(new Complex(-2.0,-1.0)));
+
+        final ComplexMatrix testMatrix = new ComplexMatrix(3,5);
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.trace(testMatrix);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.trace(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0, new Complex(1.0, 1.0));
+        assertTrue(theMatrix.trace().equals(new Complex(1.0,1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(1,1, new Complex(2.0,2.0));
+        theMatrix.set(2,2, new Complex(-5.0,-4.0));
+        assertTrue(theMatrix.trace().equals(new Complex(-2.0,-1.0)));
+
+        theMatrix = new ComplexMatrix(3,3);
+        theMatrix.set(0,0, new Complex(1.0,1.0));
+        theMatrix.set(0,1, new Complex(10.0,1.0));
+        theMatrix.set(0,2, new Complex(1.0,10.0));
+        theMatrix.set(1,0, new Complex(-5.0,3.0));
+        theMatrix.set(1,1, new Complex(2.0,2.0));
+        theMatrix.set(1,2, new Complex(2.0,-2.0));
+        theMatrix.set(2,0, new Complex(7.0,6.0));
+        theMatrix.set(2,1, new Complex(8.0,3.0));
+        theMatrix.set(2,2, new Complex(-5.0,-4.0));
+        assertTrue(theMatrix.trace().equals(new Complex(-2.0,-1.0)));
+    }
+
+    @Test
+    void innerProduct()
+    {
+        ComplexMatrix matrix1;
+        ComplexMatrix matrix2;
+        Complex result;
+
+        matrix1 = new ComplexMatrix(1,1);
+        matrix2 = new ComplexMatrix(1,1);
+        matrix1.set(0,0, new Complex(1.0, 1.0));
+        matrix2.set(0,0, new Complex(2.0,2.0));
+        result = ComplexMatrix.innerProduct(matrix1, matrix2);
+        assertTrue(result.equals(new Complex(4.0, 0)));
     }
 }
