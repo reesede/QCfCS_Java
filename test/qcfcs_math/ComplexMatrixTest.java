@@ -1492,11 +1492,92 @@ class ComplexMatrixTest
         ComplexMatrix matrix2;
         Complex result;
 
+        // Test class method.
+
         matrix1 = new ComplexMatrix(1,1);
         matrix2 = new ComplexMatrix(1,1);
         matrix1.set(0,0, new Complex(1.0, 1.0));
         matrix2.set(0,0, new Complex(2.0,2.0));
         result = ComplexMatrix.innerProduct(matrix1, matrix2);
         assertTrue(result.equals(new Complex(4.0, 0)));
+
+        matrix1 = new ComplexMatrix(3,3);
+        matrix2 = new ComplexMatrix(3,3);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix1.set(1,1,new Complex(2.0,2.0));
+        matrix1.set(2,2,new Complex(3.0,3.0));
+        matrix2.set(0,0,new Complex(1.0,-1.0));
+        matrix2.set(1,1,new Complex(2.0,0.0));
+        matrix2.set(2,2,new Complex(1.0,0.0));
+        result = ComplexMatrix.innerProduct(matrix1,matrix2);
+        assertTrue(result.equals(new Complex(7.0,-9.0)));
+
+        matrix1 = new ComplexMatrix(2,2);
+        matrix2 = new ComplexMatrix(2,2);
+        matrix1.set(0,0,new Complex(1.0,0.0));
+        matrix1.set(0,1,new Complex(0.0,1.0));
+        matrix1.set(1,0,new Complex(0.0,-1.0));
+        matrix1.set(1,1,new Complex(1.0,1.0));
+        matrix2.set(0,0,new Complex(1.0,0.0));
+        matrix2.set(1,0,new Complex(0.0,1.0));
+        matrix2.set(0,1,new Complex(0.0,1.0));
+        result = ComplexMatrix.innerProduct(matrix1,matrix2);
+        assertTrue(result.equals(new Complex(1.0,0.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.innerProduct(new ComplexMatrix(2,2), null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.innerProduct(null, new ComplexMatrix(2,2));
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.innerProduct(null, null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.innerProduct(new ComplexMatrix(2,3), new ComplexMatrix(2,2));
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.innerProduct(new ComplexMatrix(2,2), new ComplexMatrix(2,3));
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.innerProduct(new ComplexMatrix(2,2), new ComplexMatrix(3,3));
+        });
+
+        // Test instance method.
+
+        matrix1 = new ComplexMatrix(1,1);
+        matrix2 = new ComplexMatrix(1,1);
+        matrix1.set(0,0, new Complex(1.0, 1.0));
+        matrix2.set(0,0, new Complex(2.0,2.0));
+        result = matrix1.innerProduct(matrix2);
+        assertTrue(result.equals(new Complex(4.0, 0)));
+
+        matrix1 = new ComplexMatrix(3,3);
+        matrix2 = new ComplexMatrix(3,3);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix1.set(1,1,new Complex(2.0,2.0));
+        matrix1.set(2,2,new Complex(3.0,3.0));
+        matrix2.set(0,0,new Complex(1.0,-1.0));
+        matrix2.set(1,1,new Complex(2.0,0.0));
+        matrix2.set(2,2,new Complex(1.0,0.0));
+        result = matrix1.innerProduct(matrix2);
+        assertTrue(result.equals(new Complex(7.0,-9.0)));
+
+        matrix1 = new ComplexMatrix(2,2);
+        matrix2 = new ComplexMatrix(2,2);
+        matrix1.set(0,0,new Complex(1.0,0.0));
+        matrix1.set(0,1,new Complex(0.0,1.0));
+        matrix1.set(1,0,new Complex(0.0,-1.0));
+        matrix1.set(1,1,new Complex(1.0,1.0));
+        matrix2.set(0,0,new Complex(1.0,0.0));
+        matrix2.set(1,0,new Complex(0.0,1.0));
+        matrix2.set(0,1,new Complex(0.0,1.0));
+        result = matrix1.innerProduct(matrix2);
+        assertTrue(result.equals(new Complex(1.0,0.0)));
     }
 }

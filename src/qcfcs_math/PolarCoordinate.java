@@ -6,7 +6,7 @@ import java.lang.Math;
  * This class implements polar coordinates.
  * Created by reesede on 1/7/2017.
  * @author David E. Reese
- * @version 1.3.3
+ * @version 2.4.1
  * @since 1.3.1
  */
 
@@ -34,6 +34,7 @@ import java.lang.Math;
 //                                      Added isZero, multiply, divide, and power operations (Programming Drill 1.3.3).
 //      20170115    D.E. Reese          Converted standard range of angles from -PI...PI to 0...2*PI.
 //                                      Added check to angleToStandardRange for -0.0. In this case, convert it to 0.0.
+//      20170210    D.E. Reese          Added toString().
 //
 
 public class PolarCoordinate
@@ -354,6 +355,17 @@ public class PolarCoordinate
     }
 
     /**
+     * This method converts a polar coordinate into a string.
+     * @param theCoord  PolarCoordinate to be converted to a string.
+     * @return  String representation of theCoord or null if theCoord is null.
+     */
+    public static String toString(PolarCoordinate theCoord)
+    {
+        if (theCoord == null) return null;
+        return new String("r = " + theCoord.radius + ", phi = " + theCoord.angle);
+    }
+
+    /**
      * This method returns the angle of the polar coordinate.
      * @return          Angle of the polar coordinate.
      */
@@ -481,4 +493,12 @@ public class PolarCoordinate
         return PolarCoordinate.pow(this, thePower);
     }
 
+    /**
+     * This method converts a PolarCoordinate into a string.
+     * @return  String representation of this PolarCoordinate.
+     */
+    public String toString()
+    {
+        return PolarCoordinate.toString(this);
+    }
 }

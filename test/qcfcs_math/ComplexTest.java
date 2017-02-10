@@ -46,6 +46,7 @@ import java.lang.IllegalArgumentException;
 //      20170124    D.E. Reese          Added code to equals() and negate() stubs.
 //      20170125    D.E. Reese          Added code to test equals() for double, float, and int.
 //      20170205    D.E. Reese          Added transpose() and transposeConjugate().
+//      20170210    D.E. Reese          Added testToString() and set(). Deleted transpose() and transposeConjugate().
 //
 class ComplexTest
 {
@@ -104,6 +105,68 @@ class ComplexTest
         Complex newNum = new Complex(theNum);
         assertEquals(1.0, newNum.getReal());
         assertEquals(2.0, theNum.getImag());
+    }
+
+    @Test
+    void set()
+    {
+        Complex theComplex;
+        Complex test1;
+
+        // Test class method.
+
+        test1 = new Complex(1.0,1.0);
+        theComplex = new Complex();
+        Complex.set(theComplex, test1);
+        assertEquals(1.0, theComplex.getReal());
+        assertEquals(1.0, theComplex.getImag());
+        assertEquals(1.0, test1.getReal());
+        assertEquals(1.0, test1.getImag());
+
+        Complex.set(theComplex, 2.0, 2.0);
+        assertEquals(2.0, theComplex.getReal());
+        assertEquals(2.0, theComplex.getImag());
+        assertEquals(1.0, test1.getReal());
+        assertEquals(1.0, test1.getImag());
+
+        Complex.set(test1, 3.0,3.0);
+        assertEquals(2.0, theComplex.getReal());
+        assertEquals(2.0, theComplex.getImag());
+        assertEquals(3.0, test1.getReal());
+        assertEquals(3.0, test1.getImag());
+
+        final Complex test2 = new Complex(4.0, 4.0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.set(test2, null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.set(null, test2);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.set(null, null);
+        });
+
+        // Test instance method.
+
+        test1 = new Complex(1.0,1.0);
+        theComplex = new Complex();
+        theComplex.set(test1);
+        assertEquals(1.0, theComplex.getReal());
+        assertEquals(1.0, theComplex.getImag());
+        assertEquals(1.0, test1.getReal());
+        assertEquals(1.0, test1.getImag());
+
+        theComplex.set(2.0, 2.0);
+        assertEquals(2.0, theComplex.getReal());
+        assertEquals(2.0, theComplex.getImag());
+        assertEquals(1.0, test1.getReal());
+        assertEquals(1.0, test1.getImag());
+
+        test1.set(3.0,3.0);
+        assertEquals(2.0, theComplex.getReal());
+        assertEquals(2.0, theComplex.getImag());
+        assertEquals(3.0, test1.getReal());
+        assertEquals(3.0, test1.getImag());
     }
 
     @Test
@@ -1248,8 +1311,13 @@ class ComplexTest
     @Test
     void negate()
     {
-        Complex theNum = new Complex();
-        Complex result = Complex.negate(theNum);
+        Complex theNum;
+        Complex result;
+
+        // Test class method.
+
+        theNum = new Complex();
+        result = Complex.negate(theNum);
         assertEquals(0.0, result.getReal());
         assertEquals(0.0, result.getImag());
 
@@ -1273,17 +1341,68 @@ class ComplexTest
         assertEquals(0.0, result.getReal());
         assertEquals(1.0, result.getImag());
 
+        assertThrows(IllegalArgumentException.class, () -> {
+            Complex.negate(null);
+        });
+
+        // Test instance method.
+
+        theNum = new Complex();
+        result = theNum.negate();
+        assertEquals(0.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(1.0);
+        result = theNum.negate();
+        assertEquals(-1.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(-1.0);
+        result = theNum.negate();
+        assertEquals(1.0, result.getReal());
+        assertEquals(0.0, result.getImag());
+
+        theNum = new Complex(0.0, 1.0);
+        result = theNum.negate();
+        assertEquals(0.0, result.getReal());
+        assertEquals(-1.0, result.getImag());
+
+        theNum = new Complex(0.0, -1.0);
+        result = theNum.negate();
+        assertEquals(0.0, result.getReal());
+        assertEquals(1.0, result.getImag());
     }
 
     @Test
-    void transpose()
+    void testToString()
     {
+        Complex theComplex;
 
+        // Test class method.
+
+        theComplex = new Complex (1.0, 0.0);
+        assertTrue(Complex.toString(theComplex).compareTo("1.0") == 0);
+        theComplex = new Complex (-1.0, 0.0);
+        assertTrue(Complex.toString(theComplex).compareTo("-1.0") == 0);
+        theComplex = new Complex(1.0,1.0);
+        assertTrue(Complex.toString(theComplex).compareTo("1.0 + 1.0*I") == 0);
+        theComplex = new Complex(1.0,-1.0);
+        assertTrue(Complex.toString(theComplex).compareTo("1.0 - 1.0*I") == 0);
+        theComplex = new Complex(-1.0,-1.0);
+        assertTrue(Complex.toString(theComplex).compareTo("-1.0 - 1.0*I") == 0);
+
+        // Test instance method.
+
+        theComplex = new Complex (1.0, 0.0);
+        assertTrue(theComplex.toString().compareTo("1.0") == 0);
+        theComplex = new Complex (-1.0, 0.0);
+        assertTrue(theComplex.toString().compareTo("-1.0") == 0);
+        theComplex = new Complex(1.0,1.0);
+        assertTrue(theComplex.toString().compareTo("1.0 + 1.0*I") == 0);
+        theComplex = new Complex(1.0,-1.0);
+        assertTrue(theComplex.toString().compareTo("1.0 - 1.0*I") == 0);
+        theComplex = new Complex(-1.0,-1.0);
+        assertTrue(theComplex.toString().compareTo("-1.0 - 1.0*I") == 0);
     }
 
-    @Test
-    void transposeConjugate()
-    {
-
-    }
 }

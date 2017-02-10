@@ -5,7 +5,7 @@ package qcfcs_math;
  * convert -0.0 to 0.0.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.1.1
+ * @version 2.4.1
  * @since 1.1.1
  */
 
@@ -45,6 +45,7 @@ package qcfcs_math;
 //      20170125    D.E. Reese          Added equals() methods to compare a complex to double, float, and int.
 //      20170128    D.E. Reese          Added fixZero() method to convert -0.0 to 0.0 and modified all methods that
 //                                      set the real or imaginary parts to call it on it.
+//      20170210    D.E. Reese          Added toString() and set(). Finalized parameters to methods.
 //
 
 public class Complex
@@ -73,7 +74,7 @@ public class Complex
      * Constructor which sets the complex number to a real number.
      * @param theReal   Real part of the new complex number.
      */
-    public Complex(double theReal)
+    public Complex(final double theReal)
     {
         realPart = Complex.fixZero(theReal);
         imagPart = 0.0;
@@ -85,7 +86,7 @@ public class Complex
      * @param theImag   Imaginary part of the new complex number.
      */
 
-    public Complex (double theReal, double theImag)
+    public Complex (final double theReal, final double theImag)
     {
         realPart = Complex.fixZero(theReal);
         imagPart = Complex.fixZero(theImag);
@@ -96,7 +97,7 @@ public class Complex
      * @param theCoord  Polar coordinate whose values are used to form a new complex number.
      * @throws IllegalArgumentException Thrown if theCoord is null.
      */
-    public Complex(PolarCoordinate theCoord) throws IllegalArgumentException
+    public Complex(final PolarCoordinate theCoord) throws IllegalArgumentException
     {
         if(theCoord == null) throw new IllegalArgumentException("theCoord is null");
         Complex newNum = theCoord.toComplex();
@@ -110,7 +111,7 @@ public class Complex
      * @param theNum    Complex number whose real and imaginary parts will be set to those of the new complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public Complex (Complex theNum) throws IllegalArgumentException
+    public Complex (final Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         this.realPart = Complex.fixZero(theNum.realPart);
@@ -123,7 +124,7 @@ public class Complex
      * @param theNum    Double to be checked and converted to 0.0 if -0.0.
      * @return  theNum unless theNum == -0.0, in which case it returns 0.0.
      */
-    private static double fixZero(double theNum)
+    private static double fixZero(final double theNum)
     {
         if (theNum == -0.0)
             return 0.0;
@@ -136,7 +137,7 @@ public class Complex
      * @return          Real part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static double getReal (Complex theNum) throws IllegalArgumentException
+    public static double getReal (final Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         return Complex.fixZero(theNum.realPart);
@@ -148,10 +149,38 @@ public class Complex
      * @return          Imaginary part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static double getImag (Complex theNum) throws IllegalArgumentException
+    public static double getImag (final Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         return Complex.fixZero(theNum.imagPart);
+    }
+
+    /**
+     * This method sets the real and imaginary parts of a complex number to the corresponding values of another complex.
+     * @param theComplex    Complex number whose values are to be set.
+     * @param newValue      Complex number whose values are to be used to set to theComplex.
+     * @throws IllegalArgumentException Thrown if theComplex is null or newValue is null.
+     */
+    public static void set(final Complex theComplex, final Complex newValue) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
+        if (newValue == null) throw new IllegalArgumentException("newValue is null.");
+        theComplex.realPart = newValue.realPart;
+        theComplex.imagPart = newValue.imagPart;
+    }
+
+    /**
+     * This method sets the real and imaginary parts of a complex number to given values.
+     * @param theComplex    Complex number whose values are to be set.
+     * @param newRealPart   New value of the realPart of theComplex.
+     * @param newImagPart   New value of the imagPart of theComplex.
+     * @throws IllegalArgumentException Thrown if theComplex is null.
+     */
+    public static void set(final Complex theComplex, final double newRealPart, final double newImagPart) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
+        theComplex.realPart = newRealPart;
+        theComplex.imagPart = newImagPart;
     }
 
     /**
@@ -160,7 +189,7 @@ public class Complex
      * @param newRealPart   New value of the real part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static void setReal (Complex theNum, double newRealPart) throws IllegalArgumentException
+    public static void setReal (final Complex theNum, final double newRealPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         theNum.realPart = Complex.fixZero(newRealPart);
@@ -172,7 +201,7 @@ public class Complex
      * @param newRealPart   New value of the real part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static void setReal (Complex theNum, float newRealPart) throws IllegalArgumentException
+    public static void setReal (final Complex theNum, final float newRealPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         theNum.realPart = Complex.fixZero((double)newRealPart);
@@ -184,7 +213,7 @@ public class Complex
      * @param newRealPart   New value of the real part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static void setReal (Complex theNum, int newRealPart) throws IllegalArgumentException
+    public static void setReal (final Complex theNum, final int newRealPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         theNum.realPart = Complex.fixZero((double)newRealPart);
@@ -196,7 +225,7 @@ public class Complex
      * @param newImagPart   New value of the imaginary part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static void setImag (Complex theNum, double newImagPart) throws IllegalArgumentException
+    public static void setImag (final Complex theNum, final double newImagPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         theNum.imagPart = Complex.fixZero(newImagPart);
@@ -208,7 +237,7 @@ public class Complex
      * @param newImagPart   New value of the imaginary part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static void setImag (Complex theNum, float newImagPart) throws IllegalArgumentException
+    public static void setImag (final Complex theNum, final float newImagPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         theNum.imagPart = Complex.fixZero((double)newImagPart);
@@ -220,7 +249,7 @@ public class Complex
      * @param newImagPart   New value of the imaginary part of the complex number.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static void setImag (Complex theNum, int newImagPart) throws IllegalArgumentException
+    public static void setImag (final Complex theNum, final int newImagPart) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         theNum.imagPart = Complex.fixZero((double)newImagPart);
@@ -232,7 +261,7 @@ public class Complex
      * @return          True if theNum is 0; returns false otherwise.
      * @throws IllegalArgumentException
      */
-    public static boolean isZero(Complex theNum) throws IllegalArgumentException {
+    public static boolean isZero(final Complex theNum) throws IllegalArgumentException {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         if ((theNum.realPart == 0.0) && (theNum.imagPart == 0.0))
             return true;
@@ -248,7 +277,7 @@ public class Complex
      * have the same value.
      * @throws IllegalArgumentException Thrown if num1 is null or num2 is null.
      */
-    public static boolean equals(Complex num1, Complex num2) throws IllegalArgumentException
+    public static boolean equals(final Complex num1, final Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -268,7 +297,7 @@ public class Complex
      * @return  true if the real part of num1 equals num2 and the imaginary part of num1 is 0.0; false otherwise.
      * @throws IllegalArgumentException Thrown if num1 is null.
      */
-    public static boolean equals(Complex num1, double num2) throws IllegalArgumentException
+    public static boolean equals(final Complex num1, final double num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
@@ -287,7 +316,7 @@ public class Complex
      * @return  true if the real part of num1 equals num2 and the imaginary part of num1 is 0.0; false otherwise.
      * @throws IllegalArgumentException Thrown if num1 is null.
      */
-    public static boolean equals(Complex num1, float num2) throws IllegalArgumentException
+    public static boolean equals(final Complex num1, final float num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
@@ -306,7 +335,7 @@ public class Complex
      * @return  true if the real part of num1 equals num2 and the imaginary part of num1 is 0.0; false otherwise.
      * @throws IllegalArgumentException Thrown if num1 is null.
      */
-    public static boolean equals(Complex num1, int num2) throws IllegalArgumentException
+    public static boolean equals(final Complex num1, final int num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
@@ -323,7 +352,7 @@ public class Complex
      * @return          Complex conjugate of theNum.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static Complex conjugate (Complex theNum) throws IllegalArgumentException
+    public static Complex conjugate (final Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null");
         Complex newComplex = new Complex (theNum.realPart, theNum.imagPart);
@@ -338,7 +367,7 @@ public class Complex
      * @return      Sum of the two complex numbers.
      * @throws IllegalArgumentException Thrown if num1 or num2 is null.
      */
-    public static Complex add (Complex num1, Complex num2) throws IllegalArgumentException
+    public static Complex add (final Complex num1, final Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -352,7 +381,7 @@ public class Complex
      * @return      Difference between num1 and num2.
      * @throws IllegalArgumentException Thrown if num1 or num2 is null.
      */
-    public static Complex subtract (Complex num1, Complex num2) throws IllegalArgumentException
+    public static Complex subtract (final Complex num1, final Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -366,7 +395,7 @@ public class Complex
      * @return
      * @throws IllegalArgumentException Thrown if num1 or num2 is null.
      */
-    public static Complex multiply (Complex num1, Complex num2) throws IllegalArgumentException
+    public static Complex multiply (final Complex num1, final Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -385,7 +414,7 @@ public class Complex
      * @return  Product of num1 * num2, with both real and imaginary parts of num1 multiplied by num2.
      * @throws IllegalArgumentException Thrown if num1 is null.
      */
-    public static Complex multiply (Complex num1, double num2) throws IllegalArgumentException
+    public static Complex multiply (final Complex num1, final double num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
@@ -400,7 +429,7 @@ public class Complex
      * @return  Product of num1 * num2, with both real and imaginary parts of num1 multiplied by num2.
      * @throws IllegalArgumentException Thrown if num1 is null.
      */
-    public static Complex multiply (Complex num1, float num2) throws IllegalArgumentException
+    public static Complex multiply (final Complex num1, final float num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
@@ -415,7 +444,7 @@ public class Complex
      * @return  Product of num1 * num2, with both real and imaginary parts of num1 multiplied by num2.
      * @throws IllegalArgumentException Thrown if num1 is null.
      */
-    public static Complex multiply (Complex num1, int num2) throws IllegalArgumentException
+    public static Complex multiply (final Complex num1, final int num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
@@ -429,7 +458,7 @@ public class Complex
      * @return  Quotient of num1 / num2.
      * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
      */
-    public static Complex divide (Complex num1, Complex num2) throws IllegalArgumentException
+    public static Complex divide (final Complex num1, final Complex num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
@@ -450,7 +479,7 @@ public class Complex
      * @return  Product of num1 / num2, with both real and imaginary parts of num1 divided by num2.
      * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
      */
-    public static Complex divide (Complex num1, double num2) throws IllegalArgumentException
+    public static Complex divide (final Complex num1, final double num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == 0.0) throw new IllegalArgumentException("num2 == 0");
@@ -466,7 +495,7 @@ public class Complex
      * @return  Product of num1 / num2, with both real and imaginary parts of num1 divided by num2.
      * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
      */
-    public static Complex divide (Complex num1, float num2) throws IllegalArgumentException
+    public static Complex divide (final Complex num1, final float num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == 0.0) throw new IllegalArgumentException("num2 == 0");
@@ -482,7 +511,7 @@ public class Complex
      * @return  Product of num1 / num2, with both real and imaginary parts of num1 divided by num2.
      * @throws IllegalArgumentException Thrown if num1 is null or num2 is 0.
      */
-    public static Complex divide (Complex num1, int num2) throws IllegalArgumentException
+    public static Complex divide (final Complex num1, final int num2) throws IllegalArgumentException
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == 0) throw new IllegalArgumentException("num2 == 0");
@@ -497,7 +526,7 @@ public class Complex
      * @return  Result of raising theNum to thePow (i.e., theNum^thePow).
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public static Complex pow (Complex theNum, double thePow) throws IllegalArgumentException
+    public static Complex pow (final Complex theNum, final double thePow) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null.");
 
@@ -510,7 +539,7 @@ public class Complex
      * @return              Polar coordinate representation of the complex number.
      * @throws IllegalArgumentException Thrown if theComplex is null.
      */
-    public static PolarCoordinate complexToPolarCoordinate (Complex theComplex) throws IllegalArgumentException
+    public static PolarCoordinate complexToPolarCoordinate (final Complex theComplex) throws IllegalArgumentException
     {
         if (theComplex == null) throw new IllegalArgumentException("theComplex is null");
 
@@ -552,7 +581,7 @@ public class Complex
      * @return  Absolute value of theComplex.
      * @throws IllegalArgumentException Thrown if theComplex is null.
      */
-    public static double abs(Complex theComplex) throws IllegalArgumentException
+    public static double abs(final Complex theComplex) throws IllegalArgumentException
     {
         if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
 
@@ -565,7 +594,7 @@ public class Complex
      * @return  Negative of theComplex.
      * @throws IllegalArgumentException Thrown if theComplex is null.
      */
-    public static Complex negate(Complex theComplex) throws IllegalArgumentException
+    public static Complex negate(final Complex theComplex) throws IllegalArgumentException
     {
         if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
 
@@ -577,6 +606,25 @@ public class Complex
         if (theComplex.imagPart != 0.0)
             resultImag = -(theComplex.imagPart);
         return new Complex(-(theComplex.realPart), -(theComplex.imagPart));
+    }
+
+    /**
+     * This method converts a complex number into a string of the form: "a + b*I".
+     * @param theComplex    Complex number to be converted.
+     * @return  A string representation of the complex number of null if theComplex is null.
+     */
+    public static String toString(final Complex theComplex)
+    {
+        if (theComplex == null) return null;
+
+        String theString = null;
+        if (theComplex.imagPart == 0.0)
+            theString = new String(theComplex.realPart + "");
+        if (theComplex.imagPart > 0.0)
+            theString = new String(theComplex.realPart + " + " + theComplex.imagPart + "*I");
+        if (theComplex.imagPart < 0.0)
+            theString = new String(theComplex.realPart + " - " + Math.abs(theComplex.imagPart) + "*I");
+        return theString;
     }
 
     /**
@@ -598,10 +646,29 @@ public class Complex
     }
 
     /**
+     * This method sets the real and imaginary parts of a complex number to the values contained in another complex number.
+     * @param newValue  Complex number whose values are to be set into this complex number.
+     */
+    public void set(final Complex newValue)
+    {
+        Complex.set(this, newValue);
+    }
+
+    /**
+     * This method sets the real and imaginary parts of a complex number to specified values.
+     * @param newRealPart   New value of the real part of the complex number.
+     * @param newImagPart   New value of the imaginary part of the complex number.
+     */
+    public void set(final double newRealPart, final double newImagPart)
+    {
+        Complex.set(this, newRealPart, newImagPart);
+    }
+
+    /**
      * This method sets the real part of this complex number to a given double value.
      * @param newRealPart   New value of the real part of the complex number.
      */
-    public void setReal(double newRealPart)
+    public void setReal(final double newRealPart)
     {
         realPart = Complex.fixZero(newRealPart);
     }
@@ -610,7 +677,7 @@ public class Complex
      * This method sets the real part of this complex number to a given float value.
      * @param newRealPart   New value of the real part of the complex number.
      */
-    public void setReal(float newRealPart)
+    public void setReal(final float newRealPart)
     {
         realPart = Complex.fixZero((double)newRealPart);
     }
@@ -619,7 +686,7 @@ public class Complex
      * This method sets the real part of this complex number to a given int value.
      * @param newRealPart   New value of the real part of the complex number.
      */
-    public void setReal(int newRealPart)
+    public void setReal(final int newRealPart)
     {
         realPart = Complex.fixZero((double)newRealPart);
     }
@@ -628,7 +695,7 @@ public class Complex
      * This method sets the imaginary part of this complex number to a given double value.
      * @param newImagPart   New value of the imaginary part of the complex number.
      */
-    public void setImag(double newImagPart)
+    public void setImag(final double newImagPart)
     {
         imagPart = Complex.fixZero(newImagPart);
     }
@@ -637,7 +704,7 @@ public class Complex
      * This method sets the imaginary part of this complex number to a given float value.
      * @param newImagPart   New value of the imaginary part of the complex number.
      */
-    public void setImag(float newImagPart)
+    public void setImag(final float newImagPart)
     {
         imagPart = Complex.fixZero((double)newImagPart);
     }
@@ -646,7 +713,7 @@ public class Complex
      * This method sets the imaginary part of this complex number to a given int value.
      * @param newImagPart   New value of the imaginary part of the complex number.
      */
-    public void setImag(int newImagPart)
+    public void setImag(final int newImagPart)
     {
         imagPart = Complex.fixZero((double)newImagPart);
     }
@@ -669,7 +736,7 @@ public class Complex
      * have the same value.
      * @throws IllegalArgumentException Thrown if theNum is null.
      */
-    public boolean equals(Complex theNum) throws IllegalArgumentException
+    public boolean equals(final Complex theNum) throws IllegalArgumentException
     {
         if (theNum == null) throw new IllegalArgumentException("theNum is null.");
         return Complex.equals(this, theNum);
@@ -681,7 +748,7 @@ public class Complex
      * @param theNum    Number to compare to this one.
      * @return  true if theNum is arithmetically equal to this complex number.
      */
-    public boolean equals(double theNum)
+    public boolean equals(final double theNum)
     {
         return Complex.equals(this, theNum);
     }
@@ -692,7 +759,7 @@ public class Complex
      * @param theNum    Number to compare to this one.
      * @return  true if theNum is arithmetically equal to this complex number.
      */
-    public boolean equals(float theNum)
+    public boolean equals(final float theNum)
     {
         return Complex.equals(this, theNum);
     }
@@ -703,7 +770,7 @@ public class Complex
      * @param theNum    Number to compare to this one.
      * @return  true if theNum is arithmetically equal to this complex number.
      */
-    public boolean equals(int theNum)
+    public boolean equals(final int theNum)
     {
         return Complex.equals(this, theNum);
     }
@@ -722,7 +789,7 @@ public class Complex
      * @param num1  Complex number to add to this one.
      * @return      Result of adding this complex number to num1.
      */
-    public Complex add (Complex num1)
+    public Complex add (final Complex num1)
     {
         return Complex.add(this, num1);
     }
@@ -732,28 +799,28 @@ public class Complex
      * @param num1  number to add to the real part of the complex number.
      * @return      Result of adding num1 to the complex number.
      */
-    public Complex add (double num1) { return Complex.add(this, new Complex (num1));}
+    public Complex add (final double num1) { return Complex.add(this, new Complex (num1));}
 
     /**
      * This method adds a float real number to this complex number.
      * @param num1  number to add to the real part of the complex number.
      * @return      Result of adding num1 to the complex number.
      */
-    public Complex add (float num1) {return Complex.add(this, new Complex ((double)num1));}
+    public Complex add (final float num1) {return Complex.add(this, new Complex ((double)num1));}
 
     /**
      * This method adds an integer real number to this complex number.
      * @param num1  number to add to the real part of the complex number.
      * @return      Result of adding num1 to the complex number.
      */
-    public Complex add (int num1) {return Complex.add(this, new Complex ((double) num1));}
+    public Complex add (final int num1) {return Complex.add(this, new Complex ((double) num1));}
 
     /**
      * Method to subtract a complex number from this complex number and return the result.
      * @param num1  Complex number to subtract from this one.
      * @return      Difference between this complex number and num1.
      */
-    public Complex subtract (Complex num1)
+    public Complex subtract (final Complex num1)
     {
         return Complex.subtract(this, num1);
     }
@@ -763,28 +830,28 @@ public class Complex
      * @param num1  number to subtract from the real part of the complex number.
      * @return      Result of subtracting num1 from the complex number.
      */
-    public Complex subtract (double num1) { return Complex.subtract(this, new Complex (num1));}
+    public Complex subtract (final double num1) { return Complex.subtract(this, new Complex (num1));}
 
     /**
      * This method subtracts a float real number from this complex number.
      * @param num1  number to subtract from the real part of the complex number.
      * @return      Result of subtractiny num1 from the complex number.
      */
-    public Complex subtract (float num1) {return Complex.subtract(this, new Complex ((double)num1));}
+    public Complex subtract (final float num1) {return Complex.subtract(this, new Complex ((double)num1));}
 
     /**
      * This method subtracts an integer real number from this complex number.
      * @param num1  number to subtract from the real part of the complex number.
      * @return      Result of subtracting num1 from the complex number.
      */
-    public Complex subtract (int num1) {return Complex.subtract(this, new Complex ((double) num1));}
+    public Complex subtract (final int num1) {return Complex.subtract(this, new Complex ((double) num1));}
 
     /**
      * Method to multiply this complex number by another complex number and return the result.
      * @param num1  Complex number to multiply by this one.
      * @return      Product found by multiplying this complex number to another one.
      */
-    public Complex multiply (Complex num1)
+    public Complex multiply (final Complex num1)
     {
         return Complex.multiply(this, num1);
     }
@@ -794,56 +861,56 @@ public class Complex
      * @param num1  number to multiply to the complex number.
      * @return      Result of multiplying num1 to the complex number.
      */
-    public Complex multiply (double num1) { return Complex.multiply(this, num1);}
+    public Complex multiply (final double num1) { return Complex.multiply(this, num1);}
 
     /**
      * This method multiplies a float real number to this complex number.
      * @param num1  number to multiply to the complex number.
      * @return      Result of multiplying num1 to the complex number.
      */
-    public Complex multiply (float num1) {return Complex.multiply(this, num1);}
+    public Complex multiply (final float num1) {return Complex.multiply(this, num1);}
 
     /**
      * This method multiplies an integer real number to this complex number.
      * @param num1  number to multiply to the complex number.
      * @return      Result of multiplying num1 to the complex number.
      */
-    public Complex multiply (int num1) {return Complex.multiply(this, num1);}
+    public Complex multiply (final int num1) {return Complex.multiply(this, num1);}
 
     /**
      * This method divides this complex number by another complex number.
      * @param num1  Number by which to divide this complex number.
      * @return      Quotient of this complex number divided by num1.
      */
-    public Complex divide (Complex num1) { return Complex.divide(this, num1);}
+    public Complex divide (final Complex num1) { return Complex.divide(this, num1);}
 
     /**
      * This method divides this complex number by a double.
      * @param num1  number by which to divide this complex number.
      * @return      Result of division by num1.
      */
-    public Complex divide (double num1) { return Complex.divide(this, num1);}
+    public Complex divide (final double num1) { return Complex.divide(this, num1);}
 
     /**
      * This method divides this complex number by a float.
      * @param num1  number by which to divide this complex number.
      * @return      Result of division by num1.
      */
-    public Complex divide (float num1) {return Complex.divide(this, num1);}
+    public Complex divide (final float num1) {return Complex.divide(this, num1);}
 
     /**
      * This method divides this complex number by an integer.
      * @param num1  number by which to divide this complex number.
      * @return      Result of division by num1.
      */
-    public Complex divide (int num1) {return Complex.divide(this, num1);}
+    public Complex divide (final int num1) {return Complex.divide(this, num1);}
 
     /**
      * This method raises this complex number to a power.
      * @param thePow    Power to which this complex number is to be raised.
      * @return  Result of raising this complex number to thePow (i.e., this^thePow).
      */
-    public Complex pow (double thePow)
+    public Complex pow (final double thePow)
     {
         return Complex.pow(this, thePow);
     }
@@ -873,5 +940,14 @@ public class Complex
     public Complex negate()
     {
         return Complex.negate(this);
+    }
+
+    /**
+     * This method converts the complex number into a string of the form: "a + b*I".
+     * @return  String representation of the complex number.
+     */
+    public String toString()
+    {
+        return Complex.toString(this);
     }
 }
