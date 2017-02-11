@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexCovector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.4.2
  * @since 2.1.1
  */
 
@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170201    D.E. Reese          Fixed ambiguous null pointers in multiply().
 //      20170204    D.E. Reese          Added multiplyMatrix().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct(), size()
+//      20170211    D.E. Reese          Added norm().
 //
 
 class ComplexCovectorTest
@@ -616,4 +617,56 @@ class ComplexCovectorTest
         theCovector = new ComplexCovector(3);
         assertEquals(3, theCovector.size());
     }
+
+    @Test
+    void norm()
+    {
+        ComplexCovector theCovector;
+
+        // Test class method.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(2.0), ComplexCovector.norm(theCovector), 0.00000001);
+
+        theCovector.set(0, new Complex(1.0,-1.0));
+        assertEquals(Math.sqrt(2.0), ComplexCovector.norm(theCovector), 0.00000001);
+
+        theCovector = new ComplexCovector(3);
+        theCovector.set(0, new Complex(1.0,1.0));
+        theCovector.set(1, new Complex(1.0,-1.0));
+        theCovector.set(2, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(12.0), ComplexCovector.norm(theCovector), 0.00000001);
+
+        theCovector.set(0, 0.0);
+        theCovector.set(1, 0.0);
+        theCovector.set(2, 0.0);
+        assertEquals(Math.sqrt(0.0), ComplexCovector.norm(theCovector), 0.00000001);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.norm(null);
+        });
+
+        // Test instance method.
+
+        theCovector = new ComplexCovector(1);
+        theCovector.set(0, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(2.0), theCovector.norm(), 0.00000001);
+
+        theCovector.set(0, new Complex(1.0,-1.0));
+        assertEquals(Math.sqrt(2.0), theCovector.norm(), 0.00000001);
+
+        theCovector = new ComplexCovector(3);
+        theCovector.set(0, new Complex(1.0,1.0));
+        theCovector.set(1, new Complex(1.0,-1.0));
+        theCovector.set(2, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(12.0), theCovector.norm(), 0.00000001);
+
+        theCovector.set(0, 0.0);
+        theCovector.set(1, 0.0);
+        theCovector.set(2, 0.0);
+        assertEquals(Math.sqrt(0.0), theCovector.norm(), 0.00000001);
+    }
+
+
 }

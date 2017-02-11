@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a (column) vector of complex numbers.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.4.2
  * @since 2.1.1
  */
 
@@ -31,6 +31,7 @@ package qcfcs_math;
 //                                      and convertComplexVectorToMatrix() methods.
 //      20170204    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct().
 //      20170205    D.E. Reese          Added size(). Made conversion routines deep copies.
+//      20170211    D.E. Reese          Added norm(). Finalized method parameters.
 //
 
 public class ComplexVector extends ComplexMatrix
@@ -40,7 +41,7 @@ public class ComplexVector extends ComplexMatrix
      * with a given number of rows and 1 column.
      * @param rows  Number of rows in the vector.
      */
-    public ComplexVector(int rows)
+    public ComplexVector(final int rows)
     {
         super(rows,1);
     }
@@ -52,7 +53,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexVector theVec, int index, Complex newValue)
+    public static Complex set(final ComplexVector theVec, final int index, final Complex newValue)
     {
         return theVec.set(index, 0, newValue);
     }
@@ -64,7 +65,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexVector theVec, int index, double newValue)
+    public static Complex set(final ComplexVector theVec, final int index, final double newValue)
     {
         return theVec.set(index, 0, newValue);
     }
@@ -76,7 +77,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexVector theVec, int index, float newValue)
+    public static Complex set(final ComplexVector theVec, final int index, final float newValue)
     {
         return theVec.set(index, 0, newValue);
     }
@@ -88,7 +89,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexVector theVec, int index, PolarCoordinate newValue)
+    public static Complex set(final ComplexVector theVec, final int index, final PolarCoordinate newValue)
     {
         return theVec.set(index, 0, newValue);
     }
@@ -100,7 +101,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexVector theVec, int index, int newValue)
+    public static Complex set(final ComplexVector theVec, final int index, final int newValue)
     {
         return theVec.set(index, 0, newValue);
     }
@@ -111,7 +112,7 @@ public class ComplexVector extends ComplexMatrix
      * @param index     Index of element to be return.
      * @return  Value of element.
      */
-    public static Complex get(ComplexVector theVec, int index)
+    public static Complex get(final ComplexVector theVec, final int index)
     {
         return theVec.get(index, 0);
     }
@@ -122,7 +123,7 @@ public class ComplexVector extends ComplexMatrix
      * @param vector2   Second vector to add.
      * @return  Sum of the two vectors.
      */
-    public static ComplexVector add(ComplexVector vector1, ComplexVector vector2)
+    public static ComplexVector add(final ComplexVector vector1, final ComplexVector vector2)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.add(vector1, vector2));
     }
@@ -133,7 +134,7 @@ public class ComplexVector extends ComplexMatrix
      * @param vector2   Vector to subtract from vector1.
      * @return  Difference of the two vectors.
      */
-    public static ComplexVector subtract(ComplexVector vector1, ComplexVector vector2)
+    public static ComplexVector subtract(final ComplexVector vector1, final ComplexVector vector2)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.subtract(vector1, vector2));
     }
@@ -144,7 +145,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
      * @return  Product of scalar multiplication of theVector by theScalar.
      */
-    public static ComplexVector multiply(ComplexVector theVector, Complex theScalar)
+    public static ComplexVector multiply(final ComplexVector theVector, final Complex theScalar)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
     }
@@ -155,7 +156,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
      * @return  Product of scalar multiplication of theVector by theScalar.
      */
-    public static ComplexVector multiply(ComplexVector theVector, double theScalar)
+    public static ComplexVector multiply(final ComplexVector theVector, final double theScalar)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
     }
@@ -166,7 +167,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
      * @return  Product of scalar multiplication of theVector by theScalar.
      */
-    public static ComplexVector multiply(ComplexVector theVector, float theScalar)
+    public static ComplexVector multiply(final ComplexVector theVector, final float theScalar)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
     }
@@ -177,7 +178,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theVector are to be multiplied.
      * @return  Product of scalar multiplication of theVector by theScalar.
      */
-    public static ComplexVector multiply(ComplexVector theVector, int theScalar)
+    public static ComplexVector multiply(final ComplexVector theVector, final int theScalar)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(theVector, theScalar));
     }
@@ -187,7 +188,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theVector Vector to be negated.
      * @return  Negated vector.
      */
-    public static ComplexVector negate(ComplexVector theVector)
+    public static ComplexVector negate(final ComplexVector theVector)
     {
         return ComplexVector.convertComplexMatrixToVector(ComplexMatrix.negate(theVector));
     }
@@ -199,7 +200,7 @@ public class ComplexVector extends ComplexMatrix
      * @return  A ComplexVector instance with the same elements as theMatrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null or it is not 1 column.
      */
-    public static ComplexVector convertComplexMatrixToVector(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static ComplexVector convertComplexMatrixToVector(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if (theMatrix.getNumColumns() != 1) throw new IllegalArgumentException("theMatrix is not 1 column.");
@@ -217,7 +218,7 @@ public class ComplexVector extends ComplexMatrix
      * @return  A ComplexMatrix instance with the same elements as theVector.
      * @throws IllegalArgumentException Thrown if theVector is null.
      */
-    public static ComplexMatrix convertComplexVectorToMatrix(ComplexVector theVector) throws IllegalArgumentException
+    public static ComplexMatrix convertComplexVectorToMatrix(final ComplexVector theVector) throws IllegalArgumentException
     {
         if (theVector == null) throw new IllegalArgumentException("theVector is null");
 
@@ -233,7 +234,7 @@ public class ComplexVector extends ComplexMatrix
      * @return  ComplexCovector with elements that have the same values as the corresponding elements in theVector.
      * @throws IllegalArgumentException Thrown if theVector is null.
      */
-    public static ComplexCovector transpose (ComplexVector theVector) throws IllegalArgumentException
+    public static ComplexCovector transpose (final ComplexVector theVector) throws IllegalArgumentException
     {
         if (theVector == null) throw new IllegalArgumentException("theVector is null.");
 
@@ -249,7 +250,7 @@ public class ComplexVector extends ComplexMatrix
      * @return  ComplexCovector with elements that are the complex conjugate of the corresponding elements in theVector.
      * @throws IllegalArgumentException Thrown if theVector is null.
      */
-    public static ComplexCovector transposeConjugate (ComplexVector theVector) throws IllegalArgumentException
+    public static ComplexCovector transposeConjugate (final ComplexVector theVector) throws IllegalArgumentException
     {
         if (theVector == null) throw new IllegalArgumentException("theVector is null.");
 
@@ -268,7 +269,7 @@ public class ComplexVector extends ComplexMatrix
      * @return  Inner product of the two vectors.
      * @throws IllegalArgumentException Thrown if vector1 is null, vector2 is null, or the two vectors are not the same size.
      */
-    public static Complex innerProduct(ComplexVector vector1, ComplexVector vector2) throws IllegalArgumentException
+    public static Complex innerProduct(final ComplexVector vector1, final ComplexVector vector2) throws IllegalArgumentException
     {
         if (vector1 == null) throw new IllegalArgumentException("vector1 is null.");
         if (vector2 == null) throw new IllegalArgumentException("vector2 is null.");
@@ -288,10 +289,24 @@ public class ComplexVector extends ComplexMatrix
      * @return  Size of the vector, i.e., the number of rows.
      * @throws IllegalArgumentException Thrown if theVector is null.
      */
-    public static int size(ComplexVector theVector) throws IllegalArgumentException
+    public static int size(final ComplexVector theVector) throws IllegalArgumentException
     {
         if (theVector == null) throw new IllegalArgumentException("theVector is null.");
         return theVector.getNumRows();
+    }
+
+    /**
+     * This method calculates the norm of a complex vector, i.e., the square root of the inner product of the
+     * vector and itself (which should be real).
+     * @param theVector Vector whose norm is to be calculated.
+     * @return  The norm of the vector.
+     * @throws IllegalArgumentException Thrown if theVector is null.
+     */
+    public static double norm (final ComplexVector theVector) throws IllegalArgumentException
+    {
+        if (theVector == null) throw new IllegalArgumentException("theVector is null.");
+        Complex result = ComplexVector.innerProduct(theVector, theVector);
+        return Math.sqrt(result.getReal());
     }
 
     /**
@@ -300,7 +315,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, Complex newValue)
+    public Complex set(final int index, final Complex newValue)
     {
         return ComplexVector.set(this, index, newValue);
     }
@@ -311,7 +326,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, double newValue)
+    public Complex set(final int index, final double newValue)
     {
         return ComplexVector.set(this, index, newValue);
     }
@@ -322,7 +337,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, float newValue)
+    public Complex set(final int index, final float newValue)
     {
         return ComplexVector.set(this, index, newValue);
     }
@@ -333,7 +348,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, int newValue)
+    public Complex set(final int index, final int newValue)
     {
         return ComplexVector.set(this, index, newValue);
     }
@@ -344,7 +359,7 @@ public class ComplexVector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, PolarCoordinate newValue)
+    public Complex set(final int index, final PolarCoordinate newValue)
     {
         return ComplexVector.set(this, index, newValue);
     }
@@ -354,7 +369,7 @@ public class ComplexVector extends ComplexMatrix
      * @param index Index of the element to return.
      * @return  Value of the indexed element.
      */
-    public Complex get(int index)
+    public Complex get(final int index)
     {
         return ComplexVector.get(this, index);
     }
@@ -364,7 +379,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theVec    Vector to add to this vector.
      * @return  Sum of this vector and theVec.
      */
-    public ComplexVector add (ComplexVector theVec)
+    public ComplexVector add (final ComplexVector theVec)
     {
         return ComplexVector.add(this, theVec);
     }
@@ -374,7 +389,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theVec    Vector to subtract from this vector.
      * @return  Difference of this vector and theVec.
      */
-    public ComplexVector subtract (ComplexVector theVec)
+    public ComplexVector subtract (final ComplexVector theVec)
     {
         return ComplexVector.subtract(this, theVec);
     }
@@ -384,7 +399,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar Scalar by which this complex vector is to be multiplied.
      * @return  Product of scalar multiplication of the vector and theScalar.
      */
-    public ComplexVector multiply (Complex theScalar)
+    public ComplexVector multiply (final Complex theScalar)
     {
         return ComplexVector.multiply(this, theScalar);
     }
@@ -394,7 +409,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar Scalar by which this complex vector is to be multiplied.
      * @return  Product of scalar multiplication of the vector and theScalar.
      */
-    public ComplexVector multiply (double theScalar)
+    public ComplexVector multiply (final double theScalar)
     {
         return ComplexVector.multiply(this, theScalar);
     }
@@ -404,7 +419,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar Scalar by which this complex vector is to be multiplied.
      * @return  Product of scalar multiplication of the vector and theScalar.
      */
-    public ComplexVector multiply (float theScalar)
+    public ComplexVector multiply (final float theScalar)
     {
         return ComplexVector.multiply(this, theScalar);
     }
@@ -414,7 +429,7 @@ public class ComplexVector extends ComplexMatrix
      * @param theScalar Scalar by which this complex vector is to be multiplied.
      * @return  Product of scalar multiplication of the vector and theScalar.
      */
-    public ComplexVector multiply (int theScalar)
+    public ComplexVector multiply (final int theScalar)
     {
         return ComplexVector.multiply(this, theScalar);
     }
@@ -464,9 +479,18 @@ public class ComplexVector extends ComplexMatrix
      * @throws IllegalArgumentException Thrown if vector1 is null, vector2 is null, or the two vectors are not the same size.
      */
 
-    public Complex innerProduct(ComplexVector theVector)
+    public Complex innerProduct(final ComplexVector theVector)
     {
         return ComplexVector.innerProduct(this, theVector);
+    }
+
+    /**
+     * This method returns the norm of the complex vector.
+     * @return  Norm of the vector, i.e., the square root of the inner product of the vector with itself (which should be real).
+     */
+    public double norm()
+    {
+        return ComplexVector.norm(this);
     }
 
     /**

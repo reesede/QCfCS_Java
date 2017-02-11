@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexVector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.4.2
  * @since 2.1.1
  */
 
@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170204    D.E. Reese          Added multiplyMatrix().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct(), size().
 //      20170206    D.E. Reese          Added code to transpose(), transposeConjugate(), and innerProduct() stubs.
+//      20170211    D.E. Reese          Added norm().
 //
 
 class ComplexVectorTest
@@ -607,6 +608,56 @@ class ComplexVectorTest
 
         theVector = new ComplexVector(3);
         assertEquals(3, theVector.size());
+    }
+
+    @Test
+    void norm()
+    {
+        ComplexVector theVector;
+
+        // Test class method.
+
+        theVector = new ComplexVector(1);
+        theVector.set(0, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(2.0), ComplexVector.norm(theVector), 0.00000001);
+
+        theVector.set(0, new Complex(1.0,-1.0));
+        assertEquals(Math.sqrt(2.0), ComplexVector.norm(theVector), 0.00000001);
+
+        theVector = new ComplexVector(3);
+        theVector.set(0, new Complex(1.0,1.0));
+        theVector.set(1, new Complex(1.0,-1.0));
+        theVector.set(2, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(12.0), ComplexVector.norm(theVector), 0.00000001);
+
+        theVector.set(0, 0.0);
+        theVector.set(1, 0.0);
+        theVector.set(2, 0.0);
+        assertEquals(Math.sqrt(0.0), ComplexVector.norm(theVector), 0.00000001);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.norm(null);
+        });
+
+        // Test instance method.
+
+        theVector = new ComplexVector(1);
+        theVector.set(0, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(2.0), theVector.norm(), 0.00000001);
+
+        theVector.set(0, new Complex(1.0,-1.0));
+        assertEquals(Math.sqrt(2.0), theVector.norm(), 0.00000001);
+
+        theVector = new ComplexVector(3);
+        theVector.set(0, new Complex(1.0,1.0));
+        theVector.set(1, new Complex(1.0,-1.0));
+        theVector.set(2, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(12.0), theVector.norm(), 0.00000001);
+
+        theVector.set(0, 0.0);
+        theVector.set(1, 0.0);
+        theVector.set(2, 0.0);
+        assertEquals(Math.sqrt(0.0), theVector.norm(), 0.00000001);
     }
 
     @Test

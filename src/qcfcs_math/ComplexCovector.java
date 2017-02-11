@@ -4,11 +4,9 @@ package qcfcs_math;
  * This class implements a (row) covector of complex numbers.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.4.2
  * @since 2.1.1
  */
-
-// TODO: Convert conversion routines from shallow copy to deep copy.
 
 // Copyright 2017 David E. Reese
 //
@@ -32,6 +30,7 @@ package qcfcs_math;
 //      20170130    D.E. Reese          Added code, copying from ComplexVector and modifying.
 //      20170204    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct().
 //      20170205    D.E. Reese          Added size(). Converted conversion routines to deep copies.
+//      20170211    D.E. Reese          Added norm(). Finalized method parameters.
 //
 
 public class ComplexCovector extends ComplexMatrix
@@ -42,7 +41,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param columns  Number of columns in the covector.
      */
 
-    public ComplexCovector(int columns)
+    public ComplexCovector(final int columns)
     {
         super(1, columns);
     }
@@ -54,7 +53,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexCovector theCovec, int index, Complex newValue)
+    public static Complex set(final ComplexCovector theCovec, final int index, final Complex newValue)
     {
         return theCovec.set(0, index,  newValue);
     }
@@ -66,7 +65,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexCovector theCovec, int index, double newValue)
+    public static Complex set(final ComplexCovector theCovec, final int index, final double newValue)
     {
         return theCovec.set(0, index, newValue);
     }
@@ -78,7 +77,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexCovector theCovec, int index, float newValue)
+    public static Complex set(final ComplexCovector theCovec, final int index, final float newValue)
     {
         return theCovec.set(0, index, newValue);
     }
@@ -90,7 +89,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexCovector theCovec, int index, PolarCoordinate newValue)
+    public static Complex set(final ComplexCovector theCovec, final int index, final PolarCoordinate newValue)
     {
         return theCovec.set(0, index, newValue);
     }
@@ -102,7 +101,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value to which the element is to be set.
      * @return  Previous value of element.
      */
-    public static Complex set(ComplexCovector theCovec, int index, int newValue)
+    public static Complex set(final ComplexCovector theCovec, final int index, final int newValue)
     {
         return theCovec.set(0, index,  newValue);
     }
@@ -113,7 +112,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param index     Index of element to be return.
      * @return  Value of element.
      */
-    public static Complex get(ComplexCovector theCovec, int index)
+    public static Complex get(final ComplexCovector theCovec, final int index)
     {
         return theCovec.get(0, index);
     }
@@ -124,7 +123,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param covector2   Second covector to add.
      * @return  Sum of the two covectors.
      */
-    public static ComplexCovector add(ComplexCovector covector1, ComplexCovector covector2)
+    public static ComplexCovector add(final ComplexCovector covector1, final ComplexCovector covector2)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.add(covector1, covector2));
     }
@@ -135,7 +134,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param covector2   Covector to subtract from covector1.
      * @return  Difference of the two covectors.
      */
-    public static ComplexCovector subtract(ComplexCovector covector1, ComplexCovector covector2)
+    public static ComplexCovector subtract(final ComplexCovector covector1, final ComplexCovector covector2)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.subtract(covector1, covector2));
     }
@@ -146,7 +145,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theCovector are to be multiplied.
      * @return  Product of scalar multiplication of theCovector by theScalar.
      */
-    public static ComplexCovector multiply(ComplexCovector theCovector, Complex theScalar)
+    public static ComplexCovector multiply(final ComplexCovector theCovector, final Complex theScalar)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.multiply(theCovector, theScalar));
     }
@@ -157,7 +156,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theCovector are to be multiplied.
      * @return  Product of scalar multiplication of theCovector by theScalar.
      */
-    public static ComplexCovector multiply(ComplexCovector theCovector, double theScalar)
+    public static ComplexCovector multiply(final ComplexCovector theCovector, final double theScalar)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.multiply(theCovector, theScalar));
     }
@@ -168,7 +167,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theCovector are to be multiplied.
      * @return  Product of scalar multiplication of theCovector by theScalar.
      */
-    public static ComplexCovector multiply(ComplexCovector theCovector, float theScalar)
+    public static ComplexCovector multiply(final ComplexCovector theCovector, final float theScalar)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.multiply(theCovector, theScalar));
     }
@@ -179,7 +178,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar     Scalar by which all elements of theCovector are to be multiplied.
      * @return  Product of scalar multiplication of theCovector by theScalar.
      */
-    public static ComplexCovector multiply(ComplexCovector theCovector, int theScalar)
+    public static ComplexCovector multiply(final ComplexCovector theCovector, final int theScalar)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.multiply(theCovector, theScalar));
     }
@@ -189,7 +188,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theCovector Covector to be negated.
      * @return  Negated covector.
      */
-    public static ComplexCovector negate(ComplexCovector theCovector)
+    public static ComplexCovector negate(final ComplexCovector theCovector)
     {
         return ComplexCovector.convertComplexMatrixToCovector(ComplexMatrix.negate(theCovector));
     }
@@ -201,7 +200,7 @@ public class ComplexCovector extends ComplexMatrix
      * @return  A ComplexCovector instance with the same elements as theMatrix.
      * @throws IllegalArgumentException Thrown if theMatrix is null or it is not 1 column.
      */
-    public static ComplexCovector convertComplexMatrixToCovector(ComplexMatrix theMatrix) throws IllegalArgumentException
+    public static ComplexCovector convertComplexMatrixToCovector(final ComplexMatrix theMatrix) throws IllegalArgumentException
     {
         if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
         if (theMatrix.getNumRows() != 1) throw new IllegalArgumentException("theMatrix is not 1 row.");
@@ -219,7 +218,7 @@ public class ComplexCovector extends ComplexMatrix
      * @return  A ComplexMatrix instance with the same elements as theCoector.
      * @throws IllegalArgumentException Thrown if theCovector is null.
      */
-    public static ComplexMatrix convertComplexCovectorToMatrix(ComplexCovector theCovector) throws IllegalArgumentException
+    public static ComplexMatrix convertComplexCovectorToMatrix(final ComplexCovector theCovector) throws IllegalArgumentException
     {
         if (theCovector == null) throw new IllegalArgumentException("theCovector is null");
 
@@ -235,7 +234,7 @@ public class ComplexCovector extends ComplexMatrix
      * @return  ComplexVector with elements that have the same value as the corresponding elements in theCovector.
      * @throws IllegalArgumentException Thrown if theCovector is null.
      */
-    public static ComplexVector transpose (ComplexCovector theCovector) throws IllegalArgumentException
+    public static ComplexVector transpose (final ComplexCovector theCovector) throws IllegalArgumentException
     {
         if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
 
@@ -251,7 +250,7 @@ public class ComplexCovector extends ComplexMatrix
      * @return  ComplexVector with elements that are the complex conjugate of the corresponding elements in theCovector.
      * @throws IllegalArgumentException Thrown if theCovector is null.
      */
-    public static ComplexVector transposeConjugate (ComplexCovector theCovector) throws IllegalArgumentException
+    public static ComplexVector transposeConjugate (final ComplexCovector theCovector) throws IllegalArgumentException
     {
         if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
 
@@ -269,7 +268,7 @@ public class ComplexCovector extends ComplexMatrix
      * @return  Inner product of theCovector and theVector (sum of the product of each corresponding element).
      * @throws IllegalArgumentException Thrown if theCovector is null, theVector is null, or theCovector and theVector are not the same size.
      */
-    public static Complex innerProduct(ComplexCovector theCovector, ComplexVector theVector) throws IllegalArgumentException
+    public static Complex innerProduct(final ComplexCovector theCovector, final ComplexVector theVector) throws IllegalArgumentException
     {
         if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
         if (theVector == null) throw new IllegalArgumentException("theVector is null.");
@@ -283,12 +282,27 @@ public class ComplexCovector extends ComplexMatrix
     }
 
     /**
+     * This method finds the norm of a covector.
+     * @param theCovector   Covector whose norm is to be found.
+     * @return  Norm of the covector.
+     * @throws IllegalArgumentException Thrown if theCovector is null.
+     */
+    public static double norm (final ComplexCovector theCovector) throws IllegalArgumentException
+    {
+        if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
+
+        ComplexVector transposedCovec = theCovector.transposeConjugate();
+        Complex result = ComplexCovector.innerProduct(theCovector, transposedCovec);
+        return Math.sqrt(result.getReal());
+    }
+
+    /**
      * This method returns the size (number of elements) of a ComplexCovector.
      * @param theCovector ComplexCovector whose size is to be found.
      * @return  Size of the covector, i.e., the number of columns.
      * @throws IllegalArgumentException Thrown if theCovector is null.
      */
-    public static int size(ComplexCovector theCovector) throws IllegalArgumentException
+    public static int size(final ComplexCovector theCovector) throws IllegalArgumentException
     {
         if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
         return theCovector.getNumColumns();
@@ -300,7 +314,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, Complex newValue)
+    public Complex set(final int index, final Complex newValue)
     {
         return ComplexCovector.set(this, index, newValue);
     }
@@ -311,7 +325,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, double newValue)
+    public Complex set(final int index, final double newValue)
     {
         return ComplexCovector.set(this, index, newValue);
     }
@@ -322,7 +336,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, float newValue)
+    public Complex set(final int index, final float newValue)
     {
         return ComplexCovector.set(this, index, newValue);
     }
@@ -333,7 +347,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, int newValue)
+    public Complex set(final int index, final int newValue)
     {
         return ComplexCovector.set(this, index, newValue);
     }
@@ -344,7 +358,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param newValue  New value of the element to be set.
      * @return  Previous value of the element.
      */
-    public Complex set(int index, PolarCoordinate newValue)
+    public Complex set(final int index, final PolarCoordinate newValue)
     {
         return ComplexCovector.set(this, index, newValue);
     }
@@ -354,7 +368,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param index Index of the element to return.
      * @return  Value of the indexed element.
      */
-    public Complex get(int index)
+    public Complex get(final int index)
     {
         return ComplexCovector.get(this, index);
     }
@@ -364,7 +378,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theCovec    Covector to add to this covector.
      * @return  Sum of this covector and theCovec.
      */
-    public ComplexCovector add (ComplexCovector theCovec)
+    public ComplexCovector add (final ComplexCovector theCovec)
     {
         return ComplexCovector.add(this, theCovec);
     }
@@ -374,7 +388,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theCovec    Covector to subtract from this covector.
      * @return  Difference of this covector and theCovec.
      */
-    public ComplexCovector subtract (ComplexCovector theCovec)
+    public ComplexCovector subtract (final ComplexCovector theCovec)
     {
         return ComplexCovector.subtract(this, theCovec);
     }
@@ -384,7 +398,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar Scalar by which this complex covector is to be multiplied.
      * @return  Product of scalar multiplication of the covector and theScalar.
      */
-    public ComplexCovector multiply (Complex theScalar)
+    public ComplexCovector multiply (final Complex theScalar)
     {
         return ComplexCovector.multiply(this, theScalar);
     }
@@ -394,7 +408,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar Scalar by which this complex covector is to be multiplied.
      * @return  Product of scalar multiplication of the covector and theScalar.
      */
-    public ComplexCovector multiply (double theScalar)
+    public ComplexCovector multiply (final double theScalar)
     {
         return ComplexCovector.multiply(this, theScalar);
     }
@@ -404,7 +418,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar Scalar by which this complex covector is to be multiplied.
      * @return  Product of scalar multiplication of the covector and theScalar.
      */
-    public ComplexCovector multiply (float theScalar)
+    public ComplexCovector multiply (final float theScalar)
     {
         return ComplexCovector.multiply(this, theScalar);
     }
@@ -414,7 +428,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theScalar Scalar by which this complex covector is to be multiplied.
      * @return  Product of scalar multiplication of the covector and theScalar.
      */
-    public ComplexCovector multiply (int theScalar)
+    public ComplexCovector multiply (final int theScalar)
     {
         return ComplexCovector.multiply(this, theScalar);
     }
@@ -461,7 +475,7 @@ public class ComplexCovector extends ComplexMatrix
      * @param theVector ComplexVector whose inner product is to be found with this ComplexCovector.
      * @return  Inner product of this ComplexCovector and theVector (i.e., the sum of the product of corresponding elements).
      */
-    public Complex innerProduct(ComplexVector theVector)
+    public Complex innerProduct(final ComplexVector theVector)
     {
         return ComplexCovector.innerProduct(this, theVector);
     }
@@ -473,5 +487,14 @@ public class ComplexCovector extends ComplexMatrix
     public int size()
     {
         return ComplexCovector.size(this);
+    }
+
+    /**
+     * This method returns the norm of a covector.
+     * @return  Norm of this complex covector.
+     */
+    public double norm()
+    {
+        return ComplexCovector.norm(this);
     }
 }
