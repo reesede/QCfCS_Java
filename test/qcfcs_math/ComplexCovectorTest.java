@@ -667,6 +667,4 @@ class ComplexCovectorTest
         theCovector.set(2, 0.0);
         assertEquals(Math.sqrt(0.0), theCovector.norm(), 0.00000001);
     }
-
-
 }

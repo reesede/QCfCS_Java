@@ -31,6 +31,7 @@ package qcfcs_math;
 //      20170204    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct().
 //      20170205    D.E. Reese          Added size(). Converted conversion routines to deep copies.
 //      20170211    D.E. Reese          Added norm(). Finalized method parameters.
+//      20170212    D.E. Reese          Added innerProduct() between two covectors. Added distance().
 //
 
 public class ComplexCovector extends ComplexMatrix
@@ -261,6 +262,27 @@ public class ComplexCovector extends ComplexMatrix
     }
 
     /**
+     * This method takes the inner product of two covectors, i.e., the sum of the products of the first covector multiplied
+     * by the complex conjugate of the corresponding element of the second covector.
+     * @param covector1 First covector to use when calculating the inner product.
+     * @param covector2 Second covector to use when calculating the inner product. Note that this is transposed conjugated.
+     * @return  Inner product of covector1 and covector2.
+     * @throws IllegalArgumentException Thrown if covector1 is null, covector2 is null, or covector1 and covector2 are not the same size.
+     */
+    public static Complex innerProduct(final ComplexCovector covector1, final ComplexCovector covector2) throws IllegalArgumentException
+    {
+        if (covector1 == null) throw new IllegalArgumentException("covector1 is null.");
+        if (covector2 == null) throw new IllegalArgumentException("covector2 is null.");
+        if (covector1.size() != covector2.size()) throw new IllegalArgumentException("covector1 and covector2 are not the same size");
+
+        ComplexVector transposedCovector2 = covector2.transposeConjugate();
+        Complex result = new Complex();
+        for(int i = 0; i < covector1.size(); i++)
+            result = result.add(covector1.get(i).multiply(transposedCovector2.get(i)));
+        return result;
+    }
+
+    /**
      * This method takes the inner product of a ComplexCovector and a ComplexVector. Note that it does not take the
      * complex conjugate of the ComplexCovector.
      * @param theCovector   ComplexCovector whose inner product is to be found with theVector.
@@ -306,6 +328,22 @@ public class ComplexCovector extends ComplexMatrix
     {
         if (theCovector == null) throw new IllegalArgumentException("theCovector is null.");
         return theCovector.getNumColumns();
+    }
+
+    /**
+     * This method finds the distance between two covectors, i.e., the norm of the difference between the two covectors.
+     * @param covector1 First covector to use when finding distance.
+     * @param covector2 Second covector to use when finding distance.
+     * @return  Distance between the two covectors.
+     * @throws IllegalArgumentException Thrown if covector1 is null, covector2 is null, or the two covectors have different sizes.
+     */
+    public static double distance(final ComplexCovector covector1, final ComplexCovector covector2) throws IllegalArgumentException
+    {
+        if (covector1 == null) throw new IllegalArgumentException("covector1 is null.");
+        if (covector2 == null) throw new IllegalArgumentException("covector2 is null.");
+        if (covector1.size() != covector2.size()) throw new IllegalArgumentException("covector1 and covector2 are not the same size.");
+
+        return covector1.subtract(covector2).norm();
     }
 
     /**
@@ -470,6 +508,16 @@ public class ComplexCovector extends ComplexMatrix
     }
 
     /**
+     * This method finds the inner product of this covector and another covector.
+     * @param theCovector   The covector to take the inner product with this covector. Note that theCovector is transpose conjugated.
+     * @return  Inner product of this covector and theCovector.
+     */
+    public Complex innerProduct(final ComplexCovector theCovector)
+    {
+        return ComplexCovector.innerProduct(this, theCovector);
+    }
+
+    /**
      * This method finds the inner product of this ComplexCovector and a ComplexVector. Note that it does not take the
      * complex conjugate of this ComplexCovector before taking the inner product.
      * @param theVector ComplexVector whose inner product is to be found with this ComplexCovector.
@@ -496,5 +544,15 @@ public class ComplexCovector extends ComplexMatrix
     public double norm()
     {
         return ComplexCovector.norm(this);
+    }
+
+    /**
+     * This method finds the distance between this covector and another covector.
+     * @param theCovector   Covector to find the distance from this covector.
+     * @return  Distance between this covector and theCovector.
+     */
+    public double distance(final ComplexCovector theCovector)
+    {
+        return ComplexCovector.distance(this, theCovector);
     }
 }
