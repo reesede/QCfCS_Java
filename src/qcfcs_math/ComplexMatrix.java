@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a matrix of complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.6.1
  * @since 2.1.1
  */
 
@@ -39,6 +39,7 @@ package qcfcs_math;
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
 //      20170209    D.E. Reese          Added trace().
 //      20170210    D.E. Reese          Added innerProduct(). Finalized method parameters.
+//      20170213    D.E. Reese          Added equals(), isHermitian().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -447,6 +448,59 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method determines if two matrices are mathematically equal, i.e., the corresponding elements in each matrix
+     * have the same values.
+     * @param matrix1   First matrix to compare.
+     * @param matrix2   Second matrix to compare.
+     * @return  true if each element in matrix1 has the same real and imaginary values as the corresponding element in matrix2.
+     * @throws IllegalArgumentException Thrown if matrix1 is null or matrix2 is null.
+     */
+    public static boolean equals(final ComplexMatrix matrix1, final ComplexMatrix matrix2) throws IllegalArgumentException
+    {
+        if(matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
+        if(matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
+
+        // If the matrices are not the same size, then they are not equal.
+
+        if(matrix1.numRows != matrix2.numRows) return false;
+        if(matrix1.numColumns != matrix2.numColumns) return false;
+
+        // If any corresponding elements of the matrices are not equal, return false.
+
+        for(int i = 0; i < matrix1.numRows; i++)
+            for(int j = 0; j < matrix1.numColumns; j++)
+                if (!(Complex.equals(matrix1.theData[i][j], matrix2.theData[i][j])))
+                    return false;
+
+        // All corresponding elements of the matrices are equal, so return true.
+
+        return true;
+    }
+
+    /**
+     * This method determines if a complex matrix is Hermitian, i.e., it equals its transpose conjugate.
+     * @param theMatrix Matrix to test to determine if it is Hermitian.
+     * @return  true if theMatrix is Hermitian; false otherwise.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static boolean isHermitian(final ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if(theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        // If the matrix is not square, it can not be Hermitian, so return false.
+
+        if(!theMatrix.isSquare()) return false;
+
+        // If the matrix is equal to its transpose conjugate, then it is Hermitian, so return true. Otherwise,
+        // return false.
+
+        ComplexMatrix transposedMatrix = theMatrix.transposeConjugate();
+        if(theMatrix.equals(transposedMatrix))
+            return true;
+        return false;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -700,5 +754,25 @@ public class ComplexMatrix implements Cloneable
     public Complex innerProduct(final ComplexMatrix matrix2)
     {
         return ComplexMatrix.innerProduct(this, matrix2);
+    }
+
+    /**
+     * This method determines if a second matrix is mathematically equal to this matrix, i.e., corresponding elements in
+     * this matrix and matrix2 have the same real and imaginary values.
+     * @param matrix2   Matrix to compare to this matrix.
+     * @return  true if each element in this matrix has the same real and imaginary values as the corresponding element in matrix2.
+     */
+    public boolean equals(final ComplexMatrix matrix2)
+    {
+        return ComplexMatrix.equals(this, matrix2);
+    }
+
+    /**
+     * This method determines if this matrix is Hermitian, i.e., it equals its transpose conjugate.
+     * @return  true if this matrix is Hermitian; false otherwise.
+     */
+    public boolean isHermitian()
+    {
+        return ComplexMatrix.isHermitian(this);
     }
 }

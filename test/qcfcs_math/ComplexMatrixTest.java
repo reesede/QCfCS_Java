@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexMatrix class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.6.1
  * @since 2.1.1
  */
 
@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), isSquare().
 //      20170209    D.E. Reese          Added trace().
 //      20170210    D.E. Reese          Finished trace(). Added innerProduct().
+//      20170213    D.E. Reese          Added equals() and isHermitian().
 //
 
 class ComplexMatrixTest
@@ -1579,5 +1580,29 @@ class ComplexMatrixTest
         matrix2.set(0,1,new Complex(0.0,1.0));
         result = matrix1.innerProduct(matrix2);
         assertTrue(result.equals(new Complex(1.0,0.0)));
+    }
+
+    @Test
+    void equals()
+    {
+        ComplexMatrix matrix1;
+        ComplexMatrix matrix2;
+
+        // Test class method.
+
+        matrix1 = new ComplexMatrix(1,1);
+        matrix2 = new ComplexMatrix(1,1);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix2.set(0,0,new Complex(1.0,1.0));
+        assertTrue(ComplexMatrix.equals(matrix1,matrix2));
+
+        matrix2.set(0,0,new Complex(1.0,0.0));
+        assertFalse(ComplexMatrix.equals(matrix1,matrix2));
+    }
+
+    @Test
+    void isHermitian()
+    {
+
     }
 }
