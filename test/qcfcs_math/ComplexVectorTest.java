@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexVector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.2
+ * @version 2.4.3
  * @since 2.1.1
  */
 
@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct(), size().
 //      20170206    D.E. Reese          Added code to transpose(), transposeConjugate(), and innerProduct() stubs.
 //      20170211    D.E. Reese          Added norm().
+//      20170212    D.E. Reese          Added distance().
 //
 
 class ComplexVectorTest
@@ -658,6 +659,95 @@ class ComplexVectorTest
         theVector.set(1, 0.0);
         theVector.set(2, 0.0);
         assertEquals(Math.sqrt(0.0), theVector.norm(), 0.00000001);
+    }
+
+    @Test
+    void distance()
+    {
+        ComplexVector vector1;
+        ComplexVector vector2;
+
+        // Test class method.
+
+        vector1 = new ComplexVector(1);
+        vector2 = new ComplexVector(1);
+        vector1.set(0, new Complex(1.0, 1.0));
+        vector2.set(0, new Complex(1.0, 1.0));
+        assertEquals(0.0, ComplexVector.distance(vector1, vector2), 0.00000001);
+        assertEquals(0.0, ComplexVector.distance(vector2, vector1), 0.00000001);
+
+        vector2.set(0, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(2.0), ComplexVector.distance(vector1, vector2), 0.00000001);
+        assertEquals(Math.sqrt(2.0), ComplexVector.distance(vector2, vector1), 0.00000001);
+
+        vector1 = new ComplexVector(3);
+        vector2 = new ComplexVector(3);
+        vector1.set(0, new Complex(1.0,1.0));
+        vector1.set(1, new Complex(-2.0,2.0));
+        vector1.set(2, new Complex(-3.0,-3.0));
+        vector2.set(0, new Complex(1.0,1.0));
+        vector2.set(1, new Complex(-2.0,2.0));
+        vector2.set(2, new Complex(-3.0,-3.0));
+        assertEquals(0.0, ComplexVector.distance(vector1, vector2), 0.00000001);
+
+        vector2.set(0, new Complex(1.0,1.0));
+        vector2.set(1, new Complex(1.0,1.0));
+        vector2.set(2, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(42.0), ComplexVector.distance(vector1, vector2), 0.00000001);
+        assertEquals(Math.sqrt(42.0), ComplexVector.distance(vector2, vector1), 0.00000001);
+
+        assertEquals(0.0, ComplexVector.distance(vector1, vector1), 0.00000001);
+
+        final ComplexVector testVector1 = new ComplexVector(3);
+        final ComplexVector testVector2 = new ComplexVector(2);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.distance(testVector1,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.distance(null, testVector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.distance(null,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexVector.distance(testVector1,testVector2);
+        });
+
+        // Test instance method.
+
+        vector1 = new ComplexVector(1);
+        vector2 = new ComplexVector(1);
+        vector1.set(0, new Complex(1.0, 1.0));
+        vector2.set(0, new Complex(1.0, 1.0));
+        assertEquals(0.0, vector1.distance(vector2), 0.00000001);
+
+        vector2.set(0, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(2.0), vector1.distance(vector2), 0.00000001);
+
+        vector1 = new ComplexVector(3);
+        vector2 = new ComplexVector(3);
+        vector1.set(0, new Complex(1.0,1.0));
+        vector1.set(1, new Complex(-2.0,2.0));
+        vector1.set(2, new Complex(-3.0,-3.0));
+        vector2.set(0, new Complex(1.0,1.0));
+        vector2.set(1, new Complex(-2.0,2.0));
+        vector2.set(2, new Complex(-3.0,-3.0));
+        assertEquals(0.0, vector1.distance(vector2), 0.00000001);
+
+        vector2.set(0, new Complex(1.0,1.0));
+        vector2.set(1, new Complex(1.0,1.0));
+        vector2.set(2, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(42.0), vector1.distance(vector2), 0.00000001);
+
+        assertEquals(0.0, vector1.distance(vector1), 0.00000001);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testVector1.distance(null);
+        });
     }
 
     @Test

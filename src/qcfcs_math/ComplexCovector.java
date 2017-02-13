@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a (row) covector of complex numbers.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.2
+ * @version 2.4.3
  * @since 2.1.1
  */
 

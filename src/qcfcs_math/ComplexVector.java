@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a (column) vector of complex numbers.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.2
+ * @version 2.4.3
  * @since 2.1.1
  */
 
@@ -32,6 +32,7 @@ package qcfcs_math;
 //      20170204    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct().
 //      20170205    D.E. Reese          Added size(). Made conversion routines deep copies.
 //      20170211    D.E. Reese          Added norm(). Finalized method parameters.
+//      20170212    D.E. Reese          Added distance().
 //
 
 public class ComplexVector extends ComplexMatrix
@@ -310,6 +311,22 @@ public class ComplexVector extends ComplexMatrix
     }
 
     /**
+     * This method finds the distance between two vector, i.e., the norm of the difference between the two covectors.
+     * @param vector1 First vector to use when finding distance.
+     * @param vector2 Second vector to use when finding distance.
+     * @return  Distance between the two vectors.
+     * @throws IllegalArgumentException Thrown if vector1 is null, vector2 is null, or the two vectors have different sizes.
+     */
+    public static double distance(final ComplexVector vector1, final ComplexVector vector2) throws IllegalArgumentException
+    {
+        if (vector1 == null) throw new IllegalArgumentException("vector1 is null.");
+        if (vector2 == null) throw new IllegalArgumentException("vector2 is null.");
+        if (vector1.size() != vector2.size()) throw new IllegalArgumentException("vector1 and vector2 are not the same size.");
+
+        return vector1.subtract(vector2).norm();
+    }
+
+    /**
      * This method sets an element in a complex vector to a new complex value.
      * @param index     Index of element to be set.
      * @param newValue  New value of the element to be set.
@@ -500,5 +517,15 @@ public class ComplexVector extends ComplexMatrix
     public int size()
     {
         return ComplexVector.size(this);
+    }
+
+    /**
+     * This method finds the distance between this vector and another vector.
+     * @param theVector   Vector to find the distance from this vector.
+     * @return  Distance between this vector and theVector.
+     */
+    public double distance(final ComplexVector theVector)
+    {
+        return ComplexVector.distance(this, theVector);
     }
 }

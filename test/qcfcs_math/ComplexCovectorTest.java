@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexCovector class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.4.2
+ * @version 2.4.3
  * @since 2.1.1
  */
 
@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170204    D.E. Reese          Added multiplyMatrix().
 //      20170205    D.E. Reese          Added transpose(), transposeConjugate(), innerProduct(), size()
 //      20170211    D.E. Reese          Added norm().
+//      20170212    D.E. Reese          Added distance().
 //
 
 class ComplexCovectorTest
@@ -549,7 +550,7 @@ class ComplexCovectorTest
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            ComplexCovector.innerProduct(testCovector1,null);
+            ComplexCovector.innerProduct(testCovector1,(ComplexVector)null);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -557,7 +558,7 @@ class ComplexCovectorTest
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            ComplexCovector.innerProduct(null,null);
+            ComplexCovector.innerProduct((ComplexCovector)null,(ComplexVector)null);
         });
 
         // Test instance method.
@@ -585,7 +586,7 @@ class ComplexCovectorTest
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            testCovector1.innerProduct(null);
+            testCovector1.innerProduct((ComplexVector)null);
         });
 
     }
@@ -666,5 +667,94 @@ class ComplexCovectorTest
         theCovector.set(1, 0.0);
         theCovector.set(2, 0.0);
         assertEquals(Math.sqrt(0.0), theCovector.norm(), 0.00000001);
+    }
+
+    @Test
+    void distance()
+    {
+        ComplexCovector covector1;
+        ComplexCovector covector2;
+
+        // Test class method.
+
+        covector1 = new ComplexCovector(1);
+        covector2 = new ComplexCovector(1);
+        covector1.set(0, new Complex(1.0, 1.0));
+        covector2.set(0, new Complex(1.0, 1.0));
+        assertEquals(0.0, ComplexCovector.distance(covector1, covector2), 0.00000001);
+        assertEquals(0.0, ComplexCovector.distance(covector2, covector1), 0.00000001);
+
+        covector2.set(0, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(2.0), ComplexCovector.distance(covector1, covector2), 0.00000001);
+        assertEquals(Math.sqrt(2.0), ComplexCovector.distance(covector2, covector1), 0.00000001);
+
+        covector1 = new ComplexCovector(3);
+        covector2 = new ComplexCovector(3);
+        covector1.set(0, new Complex(1.0,1.0));
+        covector1.set(1, new Complex(-2.0,2.0));
+        covector1.set(2, new Complex(-3.0,-3.0));
+        covector2.set(0, new Complex(1.0,1.0));
+        covector2.set(1, new Complex(-2.0,2.0));
+        covector2.set(2, new Complex(-3.0,-3.0));
+        assertEquals(0.0, ComplexCovector.distance(covector1, covector2), 0.00000001);
+
+        covector2.set(0, new Complex(1.0,1.0));
+        covector2.set(1, new Complex(1.0,1.0));
+        covector2.set(2, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(42.0), ComplexCovector.distance(covector1, covector2), 0.00000001);
+        assertEquals(Math.sqrt(42.0), ComplexCovector.distance(covector2, covector1), 0.00000001);
+
+        assertEquals(0.0, ComplexCovector.distance(covector1, covector1), 0.00000001);
+
+        final ComplexCovector testCovector1 = new ComplexCovector(3);
+        final ComplexCovector testCovector2 = new ComplexCovector(2);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.distance(testCovector1,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.distance(null, testCovector2);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.distance(null,null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexCovector.distance(testCovector1,testCovector2);
+        });
+
+        // Test instance method.
+
+        covector1 = new ComplexCovector(1);
+        covector2 = new ComplexCovector(1);
+        covector1.set(0, new Complex(1.0, 1.0));
+        covector2.set(0, new Complex(1.0, 1.0));
+        assertEquals(0.0, covector1.distance(covector2), 0.00000001);
+
+        covector2.set(0, new Complex(2.0,2.0));
+        assertEquals(Math.sqrt(2.0), covector1.distance(covector2), 0.00000001);
+
+        covector1 = new ComplexCovector(3);
+        covector2 = new ComplexCovector(3);
+        covector1.set(0, new Complex(1.0,1.0));
+        covector1.set(1, new Complex(-2.0,2.0));
+        covector1.set(2, new Complex(-3.0,-3.0));
+        covector2.set(0, new Complex(1.0,1.0));
+        covector2.set(1, new Complex(-2.0,2.0));
+        covector2.set(2, new Complex(-3.0,-3.0));
+        assertEquals(0.0, covector1.distance(covector2), 0.00000001);
+
+        covector2.set(0, new Complex(1.0,1.0));
+        covector2.set(1, new Complex(1.0,1.0));
+        covector2.set(2, new Complex(1.0,1.0));
+        assertEquals(Math.sqrt(42.0), covector1.distance(covector2), 0.00000001);
+
+        assertEquals(0.0, covector1.distance(covector1), 0.00000001);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            testCovector1.distance(null);
+        });
     }
 }
