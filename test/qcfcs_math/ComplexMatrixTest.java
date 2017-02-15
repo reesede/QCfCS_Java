@@ -1598,11 +1598,127 @@ class ComplexMatrixTest
 
         matrix2.set(0,0,new Complex(1.0,0.0));
         assertFalse(ComplexMatrix.equals(matrix1,matrix2));
+
+        matrix1 = new ComplexMatrix(2,2);
+        assertFalse(ComplexMatrix.equals(matrix1,matrix2));
+
+        matrix2 = new ComplexMatrix(2,2);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix1.set(0,1,new Complex(2.0,2.0));
+        matrix1.set(1,0,new Complex(3.0,3.0));
+        matrix1.set(1,1,new Complex(4.0,4.0));
+        matrix2.set(0,0,new Complex(1.0,1.0));
+        matrix2.set(0,1,new Complex(2.0,2.0));
+        matrix2.set(1,0,new Complex(3.0,3.0));
+        matrix2.set(1,1,new Complex(4.0,4.0));
+        assertTrue(ComplexMatrix.equals(matrix1,matrix2));
+
+        matrix2.set(1,0,new Complex(1.0,1.0));
+        assertFalse(ComplexMatrix.equals(matrix1,matrix2));
+
+        final ComplexMatrix testMatrix = matrix1;
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.equals(testMatrix, null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.equals(null, testMatrix);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.equals(null, null);
+        });
+
+        // Test instance method.
+
+        matrix1 = new ComplexMatrix(1,1);
+        matrix2 = new ComplexMatrix(1,1);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix2.set(0,0,new Complex(1.0,1.0));
+        assertTrue(matrix1.equals(matrix2));
+
+        matrix2.set(0,0,new Complex(1.0,0.0));
+        assertFalse(matrix1.equals(matrix2));
+
+        matrix1 = new ComplexMatrix(2,2);
+        assertFalse(matrix1.equals(matrix2));
+
+        matrix2 = new ComplexMatrix(2,2);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix1.set(0,1,new Complex(2.0,2.0));
+        matrix1.set(1,0,new Complex(3.0,3.0));
+        matrix1.set(1,1,new Complex(4.0,4.0));
+        matrix2.set(0,0,new Complex(1.0,1.0));
+        matrix2.set(0,1,new Complex(2.0,2.0));
+        matrix2.set(1,0,new Complex(3.0,3.0));
+        matrix2.set(1,1,new Complex(4.0,4.0));
+        assertTrue(matrix1.equals(matrix2));
+
+        matrix2.set(1,0,new Complex(1.0,1.0));
+        assertFalse(matrix1.equals(matrix2));
     }
 
     @Test
     void isHermitian()
     {
+        ComplexMatrix theMatrix;
 
+        // Test class method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        assertTrue(ComplexMatrix.isHermitian(theMatrix));
+
+        theMatrix.set(0,0,new Complex(1.0,1.0));
+        assertFalse(ComplexMatrix.isHermitian((theMatrix)));
+
+        theMatrix = new ComplexMatrix(2,2);
+        assertTrue(ComplexMatrix.isHermitian(theMatrix));
+
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        theMatrix.set(0,1,new Complex(1.0,1.0));
+        theMatrix.set(1,0,new Complex(1.0,-1.0));
+        theMatrix.set(1,1,new Complex(2.0,0.0));
+        assertTrue(ComplexMatrix.isHermitian(theMatrix));
+
+        theMatrix.set(1,1,new Complex(2.0,1.0));
+        assertFalse(ComplexMatrix.isHermitian(theMatrix));
+
+        theMatrix.set(1,1,new Complex(2.0,0.0));
+        theMatrix.set(1,0,new Complex(1.0,1.0));
+        assertFalse(ComplexMatrix.isHermitian(theMatrix));
+
+        theMatrix = new ComplexMatrix(2,3);
+        assertFalse(ComplexMatrix.isHermitian(theMatrix));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.isHermitian(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        assertTrue(theMatrix.isHermitian());
+
+        theMatrix.set(0,0,new Complex(1.0,1.0));
+        assertFalse(theMatrix.isHermitian());
+
+        theMatrix = new ComplexMatrix(2,2);
+        assertTrue(theMatrix.isHermitian());
+
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        theMatrix.set(0,1,new Complex(1.0,1.0));
+        theMatrix.set(1,0,new Complex(1.0,-1.0));
+        theMatrix.set(1,1,new Complex(2.0,0.0));
+        assertTrue(theMatrix.isHermitian());
+
+        theMatrix.set(1,1,new Complex(2.0,1.0));
+        assertFalse(theMatrix.isHermitian());
+
+        theMatrix.set(1,1,new Complex(2.0,0.0));
+        theMatrix.set(1,0,new Complex(1.0,1.0));
+        assertFalse(theMatrix.isHermitian());
+
+        theMatrix = new ComplexMatrix(2,3);
+        assertFalse(theMatrix.isHermitian());
     }
 }
