@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a matrix of complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.6.1
+ * @version 2.6.2
  * @since 2.1.1
  */
 
@@ -40,6 +40,7 @@ package qcfcs_math;
 //      20170209    D.E. Reese          Added trace().
 //      20170210    D.E. Reese          Added innerProduct(). Finalized method parameters.
 //      20170213    D.E. Reese          Added equals(), isHermitian().
+//      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -501,6 +502,49 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method returns an identity matrix, i.e., a square matrix with 1's on the diagonals and 0's elsewhere.
+     * @param size  Size of the matrix. This must be >= 1.
+     * @return  A size X size matrix with values of 1.0 in the diagonal elements and 0.0 in other elements.
+     * @throws IllegalArgumentException Thrown if size <= 0.
+     */
+    public static ComplexMatrix identityMatrix(final int size) throws IllegalArgumentException
+    {
+        if (size <= 0) throw new IllegalArgumentException("size <= 0.");
+
+        ComplexMatrix theResult = new ComplexMatrix(size,size);
+        for(int i = 0; i < size; i++)
+            theResult.set(i,i,new Complex(1.0,0.0));
+        return theResult;
+    }
+
+    /**
+     * This method determines if a matrix is the identity matrix, i.e., it is square with diagonal elements of 1.0
+     * and all off-diagonal elements of 0.0.
+     * @param theMatrix Matrix to test.
+     * @return  true if theMatrix is the identity matrix; false if it is not square or not an identity matrix.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static boolean isIdentity(final ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        if (!theMatrix.isSquare()) return false;
+        for(int i = 0; i < theMatrix.numRows; i++)
+            for(int j = 0; j < theMatrix.numColumns; j++)
+                if(i==j)
+                {
+                    if (!theMatrix.get(i,j).equals(new Complex(1.0,0.0)))
+                        return false;
+                }
+                else
+                {
+                    if (!theMatrix.get(i,j).equals(new Complex(0.0,0.0)))
+                        return false;
+                }
+        return true;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -774,5 +818,15 @@ public class ComplexMatrix implements Cloneable
     public boolean isHermitian()
     {
         return ComplexMatrix.isHermitian(this);
+    }
+
+    /**
+     * This method determines if a ComplexMatrix is the identity matrix, i.e., a square matrix with diagonal elements
+     * set to 1.0 and off-diagonal elements set to 0.0.
+     * @return  true if the matrix is the identity matrix, false otherwise.
+     */
+    public boolean isIdentity()
+    {
+        return ComplexMatrix.isIdentity(this);
     }
 }

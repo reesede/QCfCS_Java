@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexMatrix class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.6.1
+ * @version 2.6.2
  * @since 2.1.1
  */
 
@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170209    D.E. Reese          Added trace().
 //      20170210    D.E. Reese          Finished trace(). Added innerProduct().
 //      20170213    D.E. Reese          Added equals() and isHermitian().
+//      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
 //
 
 class ComplexMatrixTest
@@ -1720,5 +1721,95 @@ class ComplexMatrixTest
 
         theMatrix = new ComplexMatrix(2,3);
         assertFalse(theMatrix.isHermitian());
+    }
+
+    @Test
+    void identityMatrix()
+    {
+        ComplexMatrix theMatrix;
+
+        theMatrix = ComplexMatrix.identityMatrix(1);
+        assertEquals(1, theMatrix.getNumRows());
+        assertEquals(1, theMatrix.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,0.0)));
+
+        theMatrix = ComplexMatrix.identityMatrix(2);
+        assertEquals(2, theMatrix.getNumRows());
+        assertEquals(2, theMatrix.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,0.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(1.0,0.0)));
+
+        theMatrix = ComplexMatrix.identityMatrix(3);
+        assertEquals(3, theMatrix.getNumRows());
+        assertEquals(3, theMatrix.getNumColumns());
+        assertTrue(theMatrix.get(0,0).equals(new Complex(1.0,0.0)));
+        assertTrue(theMatrix.get(0,1).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(0,2).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(1,0).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(1,1).equals(new Complex(1.0,0.0)));
+        assertTrue(theMatrix.get(0,2).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(2,0).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(2,1).equals(new Complex(0.0,0.0)));
+        assertTrue(theMatrix.get(2,2).equals(new Complex(1.0,0.0)));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.identityMatrix(0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.identityMatrix(-1);
+        });
+    }
+
+    @Test
+    void isIdentity()
+    {
+        ComplexMatrix theMatrix;
+
+        // Test class method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        assertFalse(ComplexMatrix.isIdentity(theMatrix));
+
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        assertTrue(ComplexMatrix.isIdentity(theMatrix));
+
+        theMatrix.set(0,0,new Complex(1.0,1.0));
+        assertFalse(ComplexMatrix.isIdentity(theMatrix));
+
+        theMatrix = ComplexMatrix.identityMatrix(3);
+        assertTrue(ComplexMatrix.isIdentity(theMatrix));
+
+        theMatrix.set(2,1,new Complex(1.0));
+        assertFalse(ComplexMatrix.isIdentity(theMatrix));
+
+        theMatrix = new ComplexMatrix(3,2);
+        assertFalse(ComplexMatrix.isIdentity(theMatrix));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.isIdentity(null);
+        });
+
+        // Test instance method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        assertFalse(theMatrix.isIdentity());
+
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        assertTrue(theMatrix.isIdentity());
+
+        theMatrix.set(0,0,new Complex(1.0,1.0));
+        assertFalse(theMatrix.isIdentity());
+
+        theMatrix = ComplexMatrix.identityMatrix(3);
+        assertTrue(theMatrix.isIdentity());
+
+        theMatrix.set(2,1,new Complex(1.0));
+        assertFalse(theMatrix.isIdentity());
+
+        theMatrix = new ComplexMatrix(3,2);
+        assertFalse(theMatrix.isIdentity());
     }
 }
