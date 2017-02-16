@@ -41,6 +41,7 @@ package qcfcs_math;
 //      20170210    D.E. Reese          Added innerProduct(). Finalized method parameters.
 //      20170213    D.E. Reese          Added equals(), isHermitian().
 //      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
+//      20170216    D.E. Reese          Added isUnitary().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -545,6 +546,22 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     * This method determines if a matrix is unitary, i.e., it is square and the product of itself and its transpose
+     * conjugate is the identity matrix.
+     * @param theMatrix Matrix to be tested to determine if it is unitary.
+     * @return  true if the matrix is unitary, false otherwise.
+     * @throws IllegalArgumentException Thrown if theMatrix is null.
+     */
+    public static boolean isUnitary(final ComplexMatrix theMatrix) throws IllegalArgumentException
+    {
+        if (theMatrix == null) throw new IllegalArgumentException("theMatrix is null.");
+
+        if (!theMatrix.isSquare()) return false;
+
+        return theMatrix.multiply(theMatrix.transposeConjugate()).isIdentity();
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -828,5 +845,10 @@ public class ComplexMatrix implements Cloneable
     public boolean isIdentity()
     {
         return ComplexMatrix.isIdentity(this);
+    }
+
+    public boolean isUnitary()
+    {
+        return ComplexMatrix.isUnitary(this);
     }
 }

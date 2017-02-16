@@ -43,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170210    D.E. Reese          Finished trace(). Added innerProduct().
 //      20170213    D.E. Reese          Added equals() and isHermitian().
 //      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
+//      20170216    D.E. Reese          Added isUnitary().
 //
 
 class ComplexMatrixTest
@@ -1811,5 +1812,23 @@ class ComplexMatrixTest
 
         theMatrix = new ComplexMatrix(3,2);
         assertFalse(theMatrix.isIdentity());
+    }
+
+    @Test
+    void isUnitary()
+    {
+        ComplexMatrix theMatrix;
+
+        // Test class method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        assertTrue(ComplexMatrix.isUnitary(theMatrix));
+
+        theMatrix.set(0,0,new Complex(0.0,1.0));
+        assertTrue(ComplexMatrix.isUnitary(theMatrix));
+
+        theMatrix.set(0,0,new Complex(1.0,1.0));
+        assertFalse(ComplexMatrix.isUnitary(theMatrix));
     }
 }

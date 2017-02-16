@@ -5,7 +5,7 @@ package qcfcs_math;
  * convert -0.0 to 0.0.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 2.6.2
  * @since 1.1.1
  */
 
@@ -46,10 +46,18 @@ package qcfcs_math;
 //      20170128    D.E. Reese          Added fixZero() method to convert -0.0 to 0.0 and modified all methods that
 //                                      set the real or imaginary parts to call it on it.
 //      20170210    D.E. Reese          Added toString() and set(). Finalized parameters to methods.
+//      20170216    D.E. Reese          Added deltaPrecision, setPrecision(), and getPrecision(). Added code to
+//                                      equals to determine equality within a given precision.
 //
 
 public class Complex
 {
+
+    /**
+     * Used as a delta from an exact value in comparisons for equality. A value will be considered equal if it is
+     * in the range (value-deltaValue)...value...(value+deltaValue).
+     */
+    private static double deltaPrecision = 0.0000001;
 
     /**
      * Real part of complex number.
@@ -282,9 +290,14 @@ public class Complex
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
         if (num2 == null) throw new IllegalArgumentException("num2 is null.");
 
-        if (num1.realPart != num2.realPart)
+        double minPrecision = num2.realPart - Complex.deltaPrecision;
+        double maxPrecision = num2.realPart + Complex.deltaPrecision;
+        if ((num1.realPart < minPrecision) || (num1.realPart > maxPrecision))
             return false;
-        if (num1.imagPart != num2.imagPart)
+
+        minPrecision = num2.imagPart - Complex.deltaPrecision;
+        maxPrecision = num2.imagPart + Complex.deltaPrecision;
+        if ((num1.imagPart < minPrecision) || (num1.imagPart > maxPrecision))
             return false;
         return true;
     }
@@ -301,9 +314,14 @@ public class Complex
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
-        if (num1.realPart != num2)
+        double minPrecision = num2 - Complex.deltaPrecision;
+        double maxPrecision = num2 + Complex.deltaPrecision;
+        if ((num1.realPart < minPrecision) || (num1.realPart > maxPrecision))
             return false;
-        if (num1.imagPart != 0.0)
+
+        minPrecision = 0.0 - Complex.deltaPrecision;
+        maxPrecision = 0.0 + Complex.deltaPrecision;
+        if ((num1.imagPart < minPrecision) || (num1.imagPart > maxPrecision))
             return false;
         return true;
     }
@@ -320,9 +338,14 @@ public class Complex
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
-        if (num1.realPart != (double)num2)
+        double minPrecision = (double)num2 - Complex.deltaPrecision;
+        double maxPrecision = (double)num2 + Complex.deltaPrecision;
+        if ((num1.realPart < minPrecision) || (num1.realPart > maxPrecision))
             return false;
-        if (num1.imagPart != 0.0)
+
+        minPrecision = 0.0 - Complex.deltaPrecision;
+        maxPrecision = 0.0 + Complex.deltaPrecision;
+        if ((num1.imagPart < minPrecision) || (num1.imagPart > maxPrecision))
             return false;
         return true;
     }
@@ -339,9 +362,14 @@ public class Complex
     {
         if (num1 == null) throw new IllegalArgumentException("num1 is null.");
 
-        if (num1.realPart != (double)num2)
+        double minPrecision = (double)num2 - Complex.deltaPrecision;
+        double maxPrecision = (double)num2 + Complex.deltaPrecision;
+        if ((num1.realPart < minPrecision) || (num1.realPart > maxPrecision))
             return false;
-        if (num1.imagPart != 0.0)
+
+        minPrecision = 0.0 - Complex.deltaPrecision;
+        maxPrecision = 0.0 + Complex.deltaPrecision;
+        if ((num1.imagPart < minPrecision) || (num1.imagPart > maxPrecision))
             return false;
         return true;
     }
@@ -625,6 +653,33 @@ public class Complex
         if (theComplex.imagPart < 0.0)
             theString = new String(theComplex.realPart + " - " + Math.abs(theComplex.imagPart) + "*I");
         return theString;
+    }
+
+    /**
+     * This method returns the precision value for determining equality for complex numbers. A number will be considered
+     * to be equal to a complex real or imaginary part if it is in the range value - getPrecision()...value + getPrecision().
+     * @return  double value representing the precision for determining equality.
+     */
+    public static double getPrecision()
+    {
+        return Complex.deltaPrecision;
+    }
+
+    /**
+     * This method sets the precision value for determining equality for complex numbers. Note that this must be
+     * greater than 0.0 and that setting it to 0.0 can cause problems when double operations (like sqrt) are used.
+     * Similarly, too small a precision can cause equals() to return strange results.
+     * @param newPrecision  New precision value, which must be >= 0.0.
+     * @return  Old precision value.
+     * @throws IllegalArgumentException Thrown if newPrecision < 0.0.
+     */
+    public static double setPrecision(final double newPrecision) throws IllegalArgumentException
+    {
+        if (newPrecision < 0.0) throw new IllegalArgumentException("newPrecision < 0.0.");
+        final double returnVal = Complex.deltaPrecision;
+        Complex.deltaPrecision = newPrecision;
+        return returnVal;
+
     }
 
     /**
