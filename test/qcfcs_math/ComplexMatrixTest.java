@@ -44,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170213    D.E. Reese          Added equals() and isHermitian().
 //      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
 //      20170216    D.E. Reese          Added isUnitary().
+//      20170217    D.E. Reese          Added additional code to isUnitary().
 //
 
 class ComplexMatrixTest
@@ -1830,5 +1831,41 @@ class ComplexMatrixTest
 
         theMatrix.set(0,0,new Complex(1.0,1.0));
         assertFalse(ComplexMatrix.isUnitary(theMatrix));
+
+        theMatrix = ComplexMatrix.identityMatrix(2);
+        assertTrue(ComplexMatrix.isUnitary(theMatrix));
+
+        theMatrix = new ComplexMatrix(2,2);
+        theMatrix.set(0,0,new Complex(1.0/Math.sqrt(2.0),0.0));
+        theMatrix.set(0,1,new Complex(1.0/Math.sqrt(2.0),0.0));
+        theMatrix.set(1,0,new Complex(-1.0/Math.sqrt(2.0),0.0));
+        theMatrix.set(1,1,new Complex(1.0/Math.sqrt(2.0),0.0));
+        assertTrue(ComplexMatrix.isUnitary(theMatrix));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ComplexMatrix.isUnitary(null);
+        });
+
+        // Test class method.
+
+        theMatrix = new ComplexMatrix(1,1);
+        theMatrix.set(0,0,new Complex(1.0,0.0));
+        assertTrue(theMatrix.isUnitary());
+
+        theMatrix.set(0,0,new Complex(0.0,1.0));
+        assertTrue(theMatrix.isUnitary());
+
+        theMatrix.set(0,0,new Complex(1.0,1.0));
+        assertFalse(theMatrix.isUnitary());
+
+        theMatrix = ComplexMatrix.identityMatrix(2);
+        assertTrue(theMatrix.isUnitary());
+
+        theMatrix = new ComplexMatrix(2,2);
+        theMatrix.set(0,0,new Complex(1.0/Math.sqrt(2.0),0.0));
+        theMatrix.set(0,1,new Complex(1.0/Math.sqrt(2.0),0.0));
+        theMatrix.set(1,0,new Complex(-1.0/Math.sqrt(2.0),0.0));
+        theMatrix.set(1,1,new Complex(1.0/Math.sqrt(2.0),0.0));
+        assertTrue(theMatrix.isUnitary());
     }
 }
