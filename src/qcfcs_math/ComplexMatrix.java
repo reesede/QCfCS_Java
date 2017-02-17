@@ -4,7 +4,7 @@ package qcfcs_math;
  * This class implements a matrix of complex numbers.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.6.2
+ * @version 2.7.1
  * @since 2.1.1
  */
 
@@ -42,6 +42,7 @@ package qcfcs_math;
 //      20170213    D.E. Reese          Added equals(), isHermitian().
 //      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
 //      20170216    D.E. Reese          Added isUnitary().
+//      20170217    D.E. Reese          Added tensorProduct().
 //
 
 public class ComplexMatrix implements Cloneable
@@ -562,6 +563,27 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
+     *
+     * @param matrix1
+     * @param matrix2
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public static ComplexMatrix tensorProduct(final ComplexMatrix matrix1,final ComplexMatrix matrix2) throws IllegalArgumentException
+    {
+        if(matrix1 == null) throw new IllegalArgumentException("matrix1 is null.");
+        if(matrix2 == null) throw new IllegalArgumentException("matrix2 is null.");
+
+        ComplexMatrix theResult = new ComplexMatrix(matrix1.numRows*matrix2.numRows,
+                matrix1.numColumns*matrix2.numColumns);
+        for(int j = 0; j < theResult.numRows; j++)
+            for(int k = 0; k < theResult.numColumns; k++)
+                theResult.theData[j][k] = Complex.multiply(matrix1.get(j/matrix1.numRows, k/matrix1.numColumns),
+                        matrix2.get(j % matrix1.numRows, k % matrix1.numColumns));
+        return theResult;
+    }
+
+    /**
      * This method returns an element of the matrix at a specified row and column.
      * @param row   Row of the desired element. Note that this is 0-based.
      * @param column    Column of the desired element. Note that this is 0-based.
@@ -847,8 +869,22 @@ public class ComplexMatrix implements Cloneable
         return ComplexMatrix.isIdentity(this);
     }
 
+    /**
+     * This method determines if a matrix is unitary.
+     * @return  true if the matrix is unitary; false otherwise.
+     */
     public boolean isUnitary()
     {
         return ComplexMatrix.isUnitary(this);
+    }
+
+    /**
+     * This method returns the tensor product of this matrix with another matrix.
+     * @param matrix2   Matrix with which the tensor product of this matrix is to be found.
+     * @return  Tensor product of this matrix and matrix2.
+     */
+    public ComplexMatrix tensorProduct(final ComplexMatrix matrix2)
+    {
+        return ComplexMatrix.tensorProduct(this, matrix2);
     }
 }
