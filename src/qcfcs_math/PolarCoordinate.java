@@ -25,7 +25,7 @@ import java.lang.Math;
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with AsianFlashCard.  If not, see <http://www.gnu.org/licenses/>.
+// along with QCfCS_java.  If not, see <http://www.gnu.org/licenses/>.
 //
 // History:
 //      20170107    D.E. Reese          Creation (Programming Drill 1.3.1)

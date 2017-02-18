@@ -32,4 +32,5 @@ History:
 20170213    D.E. Reese          Added Programming Drill 2.6.1.
 20170215    D.E. Reese          Added Programming Drill 2.6.2.
 20170218    D.E. Reese          Added Programming Drill 2.7.1.
+                                Fixed licence file reference to program.
 
