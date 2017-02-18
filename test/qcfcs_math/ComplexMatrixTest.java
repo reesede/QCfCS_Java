@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This class implements unit tests for the ComplexMatrix class.
  * Created by reesede on 1/22/2017.
  * @author David E. Reese
- * @version 2.6.2
+ * @version 2.7.1
  * @since 2.1.1
  */
 
@@ -44,7 +44,8 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170213    D.E. Reese          Added equals() and isHermitian().
 //      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
 //      20170216    D.E. Reese          Added isUnitary().
-//      20170217    D.E. Reese          Added additional code to isUnitary().
+//      20170217    D.E. Reese          Added additional code to isUnitary(). Added tensorProduct().
+//      20170218    D.E. Reese          Added additional code to tensorProduct().
 //
 
 class ComplexMatrixTest
@@ -1846,7 +1847,7 @@ class ComplexMatrixTest
             ComplexMatrix.isUnitary(null);
         });
 
-        // Test class method.
+        // Test instance method.
 
         theMatrix = new ComplexMatrix(1,1);
         theMatrix.set(0,0,new Complex(1.0,0.0));
@@ -1867,5 +1868,65 @@ class ComplexMatrixTest
         theMatrix.set(1,0,new Complex(-1.0/Math.sqrt(2.0),0.0));
         theMatrix.set(1,1,new Complex(1.0/Math.sqrt(2.0),0.0));
         assertTrue(theMatrix.isUnitary());
+    }
+
+    @Test
+    void tensorProduct()
+    {
+        ComplexMatrix matrix1;
+        ComplexMatrix matrix2;
+        ComplexMatrix result;
+
+        // Test class method.
+
+        matrix1 = new ComplexMatrix(1,1);
+        matrix2 = new ComplexMatrix(1,1);
+        matrix1.set(0,0,new Complex(1.0,1.0));
+        matrix2.set(0,0,new Complex(2.0,2.0));
+        result = ComplexMatrix.tensorProduct(matrix1, matrix2);
+        assertEquals(1, result.getNumRows());
+        assertEquals(1, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(0.0,4.0)));
+
+        matrix1 = ComplexMatrix.identityMatrix(2);
+        matrix2 = ComplexMatrix.identityMatrix(2);
+        result = ComplexMatrix.tensorProduct(matrix1,matrix2);
+        assertEquals(4, result.getNumRows());
+        assertEquals(4, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(1.0,0.0)));
+        assertTrue(result.get(0,1).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(0,2).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(0,3).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(1,0).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(1,1).equals(new Complex(1.0,0.0)));
+        assertTrue(result.get(1,2).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(1,3).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(2,0).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(2,1).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(2,2).equals(new Complex(1.0,0.0)));
+        assertTrue(result.get(2,3).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(3,0).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(3,1).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(3,2).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(3,3).equals(new Complex(1.0,0.0)));
+
+        matrix1 = new ComplexMatrix(3,1);
+        matrix2 = new ComplexMatrix(1,3);
+        matrix1.set(0,0,new Complex(2.0,2.0));
+        matrix1.set(2,0,new Complex(1.0,1.0));
+        matrix2.set(0,0,new Complex(1.0,0.0));
+        matrix2.set(0,2,new Complex(2.0,0.0));
+        result = ComplexMatrix.tensorProduct(matrix1,matrix2);
+        assertEquals(3, result.getNumRows());
+        assertEquals(3, result.getNumColumns());
+        assertTrue(result.get(0,0).equals(new Complex(2.0,2.0)));
+        assertTrue(result.get(0,1).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(0,2).equals(new Complex(4.0,4.0)));
+        assertTrue(result.get(1,0).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(1,1).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(1,2).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(2,0).equals(new Complex(1.0,1.0)));
+        assertTrue(result.get(2,1).equals(new Complex(0.0,0.0)));
+        assertTrue(result.get(2,2).equals(new Complex(2.0,2.0)));
     }
 }

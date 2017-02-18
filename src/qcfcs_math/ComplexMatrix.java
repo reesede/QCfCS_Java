@@ -43,6 +43,7 @@ package qcfcs_math;
 //      20170215    D.E. Reese          Added identityMatrix(), isIdentity().
 //      20170216    D.E. Reese          Added isUnitary().
 //      20170217    D.E. Reese          Added tensorProduct().
+//      20170218    D.E. Reese          Fixed bug in tensorProduct() to get the correct indices.
 //
 
 public class ComplexMatrix implements Cloneable
@@ -563,11 +564,12 @@ public class ComplexMatrix implements Cloneable
     }
 
     /**
-     *
-     * @param matrix1
-     * @param matrix2
-     * @return
-     * @throws IllegalArgumentException
+     * This method calculates the tensor product of two matrices. If matrix1 is an n1 X m1 matrix and matrix2 is an
+     * n2 X m2 matrix, this method will return an (n1 n2) X (m1 m2) matrix.
+     * @param matrix1   First matrix to use to find the tensor product.
+     * @param matrix2   Second matrix to use to find the tensor product.
+     * @return  Tensor product of matrix1 and matrix2.
+     * @throws IllegalArgumentException Thrown if matrix1 is null or matrix2 is null.
      */
     public static ComplexMatrix tensorProduct(final ComplexMatrix matrix1,final ComplexMatrix matrix2) throws IllegalArgumentException
     {
@@ -576,10 +578,25 @@ public class ComplexMatrix implements Cloneable
 
         ComplexMatrix theResult = new ComplexMatrix(matrix1.numRows*matrix2.numRows,
                 matrix1.numColumns*matrix2.numColumns);
-        for(int j = 0; j < theResult.numRows; j++)
-            for(int k = 0; k < theResult.numColumns; k++)
-                theResult.theData[j][k] = Complex.multiply(matrix1.get(j/matrix1.numRows, k/matrix1.numColumns),
-                        matrix2.get(j % matrix1.numRows, k % matrix1.numColumns));
+
+        for(int matrix1Row = 0; matrix1Row < matrix1.numRows; matrix1Row++)
+        {
+            for(int matrix1Col = 0; matrix1Col < matrix1.numColumns; matrix1Col++)
+            {
+                final Complex matrix1El = matrix1.get(matrix1Row,matrix1Col);
+                for(int matrix2Row = 0; matrix2Row < matrix2.numRows; matrix2Row++)
+                {
+                    for(int matrix2Col = 0; matrix2Col < matrix2.numColumns; matrix2Col++)
+                    {
+                        final Complex matrix2El = matrix2.get(matrix2Row,matrix2Col);
+                        final int resultRow = matrix1Row * matrix2.numRows + matrix2Row;
+                        final int resultCol = matrix1Col * matrix2.numColumns + matrix2Col;
+                        theResult.theData[resultRow][resultCol] = Complex.multiply(matrix1El, matrix2El);
+                    }
+
+                }
+            }
+        }
         return theResult;
     }
 
