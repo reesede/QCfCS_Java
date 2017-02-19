@@ -9,6 +9,15 @@ public class ProbabilityGame01GUI
 {
     private JPanel panel1;
     private JPanel GameTypePanel;
-    private JPanel GameMatrixPanel;
     private JPanel ControlPanel;
+    private JRadioButton BooleanGameButton;
+    private JRadioButton RealGameButton;
+    private JRadioButton ComplexGameButton;
+    private JButton StartButton;
+    private JPanel MainPanel;
+    private JLabel IterationCountLabel;
+    private JButton ExecuteButton;
+    private JLabel NumStateLabel;
+    private JFormattedTextField NumStatesTextField;
+    private JScrollPane MainScrollPane;
 }

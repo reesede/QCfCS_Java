@@ -5,27 +5,91 @@
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
     <properties/>
-    <border type="none"/>
+    <border type="none" title="Probabilty Game 01" title-justification="2" title-position="1"/>
     <children>
-      <grid id="4d2ae" binding="GameTypePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="4d2ae" binding="GameTypePanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="North"/>
         <properties/>
         <border type="line">
           <color color="-16777216"/>
         </border>
-        <children/>
-      </grid>
-      <grid id="dd444" binding="GameMatrixPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints border-constraint="Center"/>
-        <properties/>
-        <border type="none"/>
-        <children/>
+        <children>
+          <component id="d711d" class="javax.swing.JRadioButton" binding="BooleanGameButton">
+            <constraints/>
+            <properties>
+              <text value="Boolean"/>
+            </properties>
+          </component>
+          <component id="6fae3" class="javax.swing.JRadioButton" binding="RealGameButton">
+            <constraints/>
+            <properties>
+              <text value="Real"/>
+            </properties>
+          </component>
+          <component id="eb07b" class="javax.swing.JRadioButton" binding="ComplexGameButton">
+            <constraints/>
+            <properties>
+              <text value="Complex"/>
+            </properties>
+          </component>
+          <component id="9ec24" class="javax.swing.JLabel" binding="NumStateLabel">
+            <constraints/>
+            <properties>
+              <text value="States = "/>
+            </properties>
+          </component>
+          <component id="8430b" class="javax.swing.JFormattedTextField" binding="NumStatesTextField">
+            <constraints/>
+            <properties>
+              <text value="1"/>
+            </properties>
+          </component>
+          <component id="c4677" class="javax.swing.JButton" binding="StartButton">
+            <constraints/>
+            <properties>
+              <text value="Start"/>
+            </properties>
+          </component>
+        </children>
       </grid>
       <grid id="70fd7" binding="ControlPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="South"/>
         <properties/>
-        <border type="none"/>
-        <children/>
+        <border type="line">
+          <color color="-16777216"/>
+        </border>
+        <children>
+          <component id="785e8" class="javax.swing.JLabel" binding="IterationCountLabel">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <text value="Iteration Count = 0"/>
+            </properties>
+          </component>
+          <component id="17c4a" class="javax.swing.JButton" binding="ExecuteButton">
+            <constraints border-constraint="East"/>
+            <properties>
+              <text value="Execute"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="b9c4d" binding="MainPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="line">
+          <color color="-16777216"/>
+        </border>
+        <children>
+          <scrollpane id="ac9b" binding="MainScrollPane">
+            <constraints/>
+            <properties>
+              <horizontalScrollBarPolicy value="32"/>
+              <verticalScrollBarPolicy value="22"/>
+            </properties>
+            <border type="none"/>
+            <children/>
+          </scrollpane>
+        </children>
       </grid>
     </children>
   </grid>
