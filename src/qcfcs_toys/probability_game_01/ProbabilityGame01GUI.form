@@ -75,7 +75,10 @@
       </grid>
       <grid id="b9c4d" binding="MainPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <preferredSize width="400" height="400"/>
+          <requestFocusEnabled value="false"/>
+        </properties>
         <border type="line">
           <color color="-16777216"/>
         </border>
@@ -84,10 +87,32 @@
             <constraints/>
             <properties>
               <horizontalScrollBarPolicy value="32"/>
+              <preferredSize width="500" height="280"/>
+              <requestFocusEnabled value="false"/>
               <verticalScrollBarPolicy value="22"/>
             </properties>
             <border type="none"/>
-            <children/>
+            <children>
+              <grid id="7d539" binding="GamePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="97470" binding="MatrixPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints border-constraint="West"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children/>
+                  </grid>
+                  <grid id="ee261" binding="StatePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints border-constraint="East"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children/>
+                  </grid>
+                </children>
+              </grid>
+            </children>
           </scrollpane>
         </children>
       </grid>

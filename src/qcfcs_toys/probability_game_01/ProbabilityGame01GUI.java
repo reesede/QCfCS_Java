@@ -20,4 +20,7 @@ public class ProbabilityGame01GUI
     private JLabel NumStateLabel;
     private JFormattedTextField NumStatesTextField;
     private JScrollPane MainScrollPane;
+    private JPanel GamePanel;
+    private JPanel MatrixPanel;
+    private JPanel StatePanel;
 }
