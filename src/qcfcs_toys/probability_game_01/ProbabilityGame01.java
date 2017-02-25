@@ -30,14 +30,10 @@ import javax.swing.*;
 //
 // History:
 //      20170218    D.E. Reese          Creation (Programming Drill 3.1.1)
+//      20170225    D.E. Reese          Deleted ProbabilityGameMainFrame and used ProbabilityGame01GUI.
 
 public class ProbabilityGame01
 {
-    /**
-     * Main frame for game.
-     */
-    public static ProbabilityGame01MainFrame theMainFrame;
-
     /**
      * Main program.
      * @param args  Arguments to be sent to main program.
@@ -51,7 +47,7 @@ public class ProbabilityGame01
                 {
                     public void run()
                     {
-                        ProbabilityGame01.theMainFrame = new ProbabilityGame01MainFrame("Probability Game 01");
+                        new ProbabilityGame01GUI();
                     }
                 }
         );
