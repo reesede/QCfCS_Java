@@ -4,7 +4,9 @@
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <preferredSize width="1000" height="600"/>
+    </properties>
     <border type="none" title="Probabilty Game 01" title-justification="2" title-position="1"/>
     <children>
       <grid id="4d2ae" binding="gameTypePanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
@@ -41,7 +43,7 @@
           <component id="8430b" class="javax.swing.JFormattedTextField" binding="numStatesTextField">
             <constraints/>
             <properties>
-              <text value="1"/>
+              <text value="10"/>
             </properties>
           </component>
           <component id="c4677" class="javax.swing.JButton" binding="startButton">
@@ -52,7 +54,7 @@
           </component>
         </children>
       </grid>
-      <grid id="70fd7" binding="controlPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="70fd7" binding="controlPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
         <properties/>
         <border type="line">
@@ -60,19 +62,19 @@
         </border>
         <children>
           <component id="785e8" class="javax.swing.JLabel" binding="iterationCountLabel">
-            <constraints border-constraint="West"/>
+            <constraints/>
             <properties>
               <text value="Iteration Count = 0"/>
             </properties>
           </component>
           <component id="17c4a" class="javax.swing.JButton" binding="executeButton">
-            <constraints border-constraint="Center"/>
+            <constraints/>
             <properties>
               <text value="Execute"/>
             </properties>
           </component>
           <component id="42fd7" class="javax.swing.JButton" binding="quitButton" default-binding="true">
-            <constraints border-constraint="East"/>
+            <constraints/>
             <properties>
               <text value="Quit"/>
             </properties>
@@ -102,12 +104,16 @@
               <grid id="7d539" binding="gamePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints/>
                 <properties/>
-                <border type="none"/>
+                <border type="line">
+                  <color color="-16777216"/>
+                </border>
                 <children>
                   <grid id="97470" binding="matrixPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints border-constraint="Center"/>
                     <properties/>
-                    <border type="none"/>
+                    <border type="line">
+                      <color color="-16777216"/>
+                    </border>
                     <children>
                       <component id="4e258" class="javax.swing.JLabel" binding="transitionMatrixLabel">
                         <constraints border-constraint="North"/>
@@ -124,7 +130,9 @@
                   <grid id="ee261" binding="statePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints border-constraint="East"/>
                     <properties/>
-                    <border type="none"/>
+                    <border type="line">
+                      <color color="-16777216"/>
+                    </border>
                     <children>
                       <component id="5abb7" class="javax.swing.JLabel" binding="stateVectorLabel">
                         <constraints border-constraint="North"/>
