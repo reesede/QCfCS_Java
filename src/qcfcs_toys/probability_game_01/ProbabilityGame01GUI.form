@@ -121,7 +121,7 @@
                           <text value="Transition Matrix"/>
                         </properties>
                       </component>
-                      <component id="1d4c0" class="javax.swing.JTable" binding="transitionMatrixTable">
+                      <component id="756e2" class="qcfcs_toys.probability_game_01.ProbabilityGameMatrixTable" binding="transitionMatrixTable" custom-create="true">
                         <constraints border-constraint="Center"/>
                         <properties/>
                       </component>
@@ -140,7 +140,7 @@
                           <text value="State Vector"/>
                         </properties>
                       </component>
-                      <component id="c561b" class="javax.swing.JTable" binding="stateVectorTable">
+                      <component id="62e57" class="qcfcs_toys.probability_game_01.ProbabilityGameMatrixTable" binding="stateVectorTable" custom-create="true">
                         <constraints border-constraint="Center"/>
                         <properties/>
                       </component>
