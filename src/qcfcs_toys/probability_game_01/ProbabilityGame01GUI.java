@@ -5,8 +5,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 
 /**
@@ -39,6 +42,8 @@ import java.text.NumberFormat;
 //      20170219    D.E. Reese          Creation (Programming Drill 3.1.1)
 //      20170228    D.E. Reese          Added createUIComponents(). Changed JTable elements to
 //                                      ProbabilityGameMatrixTable classes.
+//      20170301    D.E. Reese          Initialize numStatesTextField. Added PropertyChangeListener to
+//                                      numStatesTextField.
 
 public class ProbabilityGame01GUI
 {
@@ -106,6 +111,12 @@ public class ProbabilityGame01GUI
 
         initializeGameTypeButtonGroup();
 
+        // Set up the number of states in the editable text field.
+
+        numStatesTextField.setPreferredSize(new Dimension(50, numStatesTextField.getPreferredSize().height));
+        numStatesTextField.setHorizontalAlignment(JFormattedTextField.CENTER);
+        numStatesTextField.setText(Integer.toString(initialNumberOfStates));
+
         // Create listeners.
 
         quitButton.addActionListener(new ActionListener()
@@ -121,6 +132,15 @@ public class ProbabilityGame01GUI
         {
             @Override
             public void actionPerformed(ActionEvent actionEvent)
+            {
+                transitionMatrixTable.setEnabled(true);
+            }
+        });
+
+        numStatesTextField.addPropertyChangeListener(new PropertyChangeListener()
+        {
+            @Override
+            public void propertyChange(PropertyChangeEvent propertyChangeEvent)
             {
 
             }

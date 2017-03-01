@@ -34,6 +34,7 @@ import java.awt.*;
 // History:
 //      20170227    D.E. Reese          Creation (Programming Drill 3.1.1)
 //      20170228    D.E. Reese          Reorganized constructor.
+//      20170301    D.E. Reese          Added tableEnabled, isEnabled(), setEnabled().
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -99,23 +100,26 @@ public class ProbabilityGameMatrixTable extends JTable
 
         // Set the model for the table.
 
-        this.setModel(transitionTableModel);
+        setModel(transitionTableModel);
 
         // Set up the renderer for all cells.
 
-        for(int i = 0; i < this.getColumnCount(); i++)
+        for(int i = 0; i < getColumnCount(); i++)
         {
-            this.getColumnModel().getColumn(i).setPreferredWidth(tableColumnWidth);
-            this.getColumnModel().getColumn(i).setCellRenderer( centerRenderer );
+            getColumnModel().getColumn(i).setPreferredWidth(tableColumnWidth);
+            getColumnModel().getColumn(i).setCellRenderer( centerRenderer );
         }
 
         // Clear out the header.
 
-        this.setTableHeader(null);
+        setTableHeader(null);
 
         // Set the table border.
 
-        this.setBorder(new LineBorder(Color.BLACK, 1));
-    }
+        setBorder(new LineBorder(Color.BLACK, 1));
 
+        // Set the table so that it is not enabled. This can be changed later.
+
+        setEnabled(false);
+    }
 }
