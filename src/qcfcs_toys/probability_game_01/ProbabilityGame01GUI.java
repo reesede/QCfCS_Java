@@ -133,7 +133,24 @@ public class ProbabilityGame01GUI
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
+                // Enable the game matrices.
+
                 transitionMatrixTable.setEnabled(true);
+                stateVectorTable.setEnabled(true);
+
+                // Disable the game type buttons.
+
+                booleanGameButton.setEnabled(false);
+                realGameButton.setEnabled(false);
+                complexGameButton.setEnabled(false);
+
+                // Disable the start button itself.
+
+                startButton.setEnabled(false);
+
+                // Disable the number of states text field.
+
+                numStatesTextField.setEnabled(false);
             }
         });
 
@@ -143,6 +160,18 @@ public class ProbabilityGame01GUI
             public void propertyChange(PropertyChangeEvent propertyChangeEvent)
             {
 
+            }
+        });
+
+        executeButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                // Disable the tables so that they can not be edited.
+
+                transitionMatrixTable.setEnabled(false);
+                stateVectorTable.setEnabled(false);
             }
         });
 

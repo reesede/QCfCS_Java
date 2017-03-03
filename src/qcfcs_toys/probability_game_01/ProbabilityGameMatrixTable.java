@@ -2,7 +2,6 @@ package qcfcs_toys.probability_game_01;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
@@ -35,6 +34,8 @@ import java.awt.*;
 //      20170227    D.E. Reese          Creation (Programming Drill 3.1.1)
 //      20170228    D.E. Reese          Reorganized constructor.
 //      20170301    D.E. Reese          Added tableEnabled, isEnabled(), setEnabled().
+//      20170303    D.E. Reese          Added use of ProbabilityGameMatrixTableRenderer to handle rendering.
+//                                      Added getTableType(), setTableType().
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -79,15 +80,16 @@ public class ProbabilityGameMatrixTable extends JTable
     {
         super(rowCount, columnCount);
 
-        // Verify that the table type is correct.
+        // Verify that the table type is correct and set the local value.
 
         if ((tableType < TABLE_TYPE_BOOLEAN) || (tableType > TABLE_TYPE_COMPLEX)) throw new IllegalArgumentException("Invalid tableType");
+        theTableType = tableType;
 
         // Set up model and renderer.
 
         DefaultTableModel transitionTableModel = new DefaultTableModel(rowCount,columnCount);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        ProbabilityGameMatrixTableRenderer theRenderer = new ProbabilityGameMatrixTableRenderer();
+        theRenderer.setHorizontalAlignment( JLabel.CENTER );
 
         // Initialize values in the table.
 
@@ -107,7 +109,7 @@ public class ProbabilityGameMatrixTable extends JTable
         for(int i = 0; i < getColumnCount(); i++)
         {
             getColumnModel().getColumn(i).setPreferredWidth(tableColumnWidth);
-            getColumnModel().getColumn(i).setCellRenderer( centerRenderer );
+            getColumnModel().getColumn(i).setCellRenderer( theRenderer );
         }
 
         // Clear out the header.
@@ -121,5 +123,31 @@ public class ProbabilityGameMatrixTable extends JTable
         // Set the table so that it is not enabled. This can be changed later.
 
         setEnabled(false);
+    }
+
+    /**
+     * This method returns the type of the table.
+     * @return  Type of table.
+     */
+    public int getTableType()
+    {
+        return theTableType;
+    }
+
+    /**
+     * This method sets the table type.
+     * @param newTableType  New type of table.
+     * @return  Old type of table.
+     * @throws IllegalArgumentException Thrown if newTableType is not valid.
+     */
+    public int setTableType(int newTableType) throws IllegalArgumentException
+    {
+        int oldType = theTableType;
+
+        if ((newTableType < TABLE_TYPE_BOOLEAN) || (newTableType > TABLE_TYPE_COMPLEX))
+            throw new IllegalArgumentException("Invalid newTableType");
+        theTableType = newTableType;
+
+        return oldType;
     }
 }
