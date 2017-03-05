@@ -39,9 +39,9 @@ public class ProbabilityGameMatrixTableRenderer extends DefaultTableCellRenderer
             JTable table, Object value, boolean isSelected,
             boolean hasFocus, int row, int column)
     {
-        // First format the cell value as required
+        Object tValue = value;
 
-        // value = formatter.format((Number)value);
+        // Verify that the table is of the correct type.
 
         if (!ProbabilityGameMatrixTable.class.isInstance(table))
             throw new IllegalArgumentException("table is not an instance of ProbabilityGameMatrixtable");
@@ -56,6 +56,6 @@ public class ProbabilityGameMatrixTableRenderer extends DefaultTableCellRenderer
         // And pass it on to parent class
 
         return super.getTableCellRendererComponent(
-                table, value, isSelected, hasFocus, row, column );
+                table, tValue, isSelected, hasFocus, row, column );
     }
 }

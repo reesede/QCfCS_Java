@@ -1,5 +1,8 @@
 package qcfcs_toys.probability_game_01;
 
+import qcfcs_math.Complex;
+import qcfcs_math.ComplexMatrix;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +39,7 @@ import java.awt.*;
 //      20170301    D.E. Reese          Added tableEnabled, isEnabled(), setEnabled().
 //      20170303    D.E. Reese          Added use of ProbabilityGameMatrixTableRenderer to handle rendering.
 //                                      Added getTableType(), setTableType().
+//      20170304    D.E. Reese          Added getMatrixElement(), setMatrixElement().
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -70,6 +74,11 @@ public class ProbabilityGameMatrixTable extends JTable
     private int tableColumnWidth = 50;
 
     /**
+     * ComplexMatrix containing the elements corresponding to the table.
+     */
+    private ComplexMatrix theMatrix;
+
+    /**
      * Constructor for the table allowing specification of the type of table and number of rows and columns.
      * @param tableType Type of table (TABLE_TYPE_BOOLEAN, TABLE_TYPE_INTEGER, TABLE_TYPE_REAL, TABLE_TYPE_COMPLEX).
      * @param rowCount  Number of rows (must be > 0).
@@ -84,6 +93,13 @@ public class ProbabilityGameMatrixTable extends JTable
 
         if ((tableType < TABLE_TYPE_BOOLEAN) || (tableType > TABLE_TYPE_COMPLEX)) throw new IllegalArgumentException("Invalid tableType");
         theTableType = tableType;
+
+        // Initialize the data corresponding to the table.
+
+        theMatrix = new ComplexMatrix(rowCount, columnCount);
+        for(int i = 0; i < rowCount; i++)
+            for(int j = 0; j < columnCount; j++)
+                theMatrix.set(i, j, 0);
 
         // Set up model and renderer.
 
@@ -140,7 +156,7 @@ public class ProbabilityGameMatrixTable extends JTable
      * @return  Old type of table.
      * @throws IllegalArgumentException Thrown if newTableType is not valid.
      */
-    public int setTableType(int newTableType) throws IllegalArgumentException
+    public int setTableType(final int newTableType) throws IllegalArgumentException
     {
         int oldType = theTableType;
 
@@ -149,5 +165,34 @@ public class ProbabilityGameMatrixTable extends JTable
         theTableType = newTableType;
 
         return oldType;
+    }
+
+    /**
+     * This method returns the complex matrix data associated with this table.
+     * @param row       Row of desired element.
+     * @param column    Column of desired element.
+     * @return          Desired element of the complex matrix corresponding to the table.
+     * @throws IllegalArgumentException Thrown if row or column is out of bounds.
+     */
+    public Complex getMatrixElement(final int row, final int column) throws IllegalArgumentException
+    {
+        if ((row < 0) || (row >= this.getRowCount())) throw new IllegalArgumentException("row is out of bounds.");
+        if ((column < 0) || (column >= this.getColumnCount())) throw new IllegalArgumentException("column is out of bounds");
+        return theMatrix.get(row, column);
+    }
+
+    /**
+     * This method sets the complex matrix element for a corresponding element in this table.
+     * @param row           Row of element that is to be set.
+     * @param column        Column of element that is to be set.
+     * @param theElement    Element to set.
+     * @throws IllegalArgumentException Thrown if row or column is out of bounds, or theElement is null.
+     */
+    public void setMatrixElement(final int row, final int column, final Complex theElement) throws IllegalArgumentException
+    {
+        if ((row < 0) || (row >= this.getRowCount())) throw new IllegalArgumentException("row is out of bounds.");
+        if ((column < 0) || (column >= this.getColumnCount())) throw new IllegalArgumentException("column is out of bounds");
+        if (theElement == null) throw new IllegalArgumentException("theElement is null.");
+        theMatrix.set(row, column, theElement);
     }
 }

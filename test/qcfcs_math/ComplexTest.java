@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException;
  * This class implements unit tests for the Complex class.
  * Created by reesede on 1/7/2017.
  * @author David E. Reese
- * @version 2.4.1
+ * @version 3.1.1
  * @since 1.2.1
  */
 
@@ -47,6 +47,7 @@ import java.lang.IllegalArgumentException;
 //      20170125    D.E. Reese          Added code to test equals() for double, float, and int.
 //      20170205    D.E. Reese          Added transpose() and transposeConjugate().
 //      20170210    D.E. Reese          Added testToString() and set(). Deleted transpose() and transposeConjugate().
+//      20170305    D.E. Reese          Added parseComplex().
 //
 class ComplexTest
 {
@@ -1405,4 +1406,69 @@ class ComplexTest
         assertTrue(theComplex.toString().compareTo("-1.0 - 1.0*I") == 0);
     }
 
+    @Test
+    void parseComplex()
+    {
+        assertTrue(Complex.parseComplex("0").equals(new Complex(0.0, 0.0)));
+        assertTrue(Complex.parseComplex("1").equals(new Complex(1.0, 0.0)));
+        assertTrue(Complex.parseComplex("1.1").equals(new Complex(1.1, 0.0)));
+        assertTrue(Complex.parseComplex("-1").equals(new Complex(-1.0, 0.0)));
+        assertTrue(Complex.parseComplex("-1.1").equals(new Complex(-1.1, 0.0)));
+        assertTrue(Complex.parseComplex("+1").equals(new Complex(1.0, 0.0)));
+        assertTrue(Complex.parseComplex("+1.1").equals(new Complex(1.1, 0.0)));
+        assertTrue(Complex.parseComplex("0.111").equals(new Complex(0.111, 0.0)));
+        assertTrue(Complex.parseComplex("+0.111").equals(new Complex(0.111, 0.0)));
+        assertTrue(Complex.parseComplex("-0.111").equals(new Complex(-0.111, 0.0)));
+        assertTrue(Complex.parseComplex(".111").equals(new Complex(0.111, 0.0)));
+        assertTrue(Complex.parseComplex("+.111").equals(new Complex(0.111, 0.0)));
+        assertTrue(Complex.parseComplex("-.111").equals(new Complex(-0.111, 0.0)));
+
+        assertTrue(Complex.parseComplex("I").equals(new Complex(0.0, 1.0)));
+        assertTrue(Complex.parseComplex("+I").equals(new Complex(0.0, 1.0)));
+        assertTrue(Complex.parseComplex("-I").equals(new Complex(0.0, -1.0)));
+        assertTrue(Complex.parseComplex("1*I").equals(new Complex(0.0, 1.0)));
+        assertTrue(Complex.parseComplex("+1*I").equals(new Complex(0.0, 1.0)));
+        assertTrue(Complex.parseComplex("-1*I").equals(new Complex(0.0, -1.0)));
+        assertTrue(Complex.parseComplex("1.0*I").equals(new Complex(0.0, 1.0)));
+        assertTrue(Complex.parseComplex("+1.0*I").equals(new Complex(0.0, 1.0)));
+        assertTrue(Complex.parseComplex("-1.0*I").equals(new Complex(0.0, -1.0)));
+        assertTrue(Complex.parseComplex("0.111*I").equals(new Complex(0.0, 0.111)));
+        assertTrue(Complex.parseComplex("+0.111*I").equals(new Complex(0.0, 0.111)));
+        assertTrue(Complex.parseComplex("-0.111*I").equals(new Complex(0.0, -0.111)));
+        assertTrue(Complex.parseComplex(".111*I").equals(new Complex(0.0, 0.111)));
+        assertTrue(Complex.parseComplex("+.111*I").equals(new Complex(0.0, 0.111)));
+        assertTrue(Complex.parseComplex("-.111*I").equals(new Complex(0.0, -0.111)));
+
+        assertTrue(Complex.parseComplex("1+I").equals(new Complex(1.0, 1.0)));
+        assertTrue(Complex.parseComplex("1-I").equals(new Complex(1.0, -1.0)));
+        assertTrue(Complex.parseComplex("-1+I").equals(new Complex(-1.0, 1.0)));
+        assertTrue(Complex.parseComplex("-1-I").equals(new Complex(-1.0, -1.0)));
+        assertTrue(Complex.parseComplex("-1.1+I").equals(new Complex(-1.1, 1.0)));
+        assertTrue(Complex.parseComplex("-1.1-I").equals(new Complex(-1.1, -1.0)));
+
+        assertTrue(Complex.parseComplex("1+1*I").equals(new Complex(1.0, 1.0)));
+        assertTrue(Complex.parseComplex("1-1*I").equals(new Complex(1.0, -1.0)));
+        assertTrue(Complex.parseComplex("1+1.1*I").equals(new Complex(1.0, 1.1)));
+        assertTrue(Complex.parseComplex("1-1.1*I").equals(new Complex(1.0, -1.1)));
+        assertTrue(Complex.parseComplex("+1+1*I").equals(new Complex(1.0, 1.0)));
+        assertTrue(Complex.parseComplex("+1-1*I").equals(new Complex(1.0, -1.0)));
+        assertTrue(Complex.parseComplex("+1+1.1*I").equals(new Complex(1.0, 1.1)));
+        assertTrue(Complex.parseComplex("+1-1.1*I").equals(new Complex(1.0, -1.1)));
+        assertTrue(Complex.parseComplex("-1+1*I").equals(new Complex(-1.0, 1.0)));
+        assertTrue(Complex.parseComplex("-1-1*I").equals(new Complex(-1.0, -1.0)));
+        assertTrue(Complex.parseComplex("-1+1.1*I").equals(new Complex(-1.0, 1.1)));
+        assertTrue(Complex.parseComplex("-1-1.1*I").equals(new Complex(-1.0, -1.1)));
+        assertTrue(Complex.parseComplex("1.1+1*I").equals(new Complex(1.1, 1.0)));
+        assertTrue(Complex.parseComplex("1.1-1*I").equals(new Complex(1.1, -1.0)));
+        assertTrue(Complex.parseComplex("1.1+1.1*I").equals(new Complex(1.1, 1.1)));
+        assertTrue(Complex.parseComplex("1.1-1.1*I").equals(new Complex(1.1, -1.1)));
+        assertTrue(Complex.parseComplex("+1.1+1*I").equals(new Complex(1.1, 1.0)));
+        assertTrue(Complex.parseComplex("+1.1-1*I").equals(new Complex(1.1, -1.0)));
+        assertTrue(Complex.parseComplex("+1.1+1.1*I").equals(new Complex(1.1, 1.1)));
+        assertTrue(Complex.parseComplex("+1.1-1.1*I").equals(new Complex(1.1, -1.1)));
+        assertTrue(Complex.parseComplex("-1.1+1*I").equals(new Complex(-1.1, 1.0)));
+        assertTrue(Complex.parseComplex("-1.1-1*I").equals(new Complex(-1.1, -1.0)));
+        assertTrue(Complex.parseComplex("-1.1+1.1*I").equals(new Complex(-1.1, 1.1)));
+        assertTrue(Complex.parseComplex("-1.1-1.1*I").equals(new Complex(-1.1, -1.1)));
+    }
 }

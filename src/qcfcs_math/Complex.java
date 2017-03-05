@@ -5,7 +5,7 @@ package qcfcs_math;
  * convert -0.0 to 0.0.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 2.6.2
+ * @version 3.1.1
  * @since 1.1.1
  */
 
@@ -48,6 +48,7 @@ package qcfcs_math;
 //      20170210    D.E. Reese          Added toString() and set(). Finalized parameters to methods.
 //      20170216    D.E. Reese          Added deltaPrecision, setPrecision(), and getPrecision(). Added code to
 //                                      equals to determine equality within a given precision.
+//      20170305    D.E. Reese          Added parseComplex().
 //
 
 public class Complex
@@ -656,6 +657,259 @@ public class Complex
     }
 
     /**
+     * This method decodes a string into a complex number. The string must be of one of the following formats:
+     *      complex := real
+     *              := real + real * I
+     *              := real - real * I
+     *              := real * I
+     *              := real * I
+     *              := real * I
+     *              := I
+     *              := + I
+     *              := - I
+     *      real    := digits
+     *              := + digits
+     *              := - digits
+     *              := digits.digits
+     *              := + digits.digits
+     *              := - digits.digits
+     *              := .digits
+     *              := + .digits
+     *              := - .digits
+     *              := .digits.digits
+     *              := + .digits.digits
+     *              := - .digits.digits
+     * Where digits are 0...9. Note that spaces normally are ignored, except that there can not be any spaces between
+     * digits and decimal points.
+     * @param theString String to be converted to a complex number.
+     * @return  Complex number extracted from the string.
+     * @throws NumberFormatException    Thrown if the string is not in one of the specified formats.
+     */
+    public static Complex parseComplex (final String theString) throws NumberFormatException
+    {
+        if (theString == null) throw new NumberFormatException("theString is null.");
+        if (theString.length() == 0) throw new NumberFormatException("Attempt to parse empty string.");
+
+        // Move through the string character-by-character, copying each valid character into a temporary working string.
+        // The valid characters are: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, +, -, *, I. Spaces will be eliminated. If an invalid
+        // character is detected, throw a NumberFormatException.
+
+        String tempString = new String();
+        for(int i = 0; i < theString.length(); i++)
+        {
+            // Get the next character in the string.
+
+            char theChar = theString.charAt(i);
+
+            // Check if the character is valid. At this point, a space also will be considered valid.
+
+            boolean goodChar = false;
+            if(theChar == '+') goodChar = true;
+            if(theChar == '-') goodChar = true;
+            if(theChar == '.') goodChar = true;
+            if(theChar == '*') goodChar = true;
+            if(theChar == 'I') goodChar = true;
+            if((theChar >= '0') && (theChar <= '9')) goodChar = true;
+            if(theChar == ' ') goodChar = true;
+            if(!goodChar) throw new NumberFormatException("Illegal character in string to be parsed.");
+
+            // Append the character to the temporary work string.
+
+            if(theChar != ' ')
+                tempString += theChar;
+        }
+
+        // Start parsing the work string for a valid complex number.
+
+        final int IN_REAL_SIGN = 0;
+        final int IN_REAL_PART_LEFT = 1;
+        final int IN_REAL_PART_RIGHT = 2;
+        final int IN_IMAG_PART_LEFT = 3;
+        final int IN_IMAG_PART_RIGHT = 4;
+        final int IN_I_PART = 5;
+        final int DONE = 6;
+
+        int    state = IN_REAL_SIGN;
+        double realPart = 0.0;
+        double imagPart = 0.0;
+        int    realSign = 1;
+        int    imagSign = 1;
+        boolean realPartDigitFound = false;
+        boolean imagPartDigitFound = false;
+        double  realPartDecimals = 1.0;
+        double  imagPartDecimals = 1.0;
+
+        for(int i = 0; i < tempString.length(); i++)
+        {
+            char theChar = tempString.charAt(i);
+            switch(state)
+            {
+                case IN_REAL_SIGN:
+                    switch(theChar)
+                    {
+                        case '+':
+                            realSign = 1;
+                            state = IN_REAL_PART_LEFT;
+                            break;
+                        case '-':
+                            realSign = -1;
+                            state = IN_REAL_PART_LEFT;
+                            break;
+                        case '.':
+                            state = IN_REAL_PART_RIGHT;
+                            break;
+                        case '*':
+                            throw new NumberFormatException("Cannot start Complex with *.");
+                        case 'I':
+                            realPart = 0.0;
+                            imagPart = 1.0;
+                            state = DONE;
+                            break;
+                        default:
+                            realPart = Character.getNumericValue(theChar);
+                            realPartDigitFound = true;
+                            state = IN_REAL_PART_LEFT;
+                            break;
+                    }
+                    break;
+                case IN_REAL_PART_LEFT:
+                    switch(theChar)
+                    {
+                        case '+':
+                            if (!realPartDigitFound) throw new NumberFormatException("No real digit found.");
+                            imagSign = 1;
+                            state = IN_IMAG_PART_LEFT;
+                            break;
+                        case '-':
+                            if (!realPartDigitFound) throw new NumberFormatException("No real digit found.");
+                            imagSign = -1;
+                            state = IN_IMAG_PART_LEFT;
+                            break;
+                        case '.':
+                            state = IN_REAL_PART_RIGHT;
+                            break;
+                        case '*':
+                            if (!realPartDigitFound) throw new NumberFormatException("No imaginary digit found.");
+                            imagPart = realPart;
+                            imagSign = realSign;
+                            realPart = 0.0;
+                            state = IN_I_PART;
+                            break;
+                        case 'I':
+                            if (realPartDigitFound)
+                                throw new NumberFormatException("No * found after imaginary part before I.");
+                            realPart=0.0;
+                            imagSign=realSign;
+                            imagPart=1.0;
+                            state=DONE;
+                            break;
+                        default:
+                            realPart = realPart * 10.0 + Character.getNumericValue(theChar);
+                            realPartDigitFound = true;
+                            break;
+                    }
+                    break;
+                case IN_REAL_PART_RIGHT:
+                    switch(theChar)
+                    {
+                        case '+':
+                            if (!realPartDigitFound) throw new NumberFormatException("No real digit found.");
+                            imagSign = 1;
+                            state = IN_IMAG_PART_LEFT;
+                            break;
+                        case '-':
+                            if (!realPartDigitFound) throw new NumberFormatException("No real digit found.");
+                            imagSign = -1;
+                            state = IN_IMAG_PART_LEFT;
+                            break;
+                        case '.':
+                            throw new NumberFormatException("Two decimal points found in real part.");
+                        case '*':
+                            if (!realPartDigitFound) throw new NumberFormatException("No imaginary digit found.");
+                            imagPart = realPart;
+                            imagSign = realSign;
+                            realPart = 0.0;
+                            state = IN_I_PART;
+                            break;
+                        case 'I':
+                            throw new NumberFormatException("No * found after imaginary part before I.");
+                        default:
+                            realPartDecimals /= 10.0;
+                            realPart = realPart + realPartDecimals * (double)Character.getNumericValue(theChar);
+                            realPartDigitFound = true;
+                            break;
+                    }
+                    break;
+                case IN_IMAG_PART_LEFT:
+                    switch(theChar)
+                    {
+                        case '+':
+                            throw new NumberFormatException("Additional plus sign found in imaginary part.");
+                        case '-':
+                            throw new NumberFormatException("Additional minus sign found in imaginary part.");
+                        case '.':
+                            state = IN_IMAG_PART_RIGHT;
+                            break;
+                        case '*':
+                            if (!imagPartDigitFound) throw new NumberFormatException("No imaginary digit found.");
+                            state = IN_I_PART;
+                            break;
+                        case 'I':
+                            if (imagPartDigitFound)
+                                throw new NumberFormatException("Additional I found in imaginary part.");
+                            imagPart = 1.0;
+                            imagPartDigitFound = true;
+                            state = DONE;
+                            break;
+                        default:
+                            imagPart = imagPart * 10.0 + Character.getNumericValue(theChar);
+                            imagPartDigitFound = true;
+                            break;
+                    }
+                    break;
+                case IN_IMAG_PART_RIGHT:
+                    switch(theChar)
+                    {
+                        case '+':
+                            throw new NumberFormatException("Additional plus sign found in imaginary part.");
+                        case '-':
+                            throw new NumberFormatException("Additional minus sign found in imaginary part.");
+                        case '.':
+                            throw new NumberFormatException("Two decimal points found in imaginary part.");
+                        case '*':
+                            state = IN_I_PART;
+                            break;
+                        case 'I':
+                            throw new NumberFormatException("No * found after imaginary part before I.");
+                        default:
+                            imagPartDecimals /= 10.0;
+                            imagPart = imagPart + imagPartDecimals * (double)Character.getNumericValue(theChar);
+                            imagPartDigitFound = true;
+                            break;
+                    }
+                    break;
+                case IN_I_PART:
+                    if(theChar == 'I')
+                        state = DONE;
+                    else
+                        throw new NumberFormatException("I expected at end of imaginary part.");
+                    break;
+                case DONE:
+                    throw new NumberFormatException("Illegal character after end of Complex.");
+            }
+        }
+
+        // Create the new complex number and return it.
+
+        if(realPart != 0)
+            realPart = (double)realSign * realPart;
+        if(imagPart != 0)
+            imagPart = (double)imagSign * imagPart;
+//        System.out.println("realPart = " + realPart + ", imagPart = " + imagPart);
+        return new Complex(realPart,imagPart);
+    }
+
+    /**
      * This method returns the precision value for determining equality for complex numbers. A number will be considered
      * to be equal to a complex real or imaginary part if it is in the range value - getPrecision()...value + getPrecision().
      * @return  double value representing the precision for determining equality.
@@ -679,7 +933,6 @@ public class Complex
         final double returnVal = Complex.deltaPrecision;
         Complex.deltaPrecision = newPrecision;
         return returnVal;
-
     }
 
     /**
