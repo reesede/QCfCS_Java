@@ -40,6 +40,8 @@ import java.awt.*;
 //      20170303    D.E. Reese          Added use of ProbabilityGameMatrixTableRenderer to handle rendering.
 //                                      Added getTableType(), setTableType().
 //      20170304    D.E. Reese          Added getMatrixElement(), setMatrixElement().
+//      20170306    D.E. Reese          Added setValueAt() and moved format checking from ProbabilityGameMatrixTableRenderer
+//                                      to there. Deleted setMatrixElement() and getMatrixElement().
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -74,11 +76,6 @@ public class ProbabilityGameMatrixTable extends JTable
     private int tableColumnWidth = 50;
 
     /**
-     * ComplexMatrix containing the elements corresponding to the table.
-     */
-    private ComplexMatrix theMatrix;
-
-    /**
      * Constructor for the table allowing specification of the type of table and number of rows and columns.
      * @param tableType Type of table (TABLE_TYPE_BOOLEAN, TABLE_TYPE_INTEGER, TABLE_TYPE_REAL, TABLE_TYPE_COMPLEX).
      * @param rowCount  Number of rows (must be > 0).
@@ -94,18 +91,10 @@ public class ProbabilityGameMatrixTable extends JTable
         if ((tableType < TABLE_TYPE_BOOLEAN) || (tableType > TABLE_TYPE_COMPLEX)) throw new IllegalArgumentException("Invalid tableType");
         theTableType = tableType;
 
-        // Initialize the data corresponding to the table.
-
-        theMatrix = new ComplexMatrix(rowCount, columnCount);
-        for(int i = 0; i < rowCount; i++)
-            for(int j = 0; j < columnCount; j++)
-                theMatrix.set(i, j, 0);
-
         // Set up model and renderer.
 
         DefaultTableModel transitionTableModel = new DefaultTableModel(rowCount,columnCount);
         ProbabilityGameMatrixTableRenderer theRenderer = new ProbabilityGameMatrixTableRenderer();
-        theRenderer.setHorizontalAlignment( JLabel.CENTER );
 
         // Initialize values in the table.
 
@@ -167,32 +156,76 @@ public class ProbabilityGameMatrixTable extends JTable
         return oldType;
     }
 
-    /**
-     * This method returns the complex matrix data associated with this table.
-     * @param row       Row of desired element.
-     * @param column    Column of desired element.
-     * @return          Desired element of the complex matrix corresponding to the table.
-     * @throws IllegalArgumentException Thrown if row or column is out of bounds.
-     */
-    public Complex getMatrixElement(final int row, final int column) throws IllegalArgumentException
+    @Override
+    public void setValueAt(Object aValue, int row, int column)
     {
-        if ((row < 0) || (row >= this.getRowCount())) throw new IllegalArgumentException("row is out of bounds.");
-        if ((column < 0) || (column >= this.getColumnCount())) throw new IllegalArgumentException("column is out of bounds");
-        return theMatrix.get(row, column);
-    }
+        Object tValue = aValue;
 
-    /**
-     * This method sets the complex matrix element for a corresponding element in this table.
-     * @param row           Row of element that is to be set.
-     * @param column        Column of element that is to be set.
-     * @param theElement    Element to set.
-     * @throws IllegalArgumentException Thrown if row or column is out of bounds, or theElement is null.
-     */
-    public void setMatrixElement(final int row, final int column, final Complex theElement) throws IllegalArgumentException
-    {
-        if ((row < 0) || (row >= this.getRowCount())) throw new IllegalArgumentException("row is out of bounds.");
-        if ((column < 0) || (column >= this.getColumnCount())) throw new IllegalArgumentException("column is out of bounds");
-        if (theElement == null) throw new IllegalArgumentException("theElement is null.");
-        theMatrix.set(row, column, theElement);
+        // Get a string containing the existing element in the table.
+
+        String oldValue = this.getValueAt(row, column).toString();
+
+        // Get a complex number corresponding to the new value. If the new value does not parse to a complex
+        // number, then newValue is set to null.
+        Complex newComplexValue = null;
+        String newValue = null;
+
+        try
+        {
+            newComplexValue = Complex.parseComplex((String)tValue);
+            newValue = newComplexValue.toString();
+        }
+        catch (NumberFormatException e)
+        {
+            newComplexValue = null;
+            newValue = null;
+        }
+
+        // If the newValue is not null, then process it based on the type of table. If it is an invalid value, then
+        // set it back to null.
+
+        if ((newValue != null) && (newComplexValue != null))
+        {
+            if (this.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN)
+            {
+                if(newComplexValue.equals(new Complex(1.0, 0.0)))
+                    newValue = "1";
+                else if (newComplexValue.equals(new Complex(0.0,0.0)))
+                    newValue = "0";
+                else
+                    newValue = null;
+            }
+
+            if (this.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_INTEGER)
+            {
+                if(newComplexValue.getImag() == 0.0)
+                {
+                    if ((newComplexValue.getReal() == Math.floor(newComplexValue.getReal())) &&
+                            Double.isInfinite(newComplexValue.getReal()))
+                    {
+                        int theInt = (int)newComplexValue.getReal();
+                        newValue = new Integer(theInt).toString();
+                    }
+                }
+                else
+                    newValue = null;
+            }
+        }
+
+        // If the newValue is null, then set the value to be set in the table to it. Otherwise, set the value
+        // to be set in the table to the old value.
+
+        if (newValue != null)
+        {
+            tValue = newValue;
+        }
+        else
+        {
+            tValue = oldValue;
+        }
+
+        // Set the value using the super method.
+
+        super.setValueAt(tValue, row, column);
     }
 }

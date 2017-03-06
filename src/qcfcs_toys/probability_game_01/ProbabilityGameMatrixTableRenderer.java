@@ -1,5 +1,7 @@
 package qcfcs_toys.probability_game_01;
 
+import qcfcs_math.Complex;
+
 import java.awt.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
@@ -31,31 +33,19 @@ import javax.swing.*;
 //
 // History:
 //      20170303    D.E. Reese          Creation (Programming Drill 3.1.1)
+//      20170306    D.E. Reese          Deleted getTableCellRendererComponent(). Added constructor.
 
 public class ProbabilityGameMatrixTableRenderer extends DefaultTableCellRenderer
 {
-    @Override
-    public Component getTableCellRendererComponent(
-            JTable table, Object value, boolean isSelected,
-            boolean hasFocus, int row, int column)
+    /**
+     * Default Constructor.
+     */
+    public ProbabilityGameMatrixTableRenderer()
     {
-        Object tValue = value;
+        super();
 
-        // Verify that the table is of the correct type.
+        // Set the horizontal alignment.
 
-        if (!ProbabilityGameMatrixTable.class.isInstance(table))
-            throw new IllegalArgumentException("table is not an instance of ProbabilityGameMatrixtable");
-        ProbabilityGameMatrixTable theTable = (ProbabilityGameMatrixTable)table;
-
-        // Process value in the table based on the type of the table.
-
-        if (theTable.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN)
-        {
-        }
-
-        // And pass it on to parent class
-
-        return super.getTableCellRendererComponent(
-                table, tValue, isSelected, hasFocus, row, column );
+        setHorizontalAlignment( JLabel.CENTER );
     }
 }
