@@ -1,7 +1,6 @@
 package qcfcs_toys.probability_game_01;
 
 import qcfcs_math.Complex;
-import qcfcs_math.ComplexMatrix;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -42,6 +41,8 @@ import java.awt.*;
 //      20170304    D.E. Reese          Added getMatrixElement(), setMatrixElement().
 //      20170306    D.E. Reese          Added setValueAt() and moved format checking from ProbabilityGameMatrixTableRenderer
 //                                      to there. Deleted setMatrixElement() and getMatrixElement().
+//      20170307    D.E. Reese          Moved theTableModel and theRenderer to be private instance variables.
+//                                      Renamed theTableModel to theTableModel. Added resizeTable().
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -76,6 +77,16 @@ public class ProbabilityGameMatrixTable extends JTable
     private int tableColumnWidth = 50;
 
     /**
+     * Model used by the table.
+     */
+    private DefaultTableModel theTableModel;
+
+    /**
+     * Renderer used by the table.
+     */
+    private ProbabilityGameMatrixTableRenderer theRenderer;
+
+    /**
      * Constructor for the table allowing specification of the type of table and number of rows and columns.
      * @param tableType Type of table (TABLE_TYPE_BOOLEAN, TABLE_TYPE_INTEGER, TABLE_TYPE_REAL, TABLE_TYPE_COMPLEX).
      * @param rowCount  Number of rows (must be > 0).
@@ -93,8 +104,8 @@ public class ProbabilityGameMatrixTable extends JTable
 
         // Set up model and renderer.
 
-        DefaultTableModel transitionTableModel = new DefaultTableModel(rowCount,columnCount);
-        ProbabilityGameMatrixTableRenderer theRenderer = new ProbabilityGameMatrixTableRenderer();
+        theTableModel = new DefaultTableModel(rowCount,columnCount);
+        theRenderer = new ProbabilityGameMatrixTableRenderer();
 
         // Initialize values in the table.
 
@@ -102,12 +113,12 @@ public class ProbabilityGameMatrixTable extends JTable
             for(int j = 0; j < columnCount; j++)
             {
                 String theValue = "0";
-                transitionTableModel.setValueAt(theValue,i,j);
+                theTableModel.setValueAt(theValue,i,j);
             }
 
         // Set the model for the table.
 
-        setModel(transitionTableModel);
+        setModel(theTableModel);
 
         // Set up the renderer for all cells.
 
@@ -201,11 +212,13 @@ public class ProbabilityGameMatrixTable extends JTable
                 if(newComplexValue.getImag() == 0.0)
                 {
                     if ((newComplexValue.getReal() == Math.floor(newComplexValue.getReal())) &&
-                            Double.isInfinite(newComplexValue.getReal()))
+                            !Double.isInfinite(newComplexValue.getReal()))
                     {
                         int theInt = (int)newComplexValue.getReal();
                         newValue = new Integer(theInt).toString();
                     }
+                    else
+                        newValue = null;
                 }
                 else
                     newValue = null;
@@ -227,5 +240,32 @@ public class ProbabilityGameMatrixTable extends JTable
         // Set the value using the super method.
 
         super.setValueAt(tValue, row, column);
+    }
+
+    /**
+     * This method resizes the table to a given number of rows and columns.
+     * @param newRows       New number of rows (must be > 0).
+     * @param newColumns    New number of columns (must be > 0).
+     * @throws IllegalArgumentException Thrown if newRows <= 0 or newColumns <= 0.
+     */
+    public void resizeTable(final int newRows, final int newColumns) throws IllegalArgumentException
+    {
+        // Verify the parameters.
+
+        if(newRows<=0) throw new IllegalArgumentException("newRows <= 0.");
+        if(newColumns<=0) throw new IllegalArgumentException("newColumns <= 0.");
+
+        // Set the rows and columns in the model.
+
+        theTableModel.setRowCount(newRows);
+        theTableModel.setColumnCount(newColumns);
+
+        // Reinitialize the data in the table.
+
+        for(int i = 0; i < newRows; i++)
+            for(int j = 0; j < newColumns; j++)
+            {
+                theTableModel.setValueAt(new String("0"), i, j);
+            }
     }
 }
