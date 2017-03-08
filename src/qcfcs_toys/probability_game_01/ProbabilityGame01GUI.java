@@ -1,5 +1,9 @@
 package qcfcs_toys.probability_game_01;
 
+import qcfcs_math.Complex;
+import qcfcs_math.ComplexMatrix;
+import qcfcs_math.ComplexVector;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -43,6 +47,7 @@ import java.beans.PropertyChangeListener;
 //                                      number of states and change the sizes of the tables appropriately. Initially,
 //                                      disable the execute button until the start button is clicked. Added
 //                                      executeGame(). Added gameType.
+//      20170308    D.E. Reese          Added code in executeGame() to perform the boolean game.
 
 public class ProbabilityGame01GUI
 {
@@ -91,6 +96,16 @@ public class ProbabilityGame01GUI
      */
     private int numIterations;
 
+    /**
+     * Matrix containing transitions.
+     */
+    private ComplexMatrix transitionMatrix;
+
+    /**
+     * Vector containing state.
+     */
+    private ComplexVector stateVector;
+
     private JFrame mainFrame;
     private JPanel panel1;
     private JPanel gameTypePanel;
@@ -117,6 +132,12 @@ public class ProbabilityGame01GUI
 
     public ProbabilityGame01GUI()
     {
+        // Set the transition matrix and state vector to null. These will be set to non-null values the first
+        // time the execute button is clicked.
+
+        transitionMatrix = null;
+        stateVector = null;
+
         // Set up main frame.
 
         initializeMainFrame();
@@ -266,6 +287,22 @@ public class ProbabilityGame01GUI
                 transitionMatrixTable.setEnabled(false);
                 stateVectorTable.setEnabled(false);
 
+                // If the transitionMatrix and stateVector are null, initialize them. If an exception occurs,
+                // display a message and exit from the program.
+
+                if((transitionMatrix == null) || (stateVector == null))
+                {
+                    try
+                    {
+                        createGameMatrices();
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println("Could not create matrices.");
+                        System.exit(-1);
+                    }
+                }
+
                 // Run an iteration of the game.
 
                 executeGame();
@@ -327,17 +364,68 @@ public class ProbabilityGame01GUI
     }
 
     /**
+     * This method creates the transitionMatrix and stateVector from the information in the corresponding table.
+     * @throws Exception    Thrown if numStates <= 0.
+     */
+    private void createGameMatrices() throws Exception
+    {
+        // Throw an exception if the number of states is invalid.
+
+        if(numStates <= 0) throw new Exception("numStates <= 0.");
+
+        // Create a new transition matrix if needed.
+
+        if(transitionMatrix == null)
+        {
+            // Create a new complex square matrix containing the number of states.
+
+            transitionMatrix = new ComplexMatrix(numStates,numStates);
+
+            // Copy the complex values from the GUI table into the transition matrix.
+
+            for(int i = 0; i < numStates; i++)
+                for(int j = 0; j < numStates; j++)
+                    transitionMatrix.set(i,j,Complex.parseComplex((String)transitionMatrixTable.getValueAt(i,j)));
+        }
+
+        // Create a new state vector if needed.
+
+        if(stateVector == null)
+        {
+            // Create a new complex vector with a number of rows equal to the number of states.
+
+            stateVector = new ComplexVector(numStates);
+
+            // Copy the complex values from the GUI table into the state vector.
+
+            for(int i = 0; i < numStates; i++)
+                stateVector.set(i,Complex.parseComplex((String)stateVectorTable.getValueAt(i,0)));
+        }
+    }
+
+    /**
      * This method executes the game, based on the type of game.
      */
     private void executeGame()
     {
-        switch (gameType)
+        // Generate a new state vector by multiplying the transition table by the current state vector.
+
+        stateVector = ComplexVector.convertComplexMatrixToVector(ComplexMatrix.multiply(transitionMatrix,stateVector));
+
+        // Process the new state vector based on the type of game.
+
+        switch(gameType)
         {
             case ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN:
-                break;
-            default:
+                for(int i = 0; i < numStates; i++)
+                {
+                    int theValue = (int)stateVector.get(i).getReal();
+                    stateVectorTable.setValueAt((new Integer(theValue)).toString(),i,0);
+                }
                 break;
         }
+
+        // Increment the number of iterations.
 
         numIterations++;
         iterationCountLabel.setText("Iteration Count = " + numIterations);
