@@ -16,7 +16,7 @@ import java.beans.PropertyChangeListener;
  * GUI form is located in ProbabilityGame01GUI.form.
  * Created by reesede on 2/19/2017.
  * @author David E. Reese
- * @version 3.1.1
+ * @version 3.2.1
  * @since 3.1.1
  */
 
@@ -48,6 +48,8 @@ import java.beans.PropertyChangeListener;
 //                                      disable the execute button until the start button is clicked. Added
 //                                      executeGame(). Added gameType.
 //      20170308    D.E. Reese          Added code in executeGame() to perform the boolean game.
+//      20170309    D.E. Reese          Added checkGameMatrixTables(), checkBooleanGameMatrixTables().
+//      20170310    D.E. Reese          Added checkRealGameMatrixTables() and enabled real game.
 
 public class ProbabilityGame01GUI
 {
@@ -170,6 +172,8 @@ public class ProbabilityGame01GUI
             public void actionPerformed(ActionEvent actionEvent)
             {
                 gameType = ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN;
+                transitionMatrixTable.setTableType(ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN);
+                stateVectorTable.setTableType(ProbabilityGameMatrixTable.TABLE_TYPE_INTEGER);
             }
         });
 
@@ -179,6 +183,8 @@ public class ProbabilityGame01GUI
             public void actionPerformed(ActionEvent actionEvent)
             {
                 gameType = ProbabilityGameMatrixTable.TABLE_TYPE_REAL;
+                transitionMatrixTable.setTableType(ProbabilityGameMatrixTable.TABLE_TYPE_REAL);
+                stateVectorTable.setTableType(ProbabilityGameMatrixTable.TABLE_TYPE_REAL);
             }
         });
 
@@ -188,6 +194,8 @@ public class ProbabilityGame01GUI
             public void actionPerformed(ActionEvent actionEvent)
             {
                 gameType = ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX;
+                transitionMatrixTable.setTableType(ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX);
+                stateVectorTable.setTableType(ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX);
             }
         });
 
@@ -228,12 +236,6 @@ public class ProbabilityGame01GUI
 
                 numStatesTextField.setEnabled(false);
 
-                // If the game type is boolean, set the state vector to integer.
-
-                if(transitionMatrixTable.getTableType() == stateVectorTable.TABLE_TYPE_BOOLEAN)
-                {
-                    stateVectorTable.setTableType(stateVectorTable.TABLE_TYPE_INTEGER);
-                }
             }
         });
 
@@ -282,26 +284,35 @@ public class ProbabilityGame01GUI
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
+                // If the transitionMatrix and stateVector are null, check the tables for validity and
+                // attempt to generate the matrices. If not, just return. Note that the checkGameMatrixTables()
+                // method should identify the problem with the matrices to the user.
+
+                if((transitionMatrix == null) || (stateVector == null))
+                {
+                    // Check that the transitionMatrixTable and stateMatrixTable are valid. If so, then attempt
+                    // to create the matrices.
+
+                    if (checkGameMatrixTables())
+                    {
+                        try
+                        {
+                            createGameMatrices();
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println("Could not create matrices.");
+                            System.exit(-1);
+                        }
+                    }
+                    else
+                        return;
+                }
+
                 // Disable the tables so that they can not be edited.
 
                 transitionMatrixTable.setEnabled(false);
                 stateVectorTable.setEnabled(false);
-
-                // If the transitionMatrix and stateVector are null, initialize them. If an exception occurs,
-                // display a message and exit from the program.
-
-                if((transitionMatrix == null) || (stateVector == null))
-                {
-                    try
-                    {
-                        createGameMatrices();
-                    }
-                    catch (Exception e)
-                    {
-                        System.out.println("Could not create matrices.");
-                        System.exit(-1);
-                    }
-                }
 
                 // Run an iteration of the game.
 
@@ -343,7 +354,6 @@ public class ProbabilityGame01GUI
 
         // Delete these lines when different types of games are implements.
 
-        realGameButton.setEnabled(false);       // Delete when the real number game is implemented.
         complexGameButton.setEnabled(false);    // Delete when the complex number game is implemented.
 
         // Set the initial game type to boolean.
@@ -401,6 +411,78 @@ public class ProbabilityGame01GUI
             for(int i = 0; i < numStates; i++)
                 stateVector.set(i,Complex.parseComplex((String)stateVectorTable.getValueAt(i,0)));
         }
+    }
+
+    /**
+     * This method checks that the game matrices are valid for the type of game.
+     * @return  true if the transitionMatrixTable and stateVectorTable are valid, false otherwise.
+     */
+    private boolean checkGameMatrixTables()
+    {
+        switch(gameType)
+        {
+            case ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN:
+                checkBooleanGameMatrixTables();
+                break;
+            case ProbabilityGameMatrixTable.TABLE_TYPE_REAL:
+                break;
+            case ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX:
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * This method verifies the format of the transitionMatrix and stateVector at the start of a boolean game.
+     * @return  true if the tables are valid, false otherwise.
+     */
+    private boolean checkBooleanGameMatrixTables()
+    {
+        boolean matricesGood = true;
+        String errorString = new String();
+
+        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+            for(int j = 0; j < transitionMatrixTable.getColumnCount(); j++)
+            {
+                String theBooleanString = (String)transitionMatrixTable.getValueAt(i,j);
+                if((theBooleanString.compareTo("0") != 0) &&
+                        theBooleanString.compareTo("1") != 0)
+                {
+                    errorString = errorString.concat("Value at transitionMatrix[" + i + "," + j + "] must be in set (0,1).\n");
+                    matricesGood = false;
+                }
+            }
+        for(int i = 0; i < stateVectorTable.getRowCount(); i++)
+        {
+            String IntegerString = (String)stateVectorTable.getValueAt(i,0);
+            try
+            {
+                Integer.parseUnsignedInt(IntegerString);
+            }
+            catch(NumberFormatException e)
+            {
+                errorString = errorString.concat("Value at stateVector[" + i + "] must be a positive integer.\n");
+                matricesGood = false;
+            }
+        }
+
+        // If an error is found, display it.
+
+        if (matricesGood)
+        {
+            System.out.print(errorString);
+        }
+
+        // Return whether or not the matrices are good.
+
+        return matricesGood;
+    }
+
+    public boolean checkRealGameMatrixTables()
+    {
+        return true;
     }
 
     /**

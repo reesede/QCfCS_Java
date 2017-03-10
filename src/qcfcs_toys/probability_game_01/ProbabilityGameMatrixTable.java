@@ -11,7 +11,7 @@ import java.awt.*;
  * This class implements an extension of JTable to handle matrices and vectors defined in the probability game.
  * Created by reesede on 2/27/2017.
  * @author David E. Reese
- * @version 3.1.1
+ * @version 3.2.1
  * @since 3.1.1
  */
 
@@ -43,6 +43,7 @@ import java.awt.*;
 //                                      to there. Deleted setMatrixElement() and getMatrixElement().
 //      20170307    D.E. Reese          Moved theTableModel and theRenderer to be private instance variables.
 //                                      Renamed theTableModel to theTableModel. Added resizeTable().
+//      20170310    D.E. Reese          Added code to setValueAt() for real numbers to enable a real table.
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -219,6 +220,19 @@ public class ProbabilityGameMatrixTable extends JTable
                     }
                     else
                         newValue = null;
+                }
+                else
+                    newValue = null;
+            }
+
+            if(this.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_REAL)
+            {
+                if(newComplexValue.getImag() == 0.0)
+                {
+                    if((newComplexValue.getReal() < 0.0) || (newComplexValue.getReal() > 1.0))
+                    {
+                        newValue = null;
+                    }
                 }
                 else
                     newValue = null;
