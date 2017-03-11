@@ -50,6 +50,7 @@ import java.beans.PropertyChangeListener;
 //      20170308    D.E. Reese          Added code in executeGame() to perform the boolean game.
 //      20170309    D.E. Reese          Added checkGameMatrixTables(), checkBooleanGameMatrixTables().
 //      20170310    D.E. Reese          Added checkRealGameMatrixTables() and enabled real game.
+//      20170311    D.E. Reese          Added code to checkRealGameMatrixTables() stub.
 
 public class ProbabilityGame01GUI
 {
@@ -422,16 +423,15 @@ public class ProbabilityGame01GUI
         switch(gameType)
         {
             case ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN:
-                checkBooleanGameMatrixTables();
-                break;
+                return checkBooleanGameMatrixTables();
             case ProbabilityGameMatrixTable.TABLE_TYPE_REAL:
-                break;
+                return checkRealGameMatrixTables();
             case ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX:
                 break;
             default:
                 break;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -470,7 +470,7 @@ public class ProbabilityGame01GUI
 
         // If an error is found, display it.
 
-        if (matricesGood)
+        if (!matricesGood)
         {
             System.out.print(errorString);
         }
@@ -482,7 +482,134 @@ public class ProbabilityGame01GUI
 
     public boolean checkRealGameMatrixTables()
     {
-        return true;
+        boolean matricesGood = true;
+        String errorString = new String();
+        String theRealString;
+        double rowSums[] = new double[transitionMatrixTable.getRowCount()];
+        double columnSums[] = new double[transitionMatrixTable.getColumnCount()];
+        double vectorSum = 0.0;
+        double theReal;
+
+        final double TOLERANCE = 0.00000001;
+
+        // Initialize the row, column, and vector sums.
+
+        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+            rowSums[i] = 0.0;
+        for(int j = 0; j < transitionMatrixTable.getColumnCount(); j++)
+            columnSums[j] = 0.0;
+
+        // Iterate through all entries in the transition table to check that they are reals in the range 0.0...1.0.
+
+        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+            for(int j = 0; j < transitionMatrixTable.getColumnCount(); j++)
+            {
+                // Get the string from the table entry and attempt to convert it to a real number.
+
+                theRealString = (String)transitionMatrixTable.getValueAt(i,j);
+                try
+                {
+                    theReal = Double.parseDouble(theRealString);
+                }
+                catch (NumberFormatException e)
+                {
+                    errorString = errorString.concat("Value at transitionMatrix[" + i + "," + j + "] must be a positive real between 0.0 and 1.0.\n");
+                    matricesGood = false;
+                    continue;
+                }
+
+                // If a real number was found, check that it is between 0.0 and 1.0.
+
+                if ((theReal < 0.0) || (theReal > 1.0))
+                {
+                    errorString = errorString.concat("Value at transitionMatrix[" + i + "," + j + "] must be a positive real between 0.0 and 1.0.\n");
+                    matricesGood = false;
+                    continue;
+                }
+
+                // Add the real number to the appropriate row sum and column sum.
+
+                rowSums[i] += theReal;
+                columnSums[j] += theReal;
+            }
+
+        // Iterate through each element in the state vector and verify that it is a real in the range 0.0...1.0.
+
+        for(int i = 0; i < stateVectorTable.getRowCount(); i++)
+        {
+            // Get the string from the table entry and attempt to convert it to a real number.
+
+            theRealString = (String)stateVectorTable.getValueAt(i,0);
+            try
+            {
+                theReal = Double.parseDouble(theRealString);
+            }
+            catch (NumberFormatException e)
+            {
+                errorString = errorString.concat("Value at stateVector[" + i + "] must be a positive real between 0.0 and 1.0.\n");
+                matricesGood = false;
+                continue;
+            }
+
+            // If a real number was found, check that it is between 0.0 and 1.0.
+
+            if ((theReal < 0.0) || (theReal > 1.0))
+            {
+               errorString = errorString.concat("Value at stateVector[" + i + "] must be a positive real between 0.0 and 1.0.\n");
+                matricesGood = false;
+                continue;
+            }
+
+            // Add the real number to the vector column sum.
+
+            vectorSum += theReal;
+        }
+
+        // Verify that each row of the transition matrix sums to 1.0.
+
+        double theSum = 0.0;
+        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+        {
+            if((rowSums[i] < 1.0 - TOLERANCE) || (rowSums[i] > 1.0 + TOLERANCE))
+            {
+                errorString = errorString.concat("transitionMatrix row " + i + "must sum to 1.0 +/- " + TOLERANCE +
+                        ", but sums to " + rowSums[i] + ".\n");
+                matricesGood = false;
+            }
+        }
+
+        // Verify that each column of the transition matrix sums to 1.0.
+
+        theSum = 0.0;
+        for(int j = 0; j < transitionMatrixTable.getColumnCount(); j++)
+        {
+            if((columnSums[j] < 1.0 - TOLERANCE) || (columnSums[j] > 1.0 + TOLERANCE))
+            {
+                errorString = errorString.concat("transitionMatrix column " + j + "must sum to 1.0 +/- " + TOLERANCE +
+                        ", but sums to " + columnSums[j] + ".\n");
+                matricesGood = false;
+            }
+        }
+
+        // Verify that the state vector elements sum to 1.0
+
+        if((vectorSum < 1.0 - TOLERANCE) || (vectorSum > 1.0 + TOLERANCE))
+        {
+            errorString = errorString.concat("stateVector elements must sum to 1.0 +/- " + TOLERANCE +
+                    ", but sum to " + vectorSum + ".\n");
+            matricesGood = false;
+        }
+
+        // If an error is found, display it.
+
+        if (!matricesGood)
+        {
+            System.out.print(errorString);
+        }
+
+        // Return whether or not the matrices are good.
+
+        return matricesGood;
     }
 
     /**
@@ -503,6 +630,13 @@ public class ProbabilityGame01GUI
                 {
                     int theValue = (int)stateVector.get(i).getReal();
                     stateVectorTable.setValueAt((new Integer(theValue)).toString(),i,0);
+                }
+                break;
+            case ProbabilityGameMatrixTable.TABLE_TYPE_REAL:
+                for(int i = 0; i < numStates; i++)
+                {
+                    double theValue = (double)stateVector.get(i).getReal();
+                    stateVectorTable.setValueAt((new Double(theValue)).toString(),i,0);
                 }
                 break;
         }

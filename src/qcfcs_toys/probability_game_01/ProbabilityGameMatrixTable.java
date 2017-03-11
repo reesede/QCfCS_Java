@@ -44,6 +44,7 @@ import java.awt.*;
 //      20170307    D.E. Reese          Moved theTableModel and theRenderer to be private instance variables.
 //                                      Renamed theTableModel to theTableModel. Added resizeTable().
 //      20170310    D.E. Reese          Added code to setValueAt() for real numbers to enable a real table.
+//      20170311    D.E. Reese          Added setDefaultRenderer() call in constructor for strings.
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -107,6 +108,7 @@ public class ProbabilityGameMatrixTable extends JTable
 
         theTableModel = new DefaultTableModel(rowCount,columnCount);
         theRenderer = new ProbabilityGameMatrixTableRenderer();
+        setDefaultRenderer(String.class, theRenderer);
 
         // Initialize values in the table.
 
@@ -281,5 +283,8 @@ public class ProbabilityGameMatrixTable extends JTable
             {
                 theTableModel.setValueAt(new String("0"), i, j);
             }
+
+        for(int j=0; j<newColumns;j++)
+            getColumnModel().getColumn(j).setCellRenderer(theRenderer);
     }
 }
