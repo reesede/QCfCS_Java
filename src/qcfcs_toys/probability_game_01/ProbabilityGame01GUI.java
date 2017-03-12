@@ -16,7 +16,7 @@ import java.beans.PropertyChangeListener;
  * GUI form is located in ProbabilityGame01GUI.form.
  * Created by reesede on 2/19/2017.
  * @author David E. Reese
- * @version 3.2.1
+ * @version 3.2.2
  * @since 3.1.1
  */
 
@@ -51,6 +51,10 @@ import java.beans.PropertyChangeListener;
 //      20170309    D.E. Reese          Added checkGameMatrixTables(), checkBooleanGameMatrixTables().
 //      20170310    D.E. Reese          Added checkRealGameMatrixTables() and enabled real game.
 //      20170311    D.E. Reese          Added code to checkRealGameMatrixTables() stub.
+//      20170312    D.E. Reese          Added transitionPowers, transitionPowerTextField (and its propertyChangedListener).
+//                                      Commented out code in checkRealGameMatrixTables() so that rows don't have to add
+//                                      to 1.0 (make tables stochastic, not doubly stochastic). Added restartButton and
+//                                      its actionListener, in order to restart the game.
 
 public class ProbabilityGame01GUI
 {
@@ -88,6 +92,11 @@ public class ProbabilityGame01GUI
      * Number of states.
      */
     private int numStates;
+
+    /**
+     * Power of the transition matrix.
+     */
+    private int transitionPowers;
 
     /**
      * Type of the game (same as the type of the transitionMatrixTable).
@@ -131,6 +140,8 @@ public class ProbabilityGame01GUI
     private JLabel stateVectorLabel;
     private ProbabilityGameMatrixTable transitionMatrixTable;
     private ProbabilityGameMatrixTable stateVectorTable;
+    private JFormattedTextField transitionPowerTextField;
+    private JButton restartButton;
     private ButtonGroup gameTypeButtonGroup;
 
     public ProbabilityGame01GUI()
@@ -155,6 +166,12 @@ public class ProbabilityGame01GUI
         numStatesTextField.setHorizontalAlignment(JFormattedTextField.CENTER);
         numStatesTextField.setText(Integer.toString(initialNumberOfStates));
         numStates = initialNumberOfStates;
+
+        // Set up the power of the transition matrix and text field.
+
+        transitionPowerTextField.setPreferredSize(new Dimension(50,transitionPowerTextField.getPreferredSize().height));
+        transitionPowerTextField.setHorizontalAlignment(JTextField.CENTER);
+        transitionPowers = 1;
 
         // Initialize the number of iterations.
 
@@ -233,10 +250,86 @@ public class ProbabilityGame01GUI
 
                 executeButton.setEnabled(true);
 
-                // Disable the number of states text field.
+                // Disable the number of states text field and the power text field.
 
                 numStatesTextField.setEnabled(false);
+                transitionPowerTextField.setEnabled(false);
 
+            }
+        });
+
+        executeButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                // If the transitionMatrix and stateVector are null, check the tables for validity and
+                // attempt to generate the matrices. If not, just return. Note that the checkGameMatrixTables()
+                // method should identify the problem with the matrices to the user.
+
+                if((transitionMatrix == null) || (stateVector == null))
+                {
+                    // Check that the transitionMatrixTable and stateMatrixTable are valid. If so, then attempt
+                    // to create the matrices.
+
+                    if (checkGameMatrixTables())
+                    {
+                        try
+                        {
+                            createGameMatrices();
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println("Could not create matrices.");
+                            System.exit(-1);
+                        }
+                    }
+                    else
+                        return;
+                }
+
+                // Disable the tables so that they can not be edited.
+
+                transitionMatrixTable.setEnabled(false);
+                stateVectorTable.setEnabled(false);
+
+                // Run an iteration of the game.
+
+                executeGame();
+            }
+        });
+
+        restartButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                // Set the number of states.
+
+                numStatesTextField.setText(Integer.toString(initialNumberOfStates));
+                numStates = initialNumberOfStates;
+                transitionMatrixTable.resizeTable(numStates,numStates);
+                stateVectorTable.resizeTable(numStates,1);
+
+                // Reinitialize the powers.
+
+                transitionPowerTextField.setText(Integer.toString(1));
+                transitionPowers = 1;
+
+                // Initialize the number of iterations.
+
+                numIterations = 0;
+                iterationCountLabel.setText("Iteration Count = " + numIterations);
+
+                // Reset the buttons and fields.
+
+                executeButton.setEnabled(false);
+                startButton.setEnabled(true);
+                booleanGameButton.setSelected(true);
+                realGameButton.setSelected(false);
+                complexGameButton.setSelected(false);
+                numStatesTextField.setEnabled(true);
+                transitionPowerTextField.setEnabled(true);
             }
         });
 
@@ -280,44 +373,41 @@ public class ProbabilityGame01GUI
             }
         });
 
-        executeButton.addActionListener(new ActionListener()
+        transitionPowerTextField.addPropertyChangeListener(new PropertyChangeListener()
         {
             @Override
-            public void actionPerformed(ActionEvent actionEvent)
+            public void propertyChange(PropertyChangeEvent propertyChangeEvent)
             {
-                // If the transitionMatrix and stateVector are null, check the tables for validity and
-                // attempt to generate the matrices. If not, just return. Note that the checkGameMatrixTables()
-                // method should identify the problem with the matrices to the user.
+                // Get the changed text.
 
-                if((transitionMatrix == null) || (stateVector == null))
+                String theText = transitionPowerTextField.getText();
+
+                // Parse the text containing the new power. If it is not an unsigned integer, then
+                // set the text back to the current number of states and return.
+
+                int newPower;
+                try
                 {
-                    // Check that the transitionMatrixTable and stateMatrixTable are valid. If so, then attempt
-                    // to create the matrices.
-
-                    if (checkGameMatrixTables())
-                    {
-                        try
-                        {
-                            createGameMatrices();
-                        }
-                        catch (Exception e)
-                        {
-                            System.out.println("Could not create matrices.");
-                            System.exit(-1);
-                        }
-                    }
-                    else
-                        return;
+                    newPower = Integer.parseUnsignedInt(theText);
+                }
+                catch(NumberFormatException e)
+                {
+                    transitionPowerTextField.setText(new Integer(transitionPowers).toString());
+                    return;
                 }
 
-                // Disable the tables so that they can not be edited.
+                // If the new power is 0 or the same as the existing power, set the text back
+                // to the current power (power must be at least 1) and return.
 
-                transitionMatrixTable.setEnabled(false);
-                stateVectorTable.setEnabled(false);
+                if ((newPower == 0) || (newPower == transitionPowers))
+                {
+                    transitionPowerTextField.setText(new Integer(transitionPowers).toString());
+                    return;
+                }
 
-                // Run an iteration of the game.
+                // Set the power level to the new value.
 
-                executeGame();
+                transitionPowers = newPower;
             }
         });
 
@@ -397,6 +487,26 @@ public class ProbabilityGame01GUI
             for(int i = 0; i < numStates; i++)
                 for(int j = 0; j < numStates; j++)
                     transitionMatrix.set(i,j,Complex.parseComplex((String)transitionMatrixTable.getValueAt(i,j)));
+
+            // If the transitionPowers is greater than 1, then multiply the transition matrix by itself the given
+            // number of times. This is valid only on a real or complex game.
+
+            if ((transitionPowers > 1) && ((gameType == ProbabilityGameMatrixTable.TABLE_TYPE_REAL) ||
+                                           (gameType == ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX)))
+            {
+                for(int i = 2; i <= transitionPowers; i++)
+                    transitionMatrix = ComplexMatrix.multiply(transitionMatrix, transitionMatrix);
+
+                // Update the visible matrix to match the transition matrix taken to the appropriate power.
+
+                for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+                    for(int j = 0; j < transitionMatrixTable.getColumnCount(); j++)
+                        transitionMatrixTable.setValueAt(transitionMatrix.get(i,j).toString(),i,j);
+
+                // Update the table label to indicate that the transition matrix has been raised to a power.
+
+                transitionMatrixLabel.setText("Transition Matrix (original raised by " + transitionPowers + " powers)");
+            }
         }
 
         // Create a new state vector if needed.
@@ -485,17 +595,18 @@ public class ProbabilityGame01GUI
         boolean matricesGood = true;
         String errorString = new String();
         String theRealString;
-        double rowSums[] = new double[transitionMatrixTable.getRowCount()];
+//        double rowSums[] = new double[transitionMatrixTable.getRowCount()];
         double columnSums[] = new double[transitionMatrixTable.getColumnCount()];
         double vectorSum = 0.0;
         double theReal;
+        double theSum;
 
         final double TOLERANCE = 0.00000001;
 
         // Initialize the row, column, and vector sums.
 
-        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
-            rowSums[i] = 0.0;
+//        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+//            rowSums[i] = 0.0;
         for(int j = 0; j < transitionMatrixTable.getColumnCount(); j++)
             columnSums[j] = 0.0;
 
@@ -529,7 +640,7 @@ public class ProbabilityGame01GUI
 
                 // Add the real number to the appropriate row sum and column sum.
 
-                rowSums[i] += theReal;
+//                rowSums[i] += theReal;
                 columnSums[j] += theReal;
             }
 
@@ -567,16 +678,16 @@ public class ProbabilityGame01GUI
 
         // Verify that each row of the transition matrix sums to 1.0.
 
-        double theSum = 0.0;
-        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
-        {
-            if((rowSums[i] < 1.0 - TOLERANCE) || (rowSums[i] > 1.0 + TOLERANCE))
-            {
-                errorString = errorString.concat("transitionMatrix row " + i + "must sum to 1.0 +/- " + TOLERANCE +
-                        ", but sums to " + rowSums[i] + ".\n");
-                matricesGood = false;
-            }
-        }
+//        theSum = 0.0;
+//        for(int i = 0; i < transitionMatrixTable.getRowCount(); i++)
+//        {
+//            if((rowSums[i] < 1.0 - TOLERANCE) || (rowSums[i] > 1.0 + TOLERANCE))
+//            {
+//                errorString = errorString.concat("transitionMatrix row " + i + "must sum to 1.0 +/- " + TOLERANCE +
+//                        ", but sums to " + rowSums[i] + ".\n");
+//                matricesGood = false;
+//            }
+//        }
 
         // Verify that each column of the transition matrix sums to 1.0.
 
