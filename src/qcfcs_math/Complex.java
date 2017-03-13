@@ -5,7 +5,7 @@ package qcfcs_math;
  * convert -0.0 to 0.0.
  * Created by reesede on 1/4/2017.
  * @author David E. Reese
- * @version 3.1.1
+ * @version 3.3.1
  * @since 1.1.1
  */
 
@@ -49,6 +49,7 @@ package qcfcs_math;
 //      20170216    D.E. Reese          Added deltaPrecision, setPrecision(), and getPrecision(). Added code to
 //                                      equals to determine equality within a given precision.
 //      20170305    D.E. Reese          Added parseComplex().
+//      20170313    D.E. Reese          Added modulus().
 //
 
 public class Complex
@@ -615,6 +616,20 @@ public class Complex
         if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
 
         return Math.sqrt(Math.pow(theComplex.realPart, 2.0) + Math.pow(theComplex.imagPart, 2.0));
+    }
+
+    /**
+     * This method returns the modulus of the complex number (i.e., the sum of the square of the real part
+     * and the square of the imaginary part). It is the square of the absolute value.
+     * @param theComplex    Number whose modulus is to be calculated.
+     * @return  Modulus of theComplex.
+     * @throws IllegalArgumentException Thrown if theComplex is null.
+     */
+    public static double modulus(final Complex theComplex) throws IllegalArgumentException
+    {
+        if (theComplex == null) throw new IllegalArgumentException("theComplex is null.");
+
+        return Math.pow(theComplex.realPart, 2.0) + Math.pow(theComplex.imagPart, 2.0);
     }
 
     /**
@@ -1239,6 +1254,16 @@ public class Complex
     public double abs()
     {
         return Complex.abs(this);
+    }
+
+    /**
+     * This method returns the modulus value (i.e., sum of the square of the real part and the square of the
+     * imaginary part) for this complex number.
+     * @return  Modulus value of this complex number.
+     */
+    public double modulus()
+    {
+        return Complex.modulus(this);
     }
 
     /**

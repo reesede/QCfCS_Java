@@ -48,6 +48,7 @@ import java.lang.IllegalArgumentException;
 //      20170205    D.E. Reese          Added transpose() and transposeConjugate().
 //      20170210    D.E. Reese          Added testToString() and set(). Deleted transpose() and transposeConjugate().
 //      20170305    D.E. Reese          Added parseComplex().
+//      20170313    D.E. Reese          Added modulus().
 //
 class ComplexTest
 {
@@ -1177,7 +1178,7 @@ class ComplexTest
     @Test
     void abs()
     {
-        //TODO: add tests for abs().
+        //TODO: add tests for instance operation.
 
         Complex theComplex = new Complex();
         double theAbs = Complex.abs(theComplex);
@@ -1206,6 +1207,12 @@ class ComplexTest
         theComplex = new Complex(1.0,1.0);
         theAbs = theComplex.abs();
         assertEquals(Math.sqrt(2.0), theAbs);
+    }
+
+    @Test
+    void modulus()
+    {
+        // TODO: add tests.
     }
 
     @Test

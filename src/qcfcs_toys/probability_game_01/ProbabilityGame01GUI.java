@@ -16,7 +16,7 @@ import java.beans.PropertyChangeListener;
  * GUI form is located in ProbabilityGame01GUI.form.
  * Created by reesede on 2/19/2017.
  * @author David E. Reese
- * @version 3.2.2
+ * @version 3.3.1
  * @since 3.1.1
  */
 
@@ -55,6 +55,7 @@ import java.beans.PropertyChangeListener;
 //                                      Commented out code in checkRealGameMatrixTables() so that rows don't have to add
 //                                      to 1.0 (make tables stochastic, not doubly stochastic). Added restartButton and
 //                                      its actionListener, in order to restart the game.
+//      20170313    D.E. Reese          Enabled complex matrices.
 
 public class ProbabilityGame01GUI
 {
@@ -442,10 +443,6 @@ public class ProbabilityGame01GUI
         booleanGameButton.setSelected(true);
         realGameButton.setSelected(false);
         complexGameButton.setSelected(false);
-
-        // Delete these lines when different types of games are implements.
-
-        complexGameButton.setEnabled(false);    // Delete when the complex number game is implemented.
 
         // Set the initial game type to boolean.
 

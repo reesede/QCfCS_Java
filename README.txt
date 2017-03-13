@@ -16,7 +16,8 @@ Programming Drills Included:
     Programming Drill 2.6.2
     Programming Drill 2.7.1
     Programming Drill 3.1.1.
-    Programming Drill 3.2.1
+    Programming Drill 3.2.1.
+    Programming Drill 3.2.2.
 
 Programming Drills not included:
     Programming Drill 1.3.2.
@@ -37,4 +38,5 @@ History:
                                 Fixed licence file reference to program.
 20170308    D.E. Reese          Added Programming Drill 3.1.1.
 20170311    D.E. Reese          Added Programming Drill 3.2.1.
+20170312    D.E. Reese          Added Programming Drill 3.2.2.
 

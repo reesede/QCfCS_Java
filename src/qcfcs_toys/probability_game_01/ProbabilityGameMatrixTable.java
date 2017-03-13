@@ -11,7 +11,7 @@ import java.awt.*;
  * This class implements an extension of JTable to handle matrices and vectors defined in the probability game.
  * Created by reesede on 2/27/2017.
  * @author David E. Reese
- * @version 3.2.1
+ * @version 3.3.1
  * @since 3.1.1
  */
 
@@ -45,6 +45,7 @@ import java.awt.*;
 //                                      Renamed theTableModel to theTableModel. Added resizeTable().
 //      20170310    D.E. Reese          Added code to setValueAt() for real numbers to enable a real table.
 //      20170311    D.E. Reese          Added setDefaultRenderer() call in constructor for strings.
+//      20170313    D.E. Reese          Modified setValueAt() to handle complex numbers.
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -200,44 +201,65 @@ public class ProbabilityGameMatrixTable extends JTable
 
         if ((newValue != null) && (newComplexValue != null))
         {
-            if (this.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN)
+            switch(getTableType())
             {
-                if(newComplexValue.equals(new Complex(1.0, 0.0)))
-                    newValue = "1";
-                else if (newComplexValue.equals(new Complex(0.0,0.0)))
-                    newValue = "0";
-                else
-                    newValue = null;
-            }
+                case TABLE_TYPE_BOOLEAN:
 
-            if (this.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_INTEGER)
-            {
-                if(newComplexValue.getImag() == 0.0)
-                {
-                    if ((newComplexValue.getReal() == Math.floor(newComplexValue.getReal())) &&
-                            !Double.isInfinite(newComplexValue.getReal()))
+                    // For a boolean table, only values of 0 and 1 are allowed.
+
+                    if(newComplexValue.equals(new Complex(1.0, 0.0)))
+                        newValue = "1";
+                    else if (newComplexValue.equals(new Complex(0.0,0.0)))
+                        newValue = "0";
+                    else
+                        newValue = null;
+                    break;
+
+                case TABLE_TYPE_INTEGER:
+
+                    // For an integer table, the imaginary part of the complex number must be 0.0, and the
+                    // real part must equal the floor of the real part.
+
+                    if(newComplexValue.getImag() == 0.0)
                     {
-                        int theInt = (int)newComplexValue.getReal();
-                        newValue = new Integer(theInt).toString();
+                        if ((newComplexValue.getReal() == Math.floor(newComplexValue.getReal())) &&
+                                !Double.isInfinite(newComplexValue.getReal()))
+                        {
+                            int theInt = (int)newComplexValue.getReal();
+                            newValue = new Integer(theInt).toString();
+                        }
+                        else
+                            newValue = null;
                     }
                     else
                         newValue = null;
-                }
-                else
-                    newValue = null;
-            }
+                    break;
 
-            if(this.getTableType() == ProbabilityGameMatrixTable.TABLE_TYPE_REAL)
-            {
-                if(newComplexValue.getImag() == 0.0)
-                {
-                    if((newComplexValue.getReal() < 0.0) || (newComplexValue.getReal() > 1.0))
+                case TABLE_TYPE_REAL:
+
+                    // For a real table, the imaginary part of the complex number must be 0.0.
+
+                    if(newComplexValue.getImag() == 0.0)
                     {
-                        newValue = null;
+                        if((newComplexValue.getReal() < 0.0) || (newComplexValue.getReal() > 1.0))
+                        {
+                            newValue = null;
+                        }
                     }
-                }
-                else
+                    else
+                        newValue = null;
+                    break;
+
+                case TABLE_TYPE_COMPLEX:
+
+                    // For a complex table, the modulus of the complex number must be between 0.0 and 1.0.
+
+                    if(newComplexValue.modulus() > 1.0)
+                        newValue = null;
+                    break;
+                default:
                     newValue = null;
+                    break;
             }
         }
 
