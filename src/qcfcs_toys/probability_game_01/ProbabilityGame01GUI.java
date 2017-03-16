@@ -56,6 +56,8 @@ import java.beans.PropertyChangeListener;
 //                                      to 1.0 (make tables stochastic, not doubly stochastic). Added restartButton and
 //                                      its actionListener, in order to restart the game.
 //      20170313    D.E. Reese          Enabled complex matrices.
+//      20170315    D.E. Reese          Corrected bug in restartButton actionListener() where the boolean, real, and
+//                                      complex radio buttons were not being enabled on reset.
 
 public class ProbabilityGame01GUI
 {
@@ -326,6 +328,9 @@ public class ProbabilityGame01GUI
 
                 executeButton.setEnabled(false);
                 startButton.setEnabled(true);
+                booleanGameButton.setEnabled(true);
+                realGameButton.setEnabled(true);
+                complexGameButton.setEnabled(true);
                 booleanGameButton.setSelected(true);
                 realGameButton.setSelected(false);
                 complexGameButton.setSelected(false);
@@ -534,11 +539,10 @@ public class ProbabilityGame01GUI
             case ProbabilityGameMatrixTable.TABLE_TYPE_REAL:
                 return checkRealGameMatrixTables();
             case ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX:
-                break;
+                return checkComplexGameMatrixTables();
             default:
-                break;
+                return false;
         }
-        return false;
     }
 
     /**
@@ -718,6 +722,15 @@ public class ProbabilityGame01GUI
         // Return whether or not the matrices are good.
 
         return matricesGood;
+    }
+
+    /**
+     * This method verifies that the tables are correct for a complex game.
+     * @return  true if the tables are valid for a complex game, false otherwise.
+     */
+    private boolean checkComplexGameMatrixTables()
+    {
+        return false;
     }
 
     /**
