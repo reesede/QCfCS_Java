@@ -19,6 +19,7 @@ Programming Drills Included:
     Programming Drill 3.2.1.
     Programming Drill 3.2.2.
     Programming Drill 3.3.1.
+    Programming Drill 3.3.2 (included in Programming Drill 3.2.2 and 3.3.1 work)
 
 Programming Drills not included:
     Programming Drill 1.3.2.
