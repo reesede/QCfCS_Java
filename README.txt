@@ -18,6 +18,7 @@ Programming Drills Included:
     Programming Drill 3.1.1.
     Programming Drill 3.2.1.
     Programming Drill 3.2.2.
+    Programming Drill 3.3.1.
 
 Programming Drills not included:
     Programming Drill 1.3.2.
@@ -39,4 +40,5 @@ History:
 20170308    D.E. Reese          Added Programming Drill 3.1.1.
 20170311    D.E. Reese          Added Programming Drill 3.2.1.
 20170312    D.E. Reese          Added Programming Drill 3.2.2.
+20170318    D.E. Reese          Added Programming Drill 3.3.1.
 

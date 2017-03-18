@@ -46,6 +46,7 @@ import java.awt.*;
 //      20170310    D.E. Reese          Added code to setValueAt() for real numbers to enable a real table.
 //      20170311    D.E. Reese          Added setDefaultRenderer() call in constructor for strings.
 //      20170313    D.E. Reese          Modified setValueAt() to handle complex numbers.
+//      20170318    D.E. Reese          Added checks for complex game data entry.
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -254,7 +255,7 @@ public class ProbabilityGameMatrixTable extends JTable
 
                     // For a complex table, the modulus of the complex number must be between 0.0 and 1.0.
 
-                    if(newComplexValue.modulus() > 1.0)
+                    if(newComplexValue.modulus() > 1.00000001)
                         newValue = null;
                     break;
                 default:

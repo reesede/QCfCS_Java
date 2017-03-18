@@ -58,6 +58,7 @@ import java.beans.PropertyChangeListener;
 //      20170313    D.E. Reese          Enabled complex matrices.
 //      20170315    D.E. Reese          Corrected bug in restartButton actionListener() where the boolean, real, and
 //                                      complex radio buttons were not being enabled on reset.
+//      20170318    D.E. Reese          Added code to execute complex game.
 
 public class ProbabilityGame01GUI
 {
@@ -730,7 +731,7 @@ public class ProbabilityGame01GUI
      */
     private boolean checkComplexGameMatrixTables()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -758,6 +759,13 @@ public class ProbabilityGame01GUI
                 {
                     double theValue = (double)stateVector.get(i).getReal();
                     stateVectorTable.setValueAt((new Double(theValue)).toString(),i,0);
+                }
+                break;
+            case ProbabilityGameMatrixTable.TABLE_TYPE_COMPLEX:
+                for(int i = 0; i < numStates; i++)
+                {
+                    String theString = stateVector.get(i).toString();
+                    stateVectorTable.setValueAt(theString, i, 0);
                 }
                 break;
         }
