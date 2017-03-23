@@ -59,6 +59,8 @@ import java.beans.PropertyChangeListener;
 //      20170315    D.E. Reese          Corrected bug in restartButton actionListener() where the boolean, real, and
 //                                      complex radio buttons were not being enabled on reset.
 //      20170318    D.E. Reese          Added code to execute complex game.
+//      20170322    D.E. Reese          Added calls to each table's tableGood() method in checkGameMatrixTables()
+//                                      prior to checking the data per game type as an initial check.
 
 public class ProbabilityGame01GUI
 {
@@ -533,6 +535,16 @@ public class ProbabilityGame01GUI
      */
     private boolean checkGameMatrixTables()
     {
+        // Perform initial checks on the transition matrix and state vector using the good data check for the
+        // table.
+
+        if (!transitionMatrixTable.tableGood())
+            return false;
+        if(!stateVectorTable.tableGood())
+            return false;
+
+        // Verify the data based on the game type.
+
         switch(gameType)
         {
             case ProbabilityGameMatrixTable.TABLE_TYPE_BOOLEAN:

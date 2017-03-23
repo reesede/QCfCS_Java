@@ -42,4 +42,5 @@ History:
 20170311    D.E. Reese          Added Programming Drill 3.2.1.
 20170312    D.E. Reese          Added Programming Drill 3.2.2.
 20170318    D.E. Reese          Added Programming Drill 3.3.1.
+20170322    D.E. Reese          Modified GUI so that table cells display red when they contain bad data.
 

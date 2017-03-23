@@ -5,6 +5,7 @@ import qcfcs_math.Complex;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 /**
@@ -47,6 +48,9 @@ import java.awt.*;
 //      20170311    D.E. Reese          Added setDefaultRenderer() call in constructor for strings.
 //      20170313    D.E. Reese          Modified setValueAt() to handle complex numbers.
 //      20170318    D.E. Reese          Added checks for complex game data entry.
+//      20170322    D.E. Reese          Modified setValueAt() to put bad values into the table. These will be marked
+//                                      with a red background.
+//                                      Overrode prepareRenderer().
 
 public class ProbabilityGameMatrixTable extends JTable
 {
@@ -71,6 +75,16 @@ public class ProbabilityGameMatrixTable extends JTable
     public static final int TABLE_TYPE_COMPLEX = 3;
 
     /**
+     * Colour of cells containing good data.
+     */
+    public static final Color goodColour = Color.WHITE;
+
+    /**
+     * Colour of cells containing bad data.
+     */
+    public static final Color badColour = Color.RED;
+
+    /**
      * Type of the table.
      */
     private int theTableType;
@@ -89,6 +103,11 @@ public class ProbabilityGameMatrixTable extends JTable
      * Renderer used by the table.
      */
     private ProbabilityGameMatrixTableRenderer theRenderer;
+
+    /**
+     * Array indicating that the data in individual cells are good.
+     */
+    private boolean[][] dataGood;
 
     /**
      * Constructor for the table allowing specification of the type of table and number of rows and columns.
@@ -120,6 +139,13 @@ public class ProbabilityGameMatrixTable extends JTable
                 String theValue = "0";
                 theTableModel.setValueAt(theValue,i,j);
             }
+
+        // Indicate that data in the initial table is good.
+
+        dataGood = new boolean[rowCount][columnCount];
+        for(int i = 0; i < rowCount; i++)
+            for(int j = 0; j < columnCount; j++)
+                dataGood[i][j] = true;
 
         // Set the model for the table.
 
@@ -172,115 +198,6 @@ public class ProbabilityGameMatrixTable extends JTable
         return oldType;
     }
 
-    @Override
-    public void setValueAt(Object aValue, int row, int column)
-    {
-        Object tValue = aValue;
-
-        // Get a string containing the existing element in the table.
-
-        String oldValue = this.getValueAt(row, column).toString();
-
-        // Get a complex number corresponding to the new value. If the new value does not parse to a complex
-        // number, then newValue is set to null.
-        Complex newComplexValue = null;
-        String newValue = null;
-
-        try
-        {
-            newComplexValue = Complex.parseComplex((String)tValue);
-            newValue = newComplexValue.toString();
-        }
-        catch (NumberFormatException e)
-        {
-            newComplexValue = null;
-            newValue = null;
-        }
-
-        // If the newValue is not null, then process it based on the type of table. If it is an invalid value, then
-        // set it back to null.
-
-        if ((newValue != null) && (newComplexValue != null))
-        {
-            switch(getTableType())
-            {
-                case TABLE_TYPE_BOOLEAN:
-
-                    // For a boolean table, only values of 0 and 1 are allowed.
-
-                    if(newComplexValue.equals(new Complex(1.0, 0.0)))
-                        newValue = "1";
-                    else if (newComplexValue.equals(new Complex(0.0,0.0)))
-                        newValue = "0";
-                    else
-                        newValue = null;
-                    break;
-
-                case TABLE_TYPE_INTEGER:
-
-                    // For an integer table, the imaginary part of the complex number must be 0.0, and the
-                    // real part must equal the floor of the real part.
-
-                    if(newComplexValue.getImag() == 0.0)
-                    {
-                        if ((newComplexValue.getReal() == Math.floor(newComplexValue.getReal())) &&
-                                !Double.isInfinite(newComplexValue.getReal()))
-                        {
-                            int theInt = (int)newComplexValue.getReal();
-                            newValue = new Integer(theInt).toString();
-                        }
-                        else
-                            newValue = null;
-                    }
-                    else
-                        newValue = null;
-                    break;
-
-                case TABLE_TYPE_REAL:
-
-                    // For a real table, the imaginary part of the complex number must be 0.0.
-
-                    if(newComplexValue.getImag() == 0.0)
-                    {
-                        if((newComplexValue.getReal() < 0.0) || (newComplexValue.getReal() > 1.0))
-                        {
-                            newValue = null;
-                        }
-                    }
-                    else
-                        newValue = null;
-                    break;
-
-                case TABLE_TYPE_COMPLEX:
-
-                    // For a complex table, the modulus of the complex number must be between 0.0 and 1.0.
-
-                    if(newComplexValue.modulus() > 1.00000001)
-                        newValue = null;
-                    break;
-                default:
-                    newValue = null;
-                    break;
-            }
-        }
-
-        // If the newValue is null, then set the value to be set in the table to it. Otherwise, set the value
-        // to be set in the table to the old value.
-
-        if (newValue != null)
-        {
-            tValue = newValue;
-        }
-        else
-        {
-            tValue = oldValue;
-        }
-
-        // Set the value using the super method.
-
-        super.setValueAt(tValue, row, column);
-    }
-
     /**
      * This method resizes the table to a given number of rows and columns.
      * @param newRows       New number of rows (must be > 0).
@@ -309,5 +226,151 @@ public class ProbabilityGameMatrixTable extends JTable
 
         for(int j=0; j<newColumns;j++)
             getColumnModel().getColumn(j).setCellRenderer(theRenderer);
+
+        // Indicate that data in the resized table is good.
+
+        dataGood = new boolean[newRows][newColumns];
+        for(int i = 0; i < newRows; i++)
+            for(int j = 0; j < newColumns; j++)
+                dataGood[i][j] = true;
+
+
+    }
+
+    /**
+     * This method returns true if all cells in the table contain good data.
+     * @return  true if all cells contain good data based on the type of table; false otherwise.
+     */
+    public boolean tableGood()
+    {
+        for(int i = 0; i < getRowCount(); i++)
+            for(int j = 0; j < getColumnCount(); j++)
+                if (!dataGood[i][j])
+                    return false;
+        return true;
+    }
+
+    @Override
+    public Component prepareRenderer (TableCellRenderer renderer, int rowIndex, int columnIndex)
+    {
+        Component component = super.prepareRenderer(renderer, rowIndex, columnIndex);
+
+        if(dataGood[rowIndex][columnIndex])
+        {
+            component.setBackground(goodColour);
+        }
+        else
+        {
+            component.setBackground(badColour);
+        }
+
+        return component;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int row, int column)
+    {
+        Object tValue = aValue;
+        boolean newValueGood = true;
+
+        // Get a complex number corresponding to the new value. If the new value does not parse to a complex
+        // number, then newValue is set to null.
+
+        Complex newComplexValue = null;
+        String newValue = null;
+
+        try
+        {
+            newComplexValue = Complex.parseComplex((String)tValue);
+            newValue = newComplexValue.toString();
+        }
+        catch (NumberFormatException e)
+        {
+            newValueGood = false;
+        }
+
+        // If the newValue is not null, then process it based on the type of table. If it is an invalid value, then
+        // set it back to null.
+
+        if ((newValue != null) && (newComplexValue != null))
+        {
+            switch(getTableType())
+            {
+                case TABLE_TYPE_BOOLEAN:
+
+                    // For a boolean table, only values of 0 and 1 are allowed.
+
+                    if(newComplexValue.equals(new Complex(1.0, 0.0)))
+                        newValue = "1";
+                    else if (newComplexValue.equals(new Complex(0.0,0.0)))
+                        newValue = "0";
+                    else
+                        newValueGood = false;
+                    break;
+
+                case TABLE_TYPE_INTEGER:
+
+                    // For an integer table, the imaginary part of the complex number must be 0.0, and the
+                    // real part must equal the floor of the real part.
+
+                    if(newComplexValue.getImag() == 0.0)
+                    {
+                        if ((newComplexValue.getReal() == Math.floor(newComplexValue.getReal())) &&
+                                !Double.isInfinite(newComplexValue.getReal()))
+                        {
+                            int theInt = (int)newComplexValue.getReal();
+                            newValue = new Integer(theInt).toString();
+                        }
+                        else
+                            newValueGood = false;
+                    }
+                    else
+                        newValueGood = false;
+                    break;
+
+                case TABLE_TYPE_REAL:
+
+                    // For a real table, the imaginary part of the complex number must be 0.0.
+
+                    if(newComplexValue.getImag() == 0.0)
+                    {
+                        if((newComplexValue.getReal() < 0.0) || (newComplexValue.getReal() > 1.0))
+                        {
+                            newValueGood = false;
+                        }
+                    }
+                    else
+                        newValueGood = false;
+                    break;
+
+                case TABLE_TYPE_COMPLEX:
+
+                    // For a complex table, the modulus of the complex number must be between 0.0 and 1.0.
+
+                    if(newComplexValue.modulus() > 1.00000001)
+                        newValueGood = false;
+                    break;
+                default:
+                    newValueGood = false;
+                    break;
+            }
+        }
+
+        // If the newValue is null, then set the value to be set in the table to it. Otherwise, set the value
+        // to be set in the table to the old value.
+
+        if (newValueGood)
+        {
+            tValue = newValue;
+            dataGood[row][column] = true;
+        }
+        else
+        {
+            dataGood[row][column] = false;
+        }
+
+        // Set the value using the super method.
+
+        super.setValueAt(tValue, row, column);
     }
 }
