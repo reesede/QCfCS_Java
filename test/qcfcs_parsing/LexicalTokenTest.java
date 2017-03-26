@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // History:
 //      20170324    D.E. Reese          Creation.
 //      20170325    D.E. Reese          Added setAndGetTokenType(), setAndGetStringValue(), setAndGetSourceStart().
+//      20170326    D.E. Reese          Added stubs for setAndGetIntegerValue() and setAndGetRealValue().
 //
 
 class LexicalTokenTest
@@ -154,5 +155,17 @@ class LexicalTokenTest
         assertThrows(IllegalArgumentException.class, () -> {
             LexicalToken.getSourceStart(null);
         });
+    }
+
+    @Test
+    void setAndGetIntegerValue()
+    {
+
+    }
+
+    @Test
+    void setAndGetRealValue()
+    {
+
     }
 }

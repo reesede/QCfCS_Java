@@ -1,5 +1,7 @@
 package qcfcs_parsing;
 
+import java.util.ArrayList;
+
 /**
  * This class implements lexical analysis tokens which are created from text. These tokens are used for when structures
  * are to be parsed from text.
@@ -29,6 +31,8 @@ package qcfcs_parsing;
 // History:
 //      20170324    D.E. Reese          Creation.
 //      20170325    D.E. Reese          Added getStringValue(), setStringValue(), getSourceStart(), setSourceStart().
+//      20170326    D.E. Reese          Added integerValue, realValue, getIntegerValue(), setIntegerValue(),
+//                                      getRealValue(), setRealValue().
 //
 
 public class LexicalToken
@@ -42,6 +46,16 @@ public class LexicalToken
      * String value of token.
      */
     private String stringValue;
+
+    /**
+     * Value of an integer token.
+     */
+    private int integerValue;
+
+    /**
+     * Value of a real token.
+     */
+    private double realValue;
 
     /**
      * Character position of start of token in source string.
@@ -80,6 +94,8 @@ public class LexicalToken
         theTokenType = EnumLexicalToken.TokenUnknown;
         stringValue = null;
         sourceStart = -1;
+        integerValue = 0;
+        realValue = 0.0;
     }
 
     /**
@@ -166,6 +182,71 @@ public class LexicalToken
     }
 
     /**
+     * This method returns the integer value of a given integer token.
+     * @param theToken  Token whose integer value is to be returned.
+     * @return          Integer value of the token.
+     * @throws IllegalArgumentException Thrown if theToken is null or theToken is not an EnumLexicalToken.TokenInteger.
+     */
+    public static int getIntegerValue(final LexicalToken theToken) throws IllegalArgumentException
+    {
+        if(theToken == null) throw new IllegalArgumentException("theToken == null.");
+        if(theToken.theTokenType != EnumLexicalToken.TokenInteger)
+            throw new IllegalArgumentException("theToken is not of type EnumLexicalToken.TokenInteger.");
+
+        return theToken.integerValue;
+    }
+
+    /**
+     * This method sets the integer value of a given integer token.
+     * @param theToken  Token whose integer value is to be set.
+     * @param theInt    New value for the integer token.
+     * @return          Old value of the integer token.
+     * @throws IllegalArgumentException Thrown if theToken is null or theToken is not an EnumLexicalToken.TokenInteger.
+     */
+    public static int setIntegerValue(final LexicalToken theToken, final int theInt) throws IllegalArgumentException
+    {
+        if(theToken == null) throw new IllegalArgumentException("theToken == null.");
+        if(theToken.theTokenType != EnumLexicalToken.TokenInteger)
+            throw new IllegalArgumentException("theToken is not of type EnumLexicalToken.TokenInteger.");
+
+        int oldValue = theToken.integerValue;
+        theToken.integerValue = theInt;
+        return oldValue;
+    }
+
+    /**
+     * This method returns the real value of a given real token.
+     * @param theToken  Token whose real value is to be returned.
+     * @return          real value of the token.
+     * @throws IllegalArgumentException Thrown if theToken is null or theToken is not an EnumLexicalToken.TokenReal.
+     */
+    public static double getRealValue(final LexicalToken theToken) throws IllegalArgumentException
+    {
+        if(theToken == null) throw new IllegalArgumentException("theToken == null.");
+        if(theToken.theTokenType != EnumLexicalToken.TokenReal)
+            throw new IllegalArgumentException("theToken is not of type EnumLexicalToken.TokenReal.");
+        return theToken.realValue;
+    }
+
+    /**
+     * This method sets the real value of a given real token.
+     * @param theToken  Token whose real value is to be set.
+     * @param theReal    New value for the real token.
+     * @return          Old value of the real token.
+     * @throws IllegalArgumentException Thrown if theToken is null or theToken is not an EnumLexicalToken.TokenReal.
+     */
+    public static double setRealValue(final LexicalToken theToken, final double theReal) throws IllegalArgumentException
+    {
+        if(theToken == null) throw new IllegalArgumentException("theToken == null.");
+        if(theToken.theTokenType != EnumLexicalToken.TokenInteger)
+            throw new IllegalArgumentException("theToken is not of type EnumLexicalToken.TokenInteger.");
+
+        double oldValue = theToken.realValue;
+        theToken.realValue = theReal;
+        return oldValue;
+    }
+
+    /**
      * This method returns the token type of this token.
      * @return  Enumerated value of this token's tokenType.
      */
@@ -221,5 +302,43 @@ public class LexicalToken
     public int setSourceStart(final int theStart)
     {
         return LexicalToken.setSourceStart(this, theStart);
+    }
+
+    /**
+     * This method returns the integer value of this token.
+     * @return  Integer value of this token.
+     */
+    public int getIntegerValue()
+    {
+        return LexicalToken.getIntegerValue(this);
+    }
+
+    /**
+     * This method sets the integer value of this token.
+     * @param theInt    New value of this integer token.
+     * @return          Old value of this integer token.
+     */
+    public int setIntegerValue(final int theInt)
+    {
+        return LexicalToken.setIntegerValue(this, theInt);
+    }
+
+    /**
+     * This method returns the real value of this token.
+     * @return  Real value of this token.
+     */
+    public double getRealValue()
+    {
+        return LexicalToken.getRealValue(this);
+    }
+
+    /**
+     * This method sets the real value of this token.
+     * @param theReal    New value of this real token.
+     * @return          Old value of this real token.
+     */
+    public double setRealValue(final double theReal)
+    {
+        return LexicalToken.setRealValue(this, theReal);
     }
 }
