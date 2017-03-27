@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170324    D.E. Reese          Creation.
 //      20170325    D.E. Reese          Added setAndGetTokenType(), setAndGetStringValue(), setAndGetSourceStart().
 //      20170326    D.E. Reese          Added stubs for setAndGetIntegerValue() and setAndGetRealValue().
+//      20170327    D.E. Reese          Added code to setAndGetIntegerValue() and setAndGetRealValue().
 //
 
 class LexicalTokenTest
@@ -160,12 +161,148 @@ class LexicalTokenTest
     @Test
     void setAndGetIntegerValue()
     {
+        LexicalToken theToken;
+        int oldValue;
+        int newValue;
 
+        theToken = new LexicalToken(EnumLexicalToken.TokenInteger, "5", 10);
+        oldValue = LexicalToken.setIntegerValue(theToken, 5);
+        newValue = LexicalToken.getIntegerValue(theToken);
+        assertEquals(0, oldValue);
+        assertEquals(5, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theToken.getStringValue().compareTo("5") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        // Try changing integer value without changing the string value.
+
+        oldValue = LexicalToken.setIntegerValue(theToken, 3);
+        newValue = LexicalToken.getIntegerValue(theToken);
+        assertEquals(5, oldValue);
+        assertEquals(3, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theToken.getStringValue().compareTo("5") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.setIntegerValue(null, 0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.getIntegerValue(null);
+        });
+
+        final LexicalToken failToken1 = new LexicalToken(EnumLexicalToken.TokenUnknown, "Sam", 10);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.setIntegerValue(failToken1, 0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.getIntegerValue(failToken1);
+        });
+
+        // Test instance methods.
+
+        theToken = new LexicalToken(EnumLexicalToken.TokenInteger, "5", 10);
+        oldValue = theToken.setIntegerValue(5);
+        newValue = theToken.getIntegerValue();
+        assertEquals(0, oldValue);
+        assertEquals(5, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theToken.getStringValue().compareTo("5") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        // Try changing integer value without changing the string value.
+
+        oldValue = theToken.setIntegerValue(3);
+        newValue = theToken.getIntegerValue();
+        assertEquals(5, oldValue);
+        assertEquals(3, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theToken.getStringValue().compareTo("5") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            failToken1.setIntegerValue(0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            failToken1.getIntegerValue();
+        });
     }
 
     @Test
     void setAndGetRealValue()
     {
+        LexicalToken theToken;
+        double oldValue;
+        double newValue;
 
+        theToken = new LexicalToken(EnumLexicalToken.TokenReal, "5.0", 10);
+        oldValue = LexicalToken.setRealValue(theToken, 5.0);
+        newValue = LexicalToken.getRealValue(theToken);
+        assertEquals(0.0, oldValue);
+        assertEquals(5.0, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenReal);
+        assertTrue(theToken.getStringValue().compareTo("5.0") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        // Try changing integer value without changing the string value.
+
+        oldValue = LexicalToken.setRealValue(theToken, 3.0);
+        newValue = LexicalToken.getRealValue(theToken);
+        assertEquals(5.0, oldValue);
+        assertEquals(3.0, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenReal);
+        assertTrue(theToken.getStringValue().compareTo("5.0") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.setRealValue(null, 0.0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.getRealValue(null);
+        });
+
+        final LexicalToken failToken1 = new LexicalToken(EnumLexicalToken.TokenUnknown, "Sam", 10);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.setRealValue(failToken1, 0.0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            LexicalToken.getRealValue(failToken1);
+        });
+
+        // Test instance methods.
+
+        theToken = new LexicalToken(EnumLexicalToken.TokenReal, "5.0", 10);
+        oldValue = theToken.setRealValue(5.0);
+        newValue = theToken.getRealValue();
+        assertEquals(0.0, oldValue);
+        assertEquals(5.0, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenReal);
+        assertTrue(theToken.getStringValue().compareTo("5.0") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        // Try changing integer value without changing the string value.
+
+        oldValue = theToken.setRealValue(3.0);
+        newValue = theToken.getRealValue();
+        assertEquals(5.0, oldValue);
+        assertEquals(3.0, newValue);
+        assertTrue(theToken.getTokenType() == EnumLexicalToken.TokenReal);
+        assertTrue(theToken.getStringValue().compareTo("5.0") == 0);
+        assertTrue(theToken.getSourceStart() == 10);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            failToken1.setRealValue(0.0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            failToken1.getRealValue();
+        });
     }
 }

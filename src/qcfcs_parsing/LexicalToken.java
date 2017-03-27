@@ -33,6 +33,7 @@ import java.util.ArrayList;
 //      20170325    D.E. Reese          Added getStringValue(), setStringValue(), getSourceStart(), setSourceStart().
 //      20170326    D.E. Reese          Added integerValue, realValue, getIntegerValue(), setIntegerValue(),
 //                                      getRealValue(), setRealValue().
+//      20170327    D.E. Reese          Fixed exception in setRealValue (failed on TokenInteger, not TokenReal).
 //
 
 public class LexicalToken
@@ -238,8 +239,8 @@ public class LexicalToken
     public static double setRealValue(final LexicalToken theToken, final double theReal) throws IllegalArgumentException
     {
         if(theToken == null) throw new IllegalArgumentException("theToken == null.");
-        if(theToken.theTokenType != EnumLexicalToken.TokenInteger)
-            throw new IllegalArgumentException("theToken is not of type EnumLexicalToken.TokenInteger.");
+        if(theToken.theTokenType != EnumLexicalToken.TokenReal)
+            throw new IllegalArgumentException("theToken is not of type EnumLexicalToken.TokenReal.");
 
         double oldValue = theToken.realValue;
         theToken.realValue = theReal;
