@@ -27,6 +27,7 @@ package qcfcs_parsing;
 //
 // History:
 //      20170324    D.E. Reese          Creation.
+//      20170329    D.E. Reese          Added tokenLeftParen, tokenRightParen, tokenDoublePlus, tokenDoubleMinus.
 //
 
 public enum EnumLexicalToken
@@ -52,22 +53,42 @@ public enum EnumLexicalToken
     TokenReal,
 
     /**
-     * Plus sign token.
+     * Plus sign token, i.e. '+'.
      */
     TokenPlus,
 
     /**
-     * Minus sign token.
+     * Minus sign token, i.e. '-'.
      */
     TokenMinus,
 
     /**
-     * Times (*) sign token.
+     * Times (*) sign token, i.e '*'.
      */
     TokenTimes,
 
     /**
-     * Keyword for I, i.e., sqrt (-1)
+     * Left parenthesis, i.e. '('.
+     */
+    TokenLeftParen,
+
+    /**
+     * Right parenthesis, i.e. ')'.
+     */
+    TokenRightParen,
+
+    /**
+     * Double plus, i.e. '++'.
+     */
+    TokenDoublePlus,
+
+    /**
+     * Double minus, i.e. '--'.
+     */
+    TokenDoubleMinus,
+
+    /**
+     * Keyword for I, i.e., sqrt (-1).
      */
     KeywordI
 }
