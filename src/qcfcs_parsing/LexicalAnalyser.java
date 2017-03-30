@@ -33,6 +33,9 @@ import java.util.ArrayList;
 //      20170329    D.E. Reese          Added initializeAnalyser(), code to analyseString(), restructured constructor,
 //                                      renamed to LexicalAnalyser, added doLexicalStateStart(), added
 //                                      doLexicalStateInLabel().
+//      20170330    D.E. Reese          Added code at end of analyseString() to handle the end of string. Added
+//                                      processEndOfString() and added code to handle processing for
+//                                      lexicalStateStart and lexicalStateInLabel.
 
 public class LexicalAnalyser
 {
@@ -176,7 +179,32 @@ public class LexicalAnalyser
             }
         }
 
+        // Process the end-of-string condition.
+
+        processEndOfString();
+
+        // Return the token list.
+
         return tokenList;
+    }
+
+    /**
+     * This method does processing of an end-of-string condition, based on the lexical state.
+     */
+    private void processEndOfString()
+    {
+        // When the end of the string is reached, process based on the state.
+
+        switch(lexicalState)
+        {
+            case lexicalStateStart:
+                break;
+            case lexicalStateInLabel:
+                final String labelString = workString.substring(curTokenStart, stringLocation);
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, labelString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+        }
     }
 
     /**
@@ -266,10 +294,10 @@ public class LexicalAnalyser
         // was the end of the label. So, decrement the string location, so that the current character will be
         // caught again and create a label token.
 
-        stringLocation--;
         final String labelString = workString.substring(curTokenStart, stringLocation);
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, labelString, curTokenStart));
         lexicalState = EnumLexicalState.lexicalStateStart;
+        stringLocation--;
         return;
     }
 }
