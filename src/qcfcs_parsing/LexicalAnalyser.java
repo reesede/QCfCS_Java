@@ -37,6 +37,8 @@ import java.util.ArrayList;
 //                                      processEndOfString() and added code to handle processing for
 //                                      lexicalStateStart and lexicalStateInLabel.
 //      20170331    D.E. Reese          Added doLexicalStateInDecimalInt(). Added stub for doLexicalStateStartOctalInt().
+//      20170401    D.E. Reese          Added skipToNextBreak().
+//      20170402    D.E. Reese          Added doLexicalStateInOctalInt().
 //
 
 public class LexicalAnalyser
@@ -214,6 +216,9 @@ public class LexicalAnalyser
                     break;
                 case lexicalStateStartOctalInt:
                     doLexicalStateStartOctalInt(theChar);
+                    break;
+                case lexicalStateInOctalInt:
+                    doLexicalStateInOctalInt(theChar);
                     break;
             }
         }
@@ -399,8 +404,110 @@ public class LexicalAnalyser
         return;
     }
 
+    /**
+     * This method processes the initial 0 in an octal constant, an integer constant of 0, or the beginning
+     * of a decimal real beginning with "0.".
+     * @param theChar   Character to process.
+     */
     private void doLexicalStateStartOctalInt(final char theChar)
     {
+        // If the character is in the range 0...7, then set the state to indicate that we are in an octal integer
+        // but past the first octet.
 
+        if((theChar >= '0') && (theChar <= '7'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInOctalInt;
+            return;
+        }
+
+        // If the character is a 'b', then transition to being in a binary integer.
+
+        if(theChar == 'b')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInBinaryInt;
+            return;
+        }
+
+        // If the character is an 'h', then transition to being in an hexidecimal integer.
+
+        if(theChar == 'h')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexidecimalInt;
+            return;
+        }
+
+        // If the character is a dot (.), then transition to being in a real number.
+
+        if(theChar == '.')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
+            return;
+        }
+
+        // If the character is an 8 or 9 or a letter, then it is an invalid octet, so generate an error.
+
+        if(((theChar >= '8') && (theChar <= '9')) || (Character.isLetter(theChar)))
+        {
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenUnknown,String.valueOf(theChar),curTokenStart));
+            errorList.add("LEXICAL ERROR AT " + String.valueOf(curTokenStart) + ": Invalid octal constant.");
+            skipToNextBreak();
+            return;
+        }
+
+        // If the character is something else, then the 0 was just 0.
+
+        final String octalIntString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, octalIntString, curTokenStart));
+        lexicalState = EnumLexicalState.lexicalStateStart;
+        stringLocation--;
+        return;
+    }
+
+    /**
+     * This method processes the second and subsequent octets of an octal integer.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateInOctalInt(final char theChar)
+    {
+        // If the character is in the range 0...7 or an underscore (_), then it is part of the octal integer.
+        // Just return to keep processing.
+
+        if(((theChar >= '0') && (theChar <= '7')) || (theChar == '_'))
+            return;
+
+        // If the character is in the range 8...9 or a letter, then it is an illegal digit in an octal integer.
+
+        if((theChar == '8') || (theChar == '9') || (Character.isLetter(theChar)))
+        {
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenUnknown,String.valueOf(theChar),curTokenStart));
+            errorList.add("LEXICAL ERROR AT " + String.valueOf(curTokenStart) + ": Invalid octal constant.");
+            skipToNextBreak();
+            return;
+        }
+
+        // Otherwise, we have reached the end of the octal integer.
+
+        final String octalIntString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, octalIntString, curTokenStart));
+        lexicalState = EnumLexicalState.lexicalStateStart;
+        stringLocation--;
+        return;
+    }
+
+    /**
+     * This method skips to the next clearly defined token after an error has been detected.
+     */
+    private void skipToNextBreak()
+    {
+        for(int i = stringLocation; i < stringLength; i++)
+        {
+            char theChar = workString.charAt(i);
+
+            if((theChar == ' ') || (theChar == '+') || (theChar == '-') || (theChar == '*') || (theChar == '/'))
+                break;
+        }
+
+        if(stringLocation != stringLength)
+            stringLocation--;
     }
 }
