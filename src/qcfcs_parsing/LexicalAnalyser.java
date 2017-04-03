@@ -36,9 +36,10 @@ import java.util.ArrayList;
 //      20170330    D.E. Reese          Added code at end of analyseString() to handle the end of string. Added
 //                                      processEndOfString() and added code to handle processing for
 //                                      lexicalStateStart and lexicalStateInLabel.
-//      20170331    D.E. Reese          Added doLexicalStateInDecimalInt(). Added stub for doLexicalStateStartOctalInt().
+//      20170331    D.E. Reese          Added doLexicalStateInDecimalInt(). Added stub for doLexicalStateStartSpecialInt().
 //      20170401    D.E. Reese          Added skipToNextBreak().
 //      20170402    D.E. Reese          Added doLexicalStateInOctalInt().
+//      20170403    D.E. Reese          Added doLexicalStateStartBinaryInt().
 //
 
 public class LexicalAnalyser
@@ -64,9 +65,9 @@ public class LexicalAnalyser
         lexicalStateInDecimalInt,
 
         /**
-         * State of lexical analysis - in an octal integer after initial 0.
+         * State of lexical analysis - in an octal, binary, or hexidecimal integer, or a plain 0, after initial 0.
          */
-        lexicalStateStartOctalInt,
+        lexicalStateStartSpecialInt,
 
         /**
          * State of lexical analysis - in an octal integer after second or greater octet (can not be binary or hex).
@@ -74,14 +75,14 @@ public class LexicalAnalyser
         lexicalStateInOctalInt,
 
         /**
-         * State of lexical analysis - in a binary integer.
+         * State of lexical analysis - start of a binary integer.
          */
-        lexicalStateInBinaryInt,
+        lexicalStateStartBinaryInt,
 
         /**
-         * State of lexical analysis - in a hexidecimal integer.
+         * State of lexical analysis - start of a hexidecimal integer.
          */
-        lexicalStateInHexidecimalInt,
+        lexicalStateStartHexidecimalInt,
 
         /**
          * State of lexical analysis - at the start of a decimal real number, with a dot (.) found, but no digits
@@ -214,11 +215,14 @@ public class LexicalAnalyser
                 case lexicalStateInDecimalInt:
                     doLexicalStateInDecimalInt(theChar);
                     break;
-                case lexicalStateStartOctalInt:
-                    doLexicalStateStartOctalInt(theChar);
+                case lexicalStateStartSpecialInt:
+                    doLexicalStateStartSpecialInt(theChar);
                     break;
                 case lexicalStateInOctalInt:
                     doLexicalStateInOctalInt(theChar);
+                    break;
+                case lexicalStateStartBinaryInt:
+                    doLexicalStateStartBinaryInt(theChar);
                     break;
             }
         }
@@ -250,12 +254,9 @@ public class LexicalAnalyser
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, tokenString, curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
+            case lexicalStateStartSpecialInt:
+            case lexicalStateInOctalInt:
             case lexicalStateInDecimalInt:
-                tokenString = workString.substring(curTokenStart, stringLocation);
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                break;
-            case lexicalStateStartOctalInt:
                 tokenString = workString.substring(curTokenStart, stringLocation);
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
@@ -295,7 +296,7 @@ public class LexicalAnalyser
             if (theChar == '0')
             {
                 curTokenStart = stringLocation;
-                lexicalState = EnumLexicalState.lexicalStateStartOctalInt;
+                lexicalState = EnumLexicalState.lexicalStateStartSpecialInt;
                 return;
             }
             else
@@ -405,11 +406,11 @@ public class LexicalAnalyser
     }
 
     /**
-     * This method processes the initial 0 in an octal constant, an integer constant of 0, or the beginning
-     * of a decimal real beginning with "0.".
+     * This method processes the initial 0 in an octal, binary, or hex constant, an integer constant of 0,
+     * or the beginning of a decimal real beginning with "0.".
      * @param theChar   Character to process.
      */
-    private void doLexicalStateStartOctalInt(final char theChar)
+    private void doLexicalStateStartSpecialInt(final char theChar)
     {
         // If the character is in the range 0...7, then set the state to indicate that we are in an octal integer
         // but past the first octet.
@@ -424,7 +425,7 @@ public class LexicalAnalyser
 
         if(theChar == 'b')
         {
-            lexicalState = EnumLexicalState.lexicalStateInBinaryInt;
+            lexicalState = EnumLexicalState.lexicalStateStartBinaryInt;
             return;
         }
 
@@ -432,7 +433,7 @@ public class LexicalAnalyser
 
         if(theChar == 'h')
         {
-            lexicalState = EnumLexicalState.lexicalStateInHexidecimalInt;
+            lexicalState = EnumLexicalState.lexicalStateStartHexidecimalInt;
             return;
         }
 
@@ -492,6 +493,11 @@ public class LexicalAnalyser
         lexicalState = EnumLexicalState.lexicalStateStart;
         stringLocation--;
         return;
+    }
+
+    private void doLexicalStateStartBinaryInt(final char theChar)
+    {
+
     }
 
     /**
