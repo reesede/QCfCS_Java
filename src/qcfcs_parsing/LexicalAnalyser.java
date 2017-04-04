@@ -40,6 +40,7 @@ import java.util.ArrayList;
 //      20170401    D.E. Reese          Added skipToNextBreak().
 //      20170402    D.E. Reese          Added doLexicalStateInOctalInt().
 //      20170403    D.E. Reese          Added doLexicalStateStartBinaryInt().
+//      20170404    D.E. Reese          Rewriting and simplifying just for complex numbers.
 //
 
 public class LexicalAnalyser
@@ -53,62 +54,6 @@ public class LexicalAnalyser
          * State of lexical analysis - beginning of analysis.
          */
         lexicalStateStart,
-
-        /**
-         * State of lexical analysis - in a label.
-         */
-        lexicalStateInLabel,
-
-        /**
-         * State of lexical analysis - in a decimal integer.
-         */
-        lexicalStateInDecimalInt,
-
-        /**
-         * State of lexical analysis - in an octal, binary, or hexidecimal integer, or a plain 0, after initial 0.
-         */
-        lexicalStateStartSpecialInt,
-
-        /**
-         * State of lexical analysis - in an octal integer after second or greater octet (can not be binary or hex).
-         */
-        lexicalStateInOctalInt,
-
-        /**
-         * State of lexical analysis - start of a binary integer.
-         */
-        lexicalStateStartBinaryInt,
-
-        /**
-         * State of lexical analysis - start of a hexidecimal integer.
-         */
-        lexicalStateStartHexidecimalInt,
-
-        /**
-         * State of lexical analysis - at the start of a decimal real number, with a dot (.) found, but no digits
-         * to the right of the dot.
-         */
-        lexicalStateStartDecimalReal,
-
-        /**
-         * State of lexical analysis - in a decimal real.
-         */
-        lexicalStateInDecimalReal,
-
-        /**
-         * State of lexical analysis - a plus (+) sign or beginning of a double plus (++) sign.
-         */
-        lexicalStatePlusOrDoublePlus,
-
-        /**
-         * State of lexical analysis = a minus (-) sign or beginning of a double minus (--) sign.
-         */
-        lexicalStateMinusOrDoubleMinus,
-
-        /**
-         * State of lexical analysis = a divide (/) sign or the beginning of a comment (// or /*)
-         */
-        lexicalStateDivideOrComment
     }
 
     /**
@@ -206,24 +151,6 @@ public class LexicalAnalyser
 
             switch(lexicalState)
             {
-                case lexicalStateStart:
-                    doLexicalStateStart(theChar);
-                    break;
-                case lexicalStateInLabel:
-                    doLexicalStateInLabel(theChar);
-                    break;
-                case lexicalStateInDecimalInt:
-                    doLexicalStateInDecimalInt(theChar);
-                    break;
-                case lexicalStateStartSpecialInt:
-                    doLexicalStateStartSpecialInt(theChar);
-                    break;
-                case lexicalStateInOctalInt:
-                    doLexicalStateInOctalInt(theChar);
-                    break;
-                case lexicalStateStartBinaryInt:
-                    doLexicalStateStartBinaryInt(theChar);
-                    break;
             }
         }
 
@@ -247,20 +174,6 @@ public class LexicalAnalyser
 
         switch(lexicalState)
         {
-            case lexicalStateStart:
-                break;
-            case lexicalStateInLabel:
-                tokenString = workString.substring(curTokenStart, stringLocation);
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, tokenString, curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                break;
-            case lexicalStateStartSpecialInt:
-            case lexicalStateInOctalInt:
-            case lexicalStateInDecimalInt:
-                tokenString = workString.substring(curTokenStart, stringLocation);
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                break;
         }
     }
 
@@ -270,234 +183,6 @@ public class LexicalAnalyser
      */
     private void doLexicalStateStart(final char theChar)
     {
-        // If the current character is a space character, then ignore it and increment the .
-
-        if (Character.isSpaceChar(theChar))
-        {
-            return;
-        }
-
-        // If the current character is a letter, then it is the start of a label.
-
-        if (Character.isLetter(theChar))
-        {
-            curTokenStart = stringLocation;
-            lexicalState = EnumLexicalState.lexicalStateInLabel;
-            return;
-        }
-
-        // If the current character is a digit, then it is the start of an integer.
-
-        if (Character.isDigit(theChar))
-        {
-            // If the digit is a 0, then the integer will be an octal, binary, or hexidecimal integer. Otherwise,
-            // it will be a decimal integer.
-
-            if (theChar == '0')
-            {
-                curTokenStart = stringLocation;
-                lexicalState = EnumLexicalState.lexicalStateStartSpecialInt;
-                return;
-            }
-            else
-            {
-                curTokenStart = stringLocation;
-                lexicalState = EnumLexicalState.lexicalStateInDecimalInt;
-                return;
-            }
-        }
-
-        // Analyse single characters.
-
-        switch (theChar)
-        {
-            case '+':   // Need to check for + or ++.
-                curTokenStart = stringLocation;
-                lexicalState = EnumLexicalState.lexicalStatePlusOrDoublePlus;
-                return;
-            case '-':   // Need to check for - or --.
-                curTokenStart = stringLocation;
-                lexicalState = EnumLexicalState.lexicalStateMinusOrDoubleMinus;
-                return;
-            case '*':   // Found a times (*) token.
-                curTokenStart = stringLocation;
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenTimes, "*", curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
-            case '/':   // Need to check for divide (/) or comment (// or /*)
-                curTokenStart = stringLocation;
-                lexicalState = EnumLexicalState.lexicalStateDivideOrComment;
-                return;
-            case '(':   // Found a left paren (().
-                curTokenStart = stringLocation;
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenLeftParen, "(", curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
-            case ')':   // Found a right paren ()).
-                curTokenStart = stringLocation;
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenRightParen, ")", curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
-            default:
-                curTokenStart = stringLocation;
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenUnknown, String.valueOf(theChar), curTokenStart));
-                lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
-        }
-    }
-
-    /**
-     * This method analyses a label.
-     * @param theChar   Character to process.
-     */
-    private void doLexicalStateInLabel(final char theChar)
-    {
-        // If the character is a letter, digit, or underscore, than just return, since we'll stay in this state and
-        // collect more characters in the label.
-
-        if((Character.isLetter(theChar)) || (Character.isDigit(theChar)) || (theChar == '_'))
-        {
-            return;
-        }
-
-        // If the character is anything other than a letter, digit, or underscore, then the previous character
-        // was the end of the label. So, decrement the string location, so that the current character will be
-        // caught again and create a label token.
-
-        final String labelString = workString.substring(curTokenStart, stringLocation);
-        tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, labelString, curTokenStart));
-        lexicalState = EnumLexicalState.lexicalStateStart;
-        stringLocation--;
-        return;
-    }
-
-    /**
-     * This method analyses a decimal integer.
-     * @param theChar   Character to process.
-     */
-    private void doLexicalStateInDecimalInt(final char theChar)
-    {
-        // If the character is a digit, then just return, since we'll stay in this state and collect more characters
-        // in the decimal integer.
-
-        if((Character.isDigit(theChar)) || (theChar == '_'))
-        {
-            return;
-        }
-
-        // If the character is a dot (.), then the integer really was a real number, so collect the dot and transition
-        // the state to indicate that we are at the start of a real number.
-
-        if(theChar == '.')
-        {
-            lexicalState = EnumLexicalState.lexicalStateStartDecimalReal;
-            return;
-        }
-
-        // If the character is anything other than a digit, dot, or underscore, than the previous character was
-        // the end of the decimal label. So, decrement the string location, so that the current character will be
-        // caught again and create a decimal integer token.
-
-        final String integerString = workString.substring(curTokenStart, stringLocation);
-        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
-        lexicalState = EnumLexicalState.lexicalStateStart;
-        stringLocation--;
-        return;
-    }
-
-    /**
-     * This method processes the initial 0 in an octal, binary, or hex constant, an integer constant of 0,
-     * or the beginning of a decimal real beginning with "0.".
-     * @param theChar   Character to process.
-     */
-    private void doLexicalStateStartSpecialInt(final char theChar)
-    {
-        // If the character is in the range 0...7, then set the state to indicate that we are in an octal integer
-        // but past the first octet.
-
-        if((theChar >= '0') && (theChar <= '7'))
-        {
-            lexicalState = EnumLexicalState.lexicalStateInOctalInt;
-            return;
-        }
-
-        // If the character is a 'b', then transition to being in a binary integer.
-
-        if(theChar == 'b')
-        {
-            lexicalState = EnumLexicalState.lexicalStateStartBinaryInt;
-            return;
-        }
-
-        // If the character is an 'h', then transition to being in an hexidecimal integer.
-
-        if(theChar == 'h')
-        {
-            lexicalState = EnumLexicalState.lexicalStateStartHexidecimalInt;
-            return;
-        }
-
-        // If the character is a dot (.), then transition to being in a real number.
-
-        if(theChar == '.')
-        {
-            lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
-            return;
-        }
-
-        // If the character is an 8 or 9 or a letter, then it is an invalid octet, so generate an error.
-
-        if(((theChar >= '8') && (theChar <= '9')) || (Character.isLetter(theChar)))
-        {
-            tokenList.add(new LexicalToken(EnumLexicalToken.TokenUnknown,String.valueOf(theChar),curTokenStart));
-            errorList.add("LEXICAL ERROR AT " + String.valueOf(curTokenStart) + ": Invalid octal constant.");
-            skipToNextBreak();
-            return;
-        }
-
-        // If the character is something else, then the 0 was just 0.
-
-        final String octalIntString = workString.substring(curTokenStart, stringLocation);
-        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, octalIntString, curTokenStart));
-        lexicalState = EnumLexicalState.lexicalStateStart;
-        stringLocation--;
-        return;
-    }
-
-    /**
-     * This method processes the second and subsequent octets of an octal integer.
-     * @param theChar   Character to process.
-     */
-    private void doLexicalStateInOctalInt(final char theChar)
-    {
-        // If the character is in the range 0...7 or an underscore (_), then it is part of the octal integer.
-        // Just return to keep processing.
-
-        if(((theChar >= '0') && (theChar <= '7')) || (theChar == '_'))
-            return;
-
-        // If the character is in the range 8...9 or a letter, then it is an illegal digit in an octal integer.
-
-        if((theChar == '8') || (theChar == '9') || (Character.isLetter(theChar)))
-        {
-            tokenList.add(new LexicalToken(EnumLexicalToken.TokenUnknown,String.valueOf(theChar),curTokenStart));
-            errorList.add("LEXICAL ERROR AT " + String.valueOf(curTokenStart) + ": Invalid octal constant.");
-            skipToNextBreak();
-            return;
-        }
-
-        // Otherwise, we have reached the end of the octal integer.
-
-        final String octalIntString = workString.substring(curTokenStart, stringLocation);
-        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, octalIntString, curTokenStart));
-        lexicalState = EnumLexicalState.lexicalStateStart;
-        stringLocation--;
-        return;
-    }
-
-    private void doLexicalStateStartBinaryInt(final char theChar)
-    {
-
     }
 
     /**
