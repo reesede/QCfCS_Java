@@ -41,6 +41,7 @@ import java.util.ArrayList;
 //      20170402    D.E. Reese          Added doLexicalStateInOctalInt().
 //      20170403    D.E. Reese          Added doLexicalStateStartBinaryInt().
 //      20170404    D.E. Reese          Rewriting and simplifying just for complex numbers.
+//      20170405    D.E. Reese          Added new state definitions for complex numbers, comments, labels.
 //
 
 public class LexicalAnalyser
@@ -54,6 +55,103 @@ public class LexicalAnalyser
          * State of lexical analysis - beginning of analysis.
          */
         lexicalStateStart,
+
+        /**
+         * State of lexical analysis - in a label
+         */
+        lexicalStateInLabel,
+
+        /**
+         * State of lexical analysis - starting a binary, octal, or hexidecimal integer, or a 0 or decimal real.
+         */
+        lexicalStateStartSpecialInteger,
+
+        /**
+         * State of lexical analysis - in a decimal integer.
+         */
+        lexicalStateInDecimalInteger,
+
+        /**
+         * State of lexical analysis - after an underscore in a decimal integer.
+         */
+        lexicalStateInDecimalIntegerUnderscore,
+
+        /**
+         * State of lexical analysis - after a dot (.) in a decimal real.
+         */
+        lexicalStateStartDecimalReal,
+
+        /**
+         * State of lexical analysis - in a decimal real.
+         */
+        lexicalStateInDecimalReal,
+
+        /**
+         * State of lexical analysis - after an underscore in a decimal real.
+         */
+        lexicalStateInDecimalRealUnderscore,
+
+        /**
+         * State of lexical analysis - in an octal integer.
+         */
+        lexicalStateInOctalInteger,
+
+        /**
+         * State of lexical analysis - after an underscore in an octal integer.
+         */
+        lexicalStateInOctalIntegerUnderscore,
+
+        /**
+         * State of lexical analysis - after the 'b' defining a binary integer, but before first bit.
+         */
+        lexicalStateStartBinaryInteger,
+
+        /**
+         * State of lexical analysis - in a binary integer.
+         */
+        lexicalStateInBinaryInteger,
+
+        /**
+         * State of lexical analysis - after an undersocre in a binary integer.
+         */
+        lexicalStateInBinaryIntegerUnderscore,
+
+        /**
+         * State of lexical analysis - after the 'h' defining a hexidecimal integer, but before first hexted.
+         */
+        lexicalStateStartHexInteger,
+
+        /**
+         * State of lexical analysis - in a hexidecimal integer.
+         */
+        lexicalStateInHexInteger,
+
+        /**
+         * State of lexical analysis - after an underscore in a hexidecimal integer.
+         */
+        lexicalStateInHexIntegerUnderscore,
+
+        /**
+         * State of lexical analysis - after a dot but before a digit.
+         */
+        lexicalStateDot,
+
+        /**
+         * State of lexical analysis - after a slash (/), checking if it is a divide or start of a comment.
+         */
+        lexicalStateDivideOrComment,
+
+        /**
+         * State of lexical analysis - in a comment.
+         */
+        lexicalStateInComment,
+
+        /**
+         * State of lexical analysis - looking for a slash (/) after a star (*) for comment end.
+         */
+        lexicalStateCheckEndComment
+
+
     }
 
     /**
