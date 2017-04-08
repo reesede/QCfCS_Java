@@ -27,7 +27,8 @@ package qcfcs_parsing;
 //
 // History:
 //      20170324    D.E. Reese          Creation.
-//      20170329    D.E. Reese          Added tokenLeftParen, tokenRightParen, tokenDoublePlus, tokenDoubleMinus.
+//      20170329    D.E. Reese          Added TokenLeftParen, TokenRightParen, TokenDoublePlus, TokenDoubleMinus.
+//      20170408    D.E. Reese          Added TokenError.
 //
 
 public enum EnumLexicalToken
@@ -36,6 +37,11 @@ public enum EnumLexicalToken
      * Used to identify an unknown or null token.
      */
     TokenUnknown,
+
+    /**
+     * Used to indicate a token in error.
+     */
+    TokenError,
 
     /**
      * Label token which is not a keyword.
