@@ -43,6 +43,7 @@ import java.util.ArrayList;
 //      20170404    D.E. Reese          Rewriting and simplifying just for complex numbers.
 //      20170405    D.E. Reese          Added new state definitions for complex numbers, comments, labels.
 //      20170408    D.E. Reese          Added doLexicalStateStart(), doLexicalStateInLabel(), doLexicalStateStartSpecialInteger().
+//      20170409    D.E. Reese          Added doLexicalStateInDecimalInteger().
 //
 
 public class LexicalAnalyser
@@ -247,6 +248,9 @@ public class LexicalAnalyser
                 case lexicalStateStartSpecialInteger:
                     doLexicalStateStartSpecialInteger(theChar);
                     break;
+                case lexicalStateInDecimalInteger:
+                    doLexicalStateInDecimalInteger(theChar);
+                    break;
             }
         }
 
@@ -279,6 +283,11 @@ public class LexicalAnalyser
             case lexicalStateStartSpecialInteger:
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, "0", curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInDecimalInteger:
+                tokenString = workString.substring(curTokenStart);
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
+                break;
         }
     }
 
@@ -399,6 +408,7 @@ public class LexicalAnalyser
             tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
             skipToNextBreak();
             lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
         }
 
         // If theChar is a 'b', then this is the start of a binary integer.
@@ -433,11 +443,66 @@ public class LexicalAnalyser
             tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
             skipToNextBreak();
             lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
         }
 
         // Otherwise, we have found a zero (0).
 
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, "0", curTokenStart));
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method processes a decimal integer.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateInDecimalInteger(final char theChar)
+    {
+        String errorString = null;
+
+        // If the character is a digit, just stay in this state.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalInteger;
+            return;
+        }
+
+        // If the character is an underscore, enter the state to wait for a new character (multiple consecutive
+        // underscores are not allowed).
+
+        if(theChar == '_')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalIntegerUnderscore;
+            return;
+        }
+
+        // If the character is a dot (.), then it is the start of a decimal real.
+
+        if(theChar == '.')
+        {
+            lexicalState = EnumLexicalState.lexicalStateStartDecimalReal;
+            return;
+        }
+
+        // If the character is a letter, generate an error.
+
+        if(Character.isLetter(theChar))
+        {
+            errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // If another character is found, the previous character was the end of the integer. So, collect the
+        // integer token and decrement the stringLocation so that the current character will be reprocessed.
+        // Set the state to lexicalStateStart to begin a new token.
+
+        final String integerString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
+        stringLocation--;
         lexicalState = EnumLexicalState.lexicalStateStart;
     }
 
