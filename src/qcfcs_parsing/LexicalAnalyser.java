@@ -44,6 +44,7 @@ import java.util.ArrayList;
 //      20170405    D.E. Reese          Added new state definitions for complex numbers, comments, labels.
 //      20170408    D.E. Reese          Added doLexicalStateStart(), doLexicalStateInLabel(), doLexicalStateStartSpecialInteger().
 //      20170409    D.E. Reese          Added doLexicalStateInDecimalInteger().
+//      20170410    D.E. Reese          Added doLexicalStateInDecimalIntegerUnderscore().
 //
 
 public class LexicalAnalyser
@@ -251,6 +252,9 @@ public class LexicalAnalyser
                 case lexicalStateInDecimalInteger:
                     doLexicalStateInDecimalInteger(theChar);
                     break;
+                case lexicalStateInDecimalIntegerUnderscore:
+                    doLexicalStateInDecimalIntegerUnderscore(theChar);
+                    break;
             }
         }
 
@@ -275,10 +279,11 @@ public class LexicalAnalyser
         switch(lexicalState)
         {
             case lexicalStateStart:
-                return;
+                break;
             case lexicalStateInLabel:
                 tokenString = workString.substring(curTokenStart);
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
             case lexicalStateStartSpecialInteger:
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, "0", curTokenStart));
@@ -287,6 +292,12 @@ public class LexicalAnalyser
             case lexicalStateInDecimalInteger:
                 tokenString = workString.substring(curTokenStart);
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInDecimalIntegerUnderscore:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
         }
     }
@@ -504,6 +515,30 @@ public class LexicalAnalyser
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
         stringLocation--;
         lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method handles a decimal integer after an underscore if found. Note that repeated underscores
+     * are not allowed.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateInDecimalIntegerUnderscore(final char theChar)
+    {
+        // If the character is a digit, then return to processing digits in the decimal integer.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalInteger;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+        return;
     }
 
     /**
