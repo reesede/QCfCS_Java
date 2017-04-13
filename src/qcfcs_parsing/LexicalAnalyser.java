@@ -45,6 +45,7 @@ import java.util.ArrayList;
 //      20170408    D.E. Reese          Added doLexicalStateStart(), doLexicalStateInLabel(), doLexicalStateStartSpecialInteger().
 //      20170409    D.E. Reese          Added doLexicalStateInDecimalInteger().
 //      20170410    D.E. Reese          Added doLexicalStateInDecimalIntegerUnderscore().
+//      20170413    D.E. Reese          Added doLexicalStateStartDecimalReal().
 //
 
 public class LexicalAnalyser
@@ -255,6 +256,9 @@ public class LexicalAnalyser
                 case lexicalStateInDecimalIntegerUnderscore:
                     doLexicalStateInDecimalIntegerUnderscore(theChar);
                     break;
+                case lexicalStateStartDecimalReal:
+                    doLexicalStateStartDecimalReal(theChar);
+                    break;
             }
         }
 
@@ -295,8 +299,14 @@ public class LexicalAnalyser
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
             case lexicalStateInDecimalIntegerUnderscore:
-                tokenString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing digit after underscore in decimal constant.";
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateStartDecimalReal:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Must have a digit after a decimal point.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                skipToNextBreak();
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
         }
@@ -535,6 +545,28 @@ public class LexicalAnalyser
         // Otherwise, generate an error.
 
         final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+        return;
+    }
+
+    /**
+     * This method handles the start of a decimal real after the decimal point. The next character after the decimal
+     * point must be a digit.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateStartDecimalReal(final char theChar)
+    {
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Must have a digit after a decimal point.";
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
         skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
