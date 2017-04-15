@@ -46,6 +46,8 @@ import java.util.ArrayList;
 //      20170409    D.E. Reese          Added doLexicalStateInDecimalInteger().
 //      20170410    D.E. Reese          Added doLexicalStateInDecimalIntegerUnderscore().
 //      20170413    D.E. Reese          Added doLexicalStateStartDecimalReal().
+//      20170415    D.E. Reese          Added doLexicalStateInDecimalReal(), doLexicalStateInDecimalRealUnderscore(),
+//                                      doLexicalStateInOctalInteger().
 //
 
 public class LexicalAnalyser
@@ -259,6 +261,12 @@ public class LexicalAnalyser
                 case lexicalStateStartDecimalReal:
                     doLexicalStateStartDecimalReal(theChar);
                     break;
+                case lexicalStateInDecimalReal:
+                    doLexicalStateInDecimalReal(theChar);
+                    break;
+                case lexicalStateInOctalInteger:
+                    doLexicalStateInOctalInteger(theChar);
+                    break;
             }
         }
 
@@ -307,6 +315,24 @@ public class LexicalAnalyser
                 tokenString = "LEXICAL ERROR at " + stringLocation + ": Must have a digit after a decimal point.";
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
                 skipToNextBreak();
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInDecimalReal:
+                tokenString = workString.substring(curTokenStart);
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenReal, tokenString, curTokenStart));
+                stringLocation--;
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInDecimalRealUnderscore:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Illegal character in decimal real.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                skipToNextBreak();
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInOctalInteger:
+                tokenString = workString.substring(curTokenStart);
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
+                stringLocation--;
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
         }
@@ -558,6 +584,8 @@ public class LexicalAnalyser
      */
     private void doLexicalStateStartDecimalReal(final char theChar)
     {
+        // If the character is a digit, the move into the decimal real state.
+
         if(Character.isDigit(theChar))
         {
             lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
@@ -574,11 +602,124 @@ public class LexicalAnalyser
     }
 
     /**
+     * This method collects digits and an isolated underscore as part of a decimal real.
+     * @param theChar   Character to be processed.
+     */
+    private void doLexicalStateInDecimalReal(final char theChar)
+    {
+        // If the character is a digit, stay in this state.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
+            return;
+        }
+
+        // If the character is an underscore, transition to the state to prevent sequential underscores.
+
+        if(theChar == '_')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalRealUnderscore;
+            return;
+        }
+
+        // If the character is a letter, generate an error.
+
+        if(Character.isLetter(theChar))
+        {
+            final String errorString = "LEXICAL ERROR at " + stringLocation + ": Illegal character in decimal real.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // Otherwise, we have reached the end of the token, so collect it.
+
+        final String realString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenReal, realString, curTokenStart));
+        stringLocation--;
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method collects digits during collecting of a decimal real immediately after an underscore.
+     * @param theChar   Character to be processed.
+     */
+    public void doLexicalStateInDecimalRealUnderscore(final char theChar)
+    {
+        // If the character is a digit, then return to the state for collecting decimal reals.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Illegal character in decimal real.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    private void doLexicalStateInOctalInteger (final char theChar)
+    {
+        String errorString = null;
+
+        // If the character is in the range 0...7, then stay in this state.
+
+        if((theChar >= '0') && (theChar <= '7'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInOctalInteger;
+            return;
+        }
+
+        // If the character is in the range 8...9, generate an error.
+
+        if((theChar >= '8') && (theChar <= '9'))
+        {
+            errorString = "LEXICAL ERROR at " + stringLocation + ": Illegal character in octal integer.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // If the character is a letter, than generate an error.
+
+        if(Character.isLetter(theChar))
+        {
+            errorString = "LEXICAL ERROR at " + stringLocation + ": Illegal character in octal integer.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // If the character is an underscore, transition to the state that will prevent sequential underscores.
+
+        if(theChar == '_')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInOctalIntegerUnderscore;
+            return;
+        }
+
+        // Otherwise, the end of the token has been found, so collect it.
+
+        final String integerString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
+        stringLocation--;
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
      * This method skips to the next clearly defined token after an error has been detected.
      */
     private void skipToNextBreak()
     {
-        for(int i = stringLocation; i < stringLength; i++)
+        for(int i = stringLocation + 1; i < stringLength; i++)
         {
             char theChar = workString.charAt(i);
 
