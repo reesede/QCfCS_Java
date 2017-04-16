@@ -48,6 +48,8 @@ import java.util.ArrayList;
 //      20170413    D.E. Reese          Added doLexicalStateStartDecimalReal().
 //      20170415    D.E. Reese          Added doLexicalStateInDecimalReal(), doLexicalStateInDecimalRealUnderscore(),
 //                                      doLexicalStateInOctalInteger().
+//      20170416    D.E. Reese          Added doLexicalStateInOctalIntegerUnderscore(), doLexicalStateStartBinaryInteger(),
+//                                      doLexicalStateInBinaryInteger(), doLexicalStateInBinaryIntegerUnderscore().
 //
 
 public class LexicalAnalyser
@@ -264,8 +266,23 @@ public class LexicalAnalyser
                 case lexicalStateInDecimalReal:
                     doLexicalStateInDecimalReal(theChar);
                     break;
+                case lexicalStateInDecimalRealUnderscore:
+                    doLexicalStateInDecimalRealUnderscore(theChar);
+                    break;
                 case lexicalStateInOctalInteger:
                     doLexicalStateInOctalInteger(theChar);
+                    break;
+                case lexicalStateInOctalIntegerUnderscore:
+                    doLexicalStateInOctalIntegerUnderscore(theChar);
+                    break;
+                case lexicalStateStartBinaryInteger:
+                    doLexicalStateStartBinaryInteger(theChar);
+                    break;
+                case lexicalStateInBinaryInteger:
+                    doLexicalStateInBinaryInteger(theChar);
+                    break;
+                case lexicalStateInBinaryIntegerUnderscore:
+                    doLexicalStateInBinaryIntegerUnderscore(theChar);
                     break;
             }
         }
@@ -286,7 +303,7 @@ public class LexicalAnalyser
     {
         // When the end of the string is reached, process based on the state.
 
-        String tokenString = null;
+        String tokenString;
 
         switch(lexicalState)
         {
@@ -335,6 +352,28 @@ public class LexicalAnalyser
                 stringLocation--;
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
+            case lexicalStateInOctalIntegerUnderscore:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing octet after underscore in octal constant.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateStartBinaryInteger:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing bit in binary constant.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                skipToNextBreak();
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInBinaryInteger:
+                tokenString = workString.substring(curTokenStart);
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
+                stringLocation--;
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInBinaryIntegerUnderscore:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing bits after underscore in binary constant.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
         }
     }
 
@@ -379,29 +418,29 @@ public class LexicalAnalyser
             case '+':
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenPlus, String.valueOf('+'), stringLocation));
                 lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
+                break;
             case '-':
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenMinus, String.valueOf('-'), stringLocation));
                 lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
+                break;
             case '(':
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenLeftParen, String.valueOf('('), stringLocation));
                 lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
+                break;
             case ')':
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenRightParen, String.valueOf(')'), stringLocation));
                 lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
+                break;
             case '.':
                 lexicalState = EnumLexicalState.lexicalStateDot;
-                return;
+                break;
             case '*':
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenTimes, String.valueOf('*'), stringLocation));
                 lexicalState = EnumLexicalState.lexicalStateStart;
-                return;
+                break;
             case '/':
                 lexicalState = EnumLexicalState.lexicalStateDivideOrComment;
-                return;
+                break;
         }
     }
 
@@ -437,7 +476,7 @@ public class LexicalAnalyser
      */
     private void doLexicalStateStartSpecialInteger(final char theChar)
     {
-        String errorString = null;
+        String errorString;
 
         // If the theChar is in the range 0...7, then this is an octal integer.
 
@@ -505,8 +544,6 @@ public class LexicalAnalyser
      */
     private void doLexicalStateInDecimalInteger(final char theChar)
     {
-        String errorString = null;
-
         // If the character is a digit, just stay in this state.
 
         if(Character.isDigit(theChar))
@@ -536,7 +573,7 @@ public class LexicalAnalyser
 
         if(Character.isLetter(theChar))
         {
-            errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+            final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
             tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
             skipToNextBreak();
             lexicalState = EnumLexicalState.lexicalStateStart;
@@ -570,11 +607,10 @@ public class LexicalAnalyser
 
         // Otherwise, generate an error.
 
-        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in decimal constant.";
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Missing digits after underscore in decimal constant.";
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
         skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
-        return;
     }
 
     /**
@@ -598,7 +634,6 @@ public class LexicalAnalyser
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
         skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
-        return;
     }
 
     /**
@@ -646,7 +681,7 @@ public class LexicalAnalyser
      * This method collects digits during collecting of a decimal real immediately after an underscore.
      * @param theChar   Character to be processed.
      */
-    public void doLexicalStateInDecimalRealUnderscore(final char theChar)
+    private void doLexicalStateInDecimalRealUnderscore(final char theChar)
     {
         // If the character is a digit, then return to the state for collecting decimal reals.
 
@@ -658,15 +693,20 @@ public class LexicalAnalyser
 
         // Otherwise, generate an error.
 
-        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Illegal character in decimal real.";
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Missing digits after underscore in decimal real.";
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
         skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
     }
 
+    /**
+     * This method handles an octal integer after an underscore if found. Note that repeated underscores
+     * are not allowed.
+     * @param theChar   Character to process.
+     */
     private void doLexicalStateInOctalInteger (final char theChar)
     {
-        String errorString = null;
+        String errorString;
 
         // If the character is in the range 0...7, then stay in this state.
 
@@ -711,6 +751,126 @@ public class LexicalAnalyser
         final String integerString = workString.substring(curTokenStart, stringLocation);
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
         stringLocation--;
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method collects octets during collecting of a octal real immediately after an underscore.
+     * @param theChar   Character to be processed.
+     */
+    private void doLexicalStateInOctalIntegerUnderscore(final char theChar)
+    {
+        // If the character is an octet, then return to processing octets in the octal integer.
+
+        if((theChar >= '0') && (theChar <= '7'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInOctalInteger;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Missing octet after underscore in octal constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method starts collection of a binary integer.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateStartBinaryInteger(final char theChar)
+    {
+        // If the character is in the range 0...1, then collect it and transition to collecting a binary integer.
+
+        if((theChar == '0') || (theChar == '1'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInBinaryInteger;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in binary constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method collects bits for a binary integer.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateInBinaryInteger(final char theChar)
+    {
+        String errorString;
+
+        // If the character is in the range 0...1, just stay in this state.
+
+        if((theChar == '0') || (theChar == '1'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInBinaryInteger;
+            return;
+        }
+
+        // If the character is an underscore, enter the state to ensure that there are not sequential underscores.
+
+        if(theChar == '_')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInBinaryIntegerUnderscore;
+            return;
+        }
+
+        // If the character is in the range 2...9, generate an error.
+
+        if((theChar >= '2') && (theChar <= '9'))
+        {
+            errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in binary constant.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // If the character is a letter, generate an error.
+
+        if(Character.isLetter(theChar))
+        {
+            errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in binary constant.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // Otherwise, the end of the token has been reached, so collect the token.
+
+        final String integerString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
+        stringLocation--;
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method collects bits during collecting of a binary real immediately after an underscore.
+     * @param theChar   Character to be processed.
+     */
+    private void doLexicalStateInBinaryIntegerUnderscore(final char theChar)
+    {
+        // If the character is a bit, then return to processing bit in the decimal integer.
+
+        if((theChar >= '0') && (theChar <= '1'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInBinaryInteger;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Missing bit after undersocre in binary constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
     }
 
