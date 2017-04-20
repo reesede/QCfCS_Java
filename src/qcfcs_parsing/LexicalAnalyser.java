@@ -50,6 +50,8 @@ import java.util.ArrayList;
 //                                      doLexicalStateInOctalInteger().
 //      20170416    D.E. Reese          Added doLexicalStateInOctalIntegerUnderscore(), doLexicalStateStartBinaryInteger(),
 //                                      doLexicalStateInBinaryInteger(), doLexicalStateInBinaryIntegerUnderscore().
+//      20170420    D.E. Reese          Added doLexicalStateStartHexInteger(), doLexicalStateInHexInteger(),
+//                                      doLexicalStateInHexIntegerUnderscore().
 //
 
 public class LexicalAnalyser
@@ -284,6 +286,15 @@ public class LexicalAnalyser
                 case lexicalStateInBinaryIntegerUnderscore:
                     doLexicalStateInBinaryIntegerUnderscore(theChar);
                     break;
+                case lexicalStateStartHexInteger:
+                    doLexicalStateStartHexInteger(theChar);
+                    break;
+                case lexicalStateInHexInteger:
+                    doLexicalStateInHexInteger(theChar);
+                    break;
+                case lexicalStateInHexIntegerUnderscore:
+                    doLexicalStateInHexIntegerUnderscore(theChar);
+                    break;
             }
         }
 
@@ -371,6 +382,23 @@ public class LexicalAnalyser
                 break;
             case lexicalStateInBinaryIntegerUnderscore:
                 tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing bits after underscore in binary constant.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateStartHexInteger:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing hextet in hexidecimal constant.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                skipToNextBreak();
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInHexInteger:
+                tokenString = workString.substring(curTokenStart);
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, tokenString, curTokenStart));
+                stringLocation--;
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInHexIntegerUnderscore:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing hextet after underscore in hexidecimal constant.";
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
@@ -869,6 +897,122 @@ public class LexicalAnalyser
         // Otherwise, generate an error.
 
         final String errorString = "LEXICAL ERROR at " + stringLocation + ": Missing bit after undersocre in binary constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method collects hextets when a hexidecimal integer is starting.
+     * @param theChar   Character to be processed.
+     */
+    private void doLexicalStateStartHexInteger(final char theChar)
+    {
+        // If the character is a digit, then it is valid for starting a hexidecimal integer.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexInteger;
+            return;
+        }
+
+        // If the character is in the range 'a'...'f' (either lower or upper case), then it is valid for starting
+        // a hexidecimal integer.
+
+        final char lowerCaseChar = Character.toLowerCase(theChar);
+        if((lowerCaseChar >= 'a') && (lowerCaseChar <= 'f'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexInteger;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in hexidecimal constant.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method processes characters in a hexidecimal integer.
+     * @param theChar   Character to be processed.
+     */
+    private void doLexicalStateInHexInteger(final char theChar)
+    {
+        String errorString;
+
+        // If the character is in the range 0...9, just stay in this state.
+
+        if((theChar >= '0') && (theChar <= '9'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexInteger;
+            return;
+        }
+
+        // If the character is in the range 'a'...'f' (both upper and lower case), state in this state.
+
+        final char lowerCaseChar = Character.toLowerCase(theChar);
+        if((lowerCaseChar >= 'a') && (lowerCaseChar <= 'f'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexInteger;
+            return;
+        }
+
+        // If the character is an underscore, enter the state to ensure that there are not sequential underscores.
+
+        if(theChar == '_')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexIntegerUnderscore;
+            return;
+        }
+
+        // If the character is a letter, generate an error.
+
+        if(Character.isLetter(theChar))
+        {
+            errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in hexidecimal constant.";
+            tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+            skipToNextBreak();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // Otherwise, the end of the token has been reached, so collect the token.
+
+        final String integerString = workString.substring(curTokenStart, stringLocation);
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenInteger, integerString, curTokenStart));
+        stringLocation--;
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method processes hextets after an underscore in hexidecimal integers.
+     * @param theChar   Character to be processed.
+     */
+    private void doLexicalStateInHexIntegerUnderscore(final char theChar)
+    {
+        // If the character is a digit, then return to processing hextets in the hexidecimal integer.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexInteger;
+            return;
+        }
+
+        // If the character is in the range 'a'...'f' (both upper and lower case), then return to processing hextets
+        // in hexidecimal integers.
+
+        final char lowerCaseChar = Character.toLowerCase(theChar);
+        if((lowerCaseChar >= 'a') && (lowerCaseChar <= 'f'))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInHexInteger;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Missing hextet after undersocre in hexidecimal constant.";
         tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
         skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
