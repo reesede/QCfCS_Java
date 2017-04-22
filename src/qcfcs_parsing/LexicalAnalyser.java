@@ -52,6 +52,7 @@ import java.util.ArrayList;
 //                                      doLexicalStateInBinaryInteger(), doLexicalStateInBinaryIntegerUnderscore().
 //      20170420    D.E. Reese          Added doLexicalStateStartHexInteger(), doLexicalStateInHexInteger(),
 //                                      doLexicalStateInHexIntegerUnderscore().
+//      20170422    D.E. Reese          doLexicalStateDot(), doLexicalStateDivideOrComment().
 //
 
 public class LexicalAnalyser
@@ -295,6 +296,12 @@ public class LexicalAnalyser
                 case lexicalStateInHexIntegerUnderscore:
                     doLexicalStateInHexIntegerUnderscore(theChar);
                     break;
+                case lexicalStateDot:
+                    doLexicalStateDot(theChar);
+                    break;
+                case lexicalStateDivideOrComment:
+                    doLexicalStateDivideOrComment(theChar);
+                    break;
             }
         }
 
@@ -401,6 +408,13 @@ public class LexicalAnalyser
                 tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing hextet after underscore in hexidecimal constant.";
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateDot:
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenDot, ".", curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateDivideOrComment:
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenDivide, "/", curTokenStart));
                 break;
         }
     }
@@ -1019,6 +1033,57 @@ public class LexicalAnalyser
     }
 
     /**
+     * This method processes a dot (.), which can be a dot token or the start of a decimal real.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateDot(final char theChar)
+    {
+        // If the character is a digit, then start collecting a decimal real.
+
+        if(Character.isDigit(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInDecimalReal;
+            return;
+        }
+
+        // Otherwise, the dot was just a dot.
+
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenDot, ".", curTokenStart));
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    /**
+     * This method processes the character after a slash (/), which can indicate a divide sign or the start of
+     * a comment.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateDivideOrComment(final char theChar)
+    {
+        // If the character is a second slash, then skip to the end of the line and indicate that a new token
+        // can be started.
+
+        if(theChar == '/')
+        {
+            stringLocation = workString.length();
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // If the character is a start (*), then it indicates that a possible multi-line comment has been
+        // entered, and analysis needs to find a */ before continuing.
+
+        if(theChar == '*')
+        {
+            lexicalState = EnumLexicalState.lexicalStateInComment;
+            return;
+        }
+
+        // Otherwise, the slash was a divide sign.
+
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenDivide, "/", curTokenStart));
+    }
+
+    /**
      * This method skips to the next clearly defined token after an error has been detected.
      */
     private void skipToNextBreak()
@@ -1035,3 +1100,4 @@ public class LexicalAnalyser
             stringLocation--;
     }
 }
+

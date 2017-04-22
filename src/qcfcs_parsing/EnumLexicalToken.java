@@ -29,6 +29,7 @@ package qcfcs_parsing;
 //      20170324    D.E. Reese          Creation.
 //      20170329    D.E. Reese          Added TokenLeftParen, TokenRightParen, TokenDoublePlus, TokenDoubleMinus.
 //      20170408    D.E. Reese          Added TokenError.
+//      20170422    D.E. Reese          Added TokenDot, TokenDivide.
 //
 
 public enum EnumLexicalToken
@@ -69,9 +70,14 @@ public enum EnumLexicalToken
     TokenMinus,
 
     /**
-     * Times (*) sign token, i.e '*'.
+     * Times sign token, i.e '*'.
      */
     TokenTimes,
+
+    /**
+     * Divide sign, i.e. '/'.
+     */
+    TokenDivide,
 
     /**
      * Left parenthesis, i.e. '('.
@@ -92,6 +98,11 @@ public enum EnumLexicalToken
      * Double minus, i.e. '--'.
      */
     TokenDoubleMinus,
+
+    /**
+     * Dot (.) which is not a decimal point.
+     */
+    TokenDot,
 
     /**
      * Keyword for I, i.e., sqrt (-1).
