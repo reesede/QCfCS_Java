@@ -52,7 +52,11 @@ import java.util.ArrayList;
 //                                      doLexicalStateInBinaryInteger(), doLexicalStateInBinaryIntegerUnderscore().
 //      20170420    D.E. Reese          Added doLexicalStateStartHexInteger(), doLexicalStateInHexInteger(),
 //                                      doLexicalStateInHexIntegerUnderscore().
-//      20170422    D.E. Reese          doLexicalStateDot(), doLexicalStateDivideOrComment().
+//      20170422    D.E. Reese          Added doLexicalStateDot(), doLexicalStateDivideOrComment().
+//      20170423    D.E. Reese          Added doLexicalStateInComment(), doLexicalStateCheckEndComment(),
+//                                      isMoreTextNeeded().
+//                                      Fixed bug in doLexicalStateInLabel() - changed logical AND to logical OR in
+//                                      check for letters, digits, and underscore.
 //
 
 public class LexicalAnalyser
@@ -302,6 +306,12 @@ public class LexicalAnalyser
                 case lexicalStateDivideOrComment:
                     doLexicalStateDivideOrComment(theChar);
                     break;
+                case lexicalStateInComment:
+                    doLexicalStateInComment(theChar);
+                    break;
+                case lexicalStateCheckEndComment:
+                    doLexicalStateCheckEndComment(theChar);
+                    break;
             }
         }
 
@@ -415,6 +425,10 @@ public class LexicalAnalyser
                 break;
             case lexicalStateDivideOrComment:
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenDivide, "/", curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateInComment:
+                lexicalState = EnumLexicalState.lexicalStateInComment;
                 break;
         }
     }
@@ -494,7 +508,7 @@ public class LexicalAnalyser
     {
         // Handle letters, digits, or underscore - just stay in this state.
 
-        if (Character.isLetter(theChar) && Character.isDigit(theChar) || theChar == '_')
+        if (Character.isLetter(theChar) || Character.isDigit(theChar) || theChar == '_')
         {
             lexicalState = EnumLexicalState.lexicalStateInLabel;
             return;
@@ -1084,6 +1098,45 @@ public class LexicalAnalyser
     }
 
     /**
+     * This method processes characters while in a comment.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateInComment(final char theChar)
+    {
+        // If the character is a star (*), then enter the state to check for a slash (/) to indicate
+        // an end of a comment.
+
+        if(theChar == '*')
+        {
+            lexicalState = EnumLexicalState.lexicalStateCheckEndComment;
+            return;
+        }
+
+        // Otherwise, stay in this state.
+
+        lexicalState = EnumLexicalState.lexicalStateInComment;
+    }
+
+    /**
+     * This method processes characters when checking for a slash (/) after a (*) at the end of a comment.
+     * @param theChar   Character to process.
+     */
+    private void doLexicalStateCheckEndComment(final char theChar)
+    {
+        // If the character is a slash, then the comment is done.
+
+        if(theChar == '/')
+        {
+            lexicalState = EnumLexicalState.lexicalStateStart;
+            return;
+        }
+
+        // Otherwise, the star (*) was not the end of a comment, so stay in the comment.
+
+        lexicalState = EnumLexicalState.lexicalStateInComment;
+    }
+
+    /**
      * This method skips to the next clearly defined token after an error has been detected.
      */
     private void skipToNextBreak()
@@ -1098,6 +1151,18 @@ public class LexicalAnalyser
 
         if(stringLocation != stringLength)
             stringLocation--;
+    }
+
+    /**
+     * This method determines whether or not lexical analysis is in a state that is valid when there is no
+     * additional text needed (i.e., it is in a state where it is not expecting an additional character).
+     * @return
+     */
+    public boolean isMoreTextNeeded()
+    {
+        if(lexicalState == EnumLexicalState.lexicalStateStart)
+            return true;
+        return false;
     }
 }
 
