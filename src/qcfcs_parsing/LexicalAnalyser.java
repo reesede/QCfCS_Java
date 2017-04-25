@@ -57,6 +57,7 @@ import java.util.ArrayList;
 //                                      isMoreTextNeeded().
 //                                      Fixed bug in doLexicalStateInLabel() - changed logical AND to logical OR in
 //                                      check for letters, digits, and underscore.
+//      20170425    D.E. Reese          Fixed bug in isMoreTextNeeded() by reversing results.
 //
 
 public class LexicalAnalyser
@@ -1161,8 +1162,8 @@ public class LexicalAnalyser
     public boolean isMoreTextNeeded()
     {
         if(lexicalState == EnumLexicalState.lexicalStateStart)
-            return true;
-        return false;
+            return false;
+        return true;
     }
 }
 

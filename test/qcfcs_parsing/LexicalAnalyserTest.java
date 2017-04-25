@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 // History:
 //      20170330    D.E. Reese          Creation.
+//      20170425    D.E. Reese          Added isMoreTextNeeded().
 
 class LexicalAnalyserTest
 {
@@ -46,7 +47,6 @@ class LexicalAnalyserTest
     {
         ArrayList<LexicalToken> theTokenList;
         LexicalAnalyser         theAnalyser;
-        LexicalToken            theToken;
 
         // Test creation of a single label of a single letter.
 
@@ -97,6 +97,43 @@ class LexicalAnalyserTest
         assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenLabel);
         assertTrue(theTokenList.get(0).getStringValue().compareTo("Sam") == 0);
         assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+    }
+
+    @Test
+    public void isMoreTextNeeded()
+    {
+        LexicalAnalyser theAnalyser;
+        ArrayList<LexicalToken> theTokenList;
+
+        // Test that a newly created lexical analyser does not need text.
+
+        theAnalyser = new LexicalAnalyser();
+        assertFalse(theAnalyser.isMoreTextNeeded());
+
+        // Test after a single label.
+
+        theTokenList = theAnalyser.analyseString("Sam");
+        assertFalse(theAnalyser.isMoreTextNeeded());
+
+        // Test after multiple labels.
+
+        theTokenList = theAnalyser.analyseString("Sam1 Sam2 Sam3");
+        assertFalse(theAnalyser.isMoreTextNeeded());
+
+        // Test while in a comment at the end of a line.
+
+        theTokenList = theAnalyser.analyseString("Sam4 // This is a comment.");
+        assertFalse(theAnalyser.isMoreTextNeeded());
+
+        // Test while in a multiline comment.
+
+        theTokenList = theAnalyser.analyseString("Sam4 /* start of multiline comment.");
+        assertTrue(theAnalyser.isMoreTextNeeded());
+        theTokenList = theAnalyser.analyseString("still in multiline comment.");
+        assertTrue(theAnalyser.isMoreTextNeeded());
+        theTokenList = theAnalyser.analyseString("end of multiline comment. */");
+        assertFalse(theAnalyser.isMoreTextNeeded());
 
     }
 
