@@ -33,7 +33,11 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 // History:
 //      20170330    D.E. Reese          Creation.
-//      20170425    D.E. Reese          Added isMoreTextNeeded().
+//      20170425    D.E. Reese          Added isMoreTextNeeded(), testDecimalInteger().
+//      20170428    D.E. Reese          Added testOctalInteger().
+//      20170501    D.E. Reese          Added testHexidecimalInteger().
+//      20170505    D.E. Reese          Changed start of hex integers from "0h" to "0x" and "0X".
+//
 
 class LexicalAnalyserTest
 {
@@ -96,6 +100,373 @@ class LexicalAnalyserTest
         assertTrue(theTokenList.size() == 2);
         assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenLabel);
         assertTrue(theTokenList.get(0).getStringValue().compareTo("Sam") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+    }
+
+    @Test
+    public void testDecimalInteger()
+    {
+        LexicalAnalyser theAnalyser;
+        ArrayList<LexicalToken> theTokenList;
+
+        // Test 0.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theTokenList = theAnalyser.analyseString(" 0 ");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(1).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(1).getStringValue().compareTo("0") == 0);
+        assertTrue(theTokenList.get(1).getSourceStart() == 1);
+
+        theTokenList = theAnalyser.analyseString("000000000");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 3);
+        assertTrue(theTokenList.get(2).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(2).getStringValue().compareTo("000000000") == 0);
+        assertTrue(theTokenList.get(2).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0+");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+        assertTrue(theTokenList.get(1).getTokenType() == EnumLexicalToken.TokenPlus);
+
+        // Test non-zero integer.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("1");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("1") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString(" 1 ");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("1") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 1);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString(" 123 ");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("123") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 1);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("123_456 ");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("123_456") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("123_456_789");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("123_456_789") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        // Check errors related to underscores and characters.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("12_");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 3: Missing digits after underscore in decimal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("12__3");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 3: Missing digits after underscore in decimal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("123abc");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 3: Invalid character in decimal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+    }
+
+    @Test
+    public void testOctalInteger()
+    {
+        LexicalAnalyser theAnalyser;
+        ArrayList<LexicalToken> theTokenList;
+
+        // Test 0.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("00");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("00") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        // Test non-zero values.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("01");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("01") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString(" 01 ");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("01") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 1);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("012345670");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("012345670") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("007654321");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("007654321") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("01234_5670");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("01234_5670") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("012_34_56_70");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("012_34_56_70") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0123(");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0123") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        // Test errors related to underscore and letters in constant.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("012_");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 4: Missing octets after underscore in octal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("012__3");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 4: Missing octets after underscore in octal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0123abc");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 4: Invalid character in octal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+    }
+
+    @Test
+    public void testHexidecimalInteger()
+    {
+        LexicalAnalyser theAnalyser;
+        ArrayList<LexicalToken> theTokenList;
+
+        // Test 0.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x0");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0x0") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0X0");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0X0") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x00");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0x00") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        // Test non-zero values.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x1");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0x1") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xa");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xa") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xA");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xA") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0XA");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0XA") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xb");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xb") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xc");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xc") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xe");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xe") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xf");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xf") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x0123456789abcdef");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0x0123456789abcdef") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x0123456789ABCDEF");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0x0123456789ABCDEF") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xFEDCBA9876543210");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xFEDCBA9876543210") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0xFED_CBA_987_654_321_0+");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("0xFED_CBA_987_654_321_0") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        // Test errors related to underscore and letters in constant.
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x12_");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 5: Missing hextet after underscore in hexidecimal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x12__3");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 5: Missing hextet after underscore in hexidecimal constant.") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("0x123ghi");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 2);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenError);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("LEXICAL ERROR at 5: Invalid character in hexidecimal constant.") == 0);
         assertTrue(theTokenList.get(0).getSourceStart() == 0);
 
     }
