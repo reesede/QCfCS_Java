@@ -65,6 +65,7 @@ import java.util.ArrayList;
 //      20170505    D.E. Reese          Change special integers so that binary integers can start with an upper-case
 //                                      'B' and hex integers start with 'x' and 'X' (rather than 'h'). Fixed misspelling
 //                                      of underscore in error messages.
+//      20170506    D.E. Reese          Fixed minor errors in consistency in error messages for binary constants.
 //
 
 public class LexicalAnalyser
@@ -406,7 +407,7 @@ public class LexicalAnalyser
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
             case lexicalStateInBinaryIntegerUnderscore:
-                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing bits after underscore in binary constant.";
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Missing bit after underscore in binary constant.";
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
