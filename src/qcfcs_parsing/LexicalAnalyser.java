@@ -69,6 +69,7 @@ import java.util.ArrayList;
 //      20170507    D.E. Reese          Fixed doLexicalStateCheckEndComment() to handle star correctly.
 //                                      Added checkKeyword() and code when a label is generated to check if a label
 //                                      is a keyword.
+//                                      Added lexicalStateStartSpclLabel and doLexicalStateStartSpclLabel().
 //
 
 public class LexicalAnalyser
@@ -87,6 +88,11 @@ public class LexicalAnalyser
          * State of lexical analysis - in a label
          */
         lexicalStateInLabel,
+
+        /**
+         * State of lexical analysis - start of special label.
+         */
+        lexicalStateStartSpclLabel,
 
         /**
          * State of lexical analysis - starting a binary, octal, or hexidecimal integer, or a 0 or decimal real.
@@ -270,6 +276,9 @@ public class LexicalAnalyser
                 case lexicalStateInLabel:
                     doLexicalStateInLabel(theChar);
                     break;
+                case lexicalStateStartSpclLabel:
+                    doLexicalStateStartSpclLabel(theChar);
+                    break;
                 case lexicalStateStartSpecialInteger:
                     doLexicalStateStartSpecialInteger(theChar);
                     break;
@@ -353,6 +362,12 @@ public class LexicalAnalyser
                 tokenString = workString.substring(curTokenStart);
                 final EnumLexicalToken keywordOrLabel = this.checkKeyword(tokenString);
                 tokenList.add(new LexicalToken(keywordOrLabel, tokenString, curTokenStart));
+                lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case lexicalStateStartSpclLabel:
+                tokenString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in special label.";
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, tokenString, curTokenStart));
+                skipToNextBreak();
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
             case lexicalStateStartSpecialInteger:
@@ -510,6 +525,9 @@ public class LexicalAnalyser
             case '/':
                 lexicalState = EnumLexicalState.lexicalStateDivideOrComment;
                 break;
+            case '%':
+                lexicalState = EnumLexicalState.lexicalStateStartSpclLabel;
+                break;
         }
     }
 
@@ -535,6 +553,24 @@ public class LexicalAnalyser
         final EnumLexicalToken keywordOrLabel = this.checkKeyword(labelString);
         tokenList.add(new LexicalToken(keywordOrLabel, labelString, curTokenStart));
         stringLocation--;
+        lexicalState = EnumLexicalState.lexicalStateStart;
+    }
+
+    private void doLexicalStateStartSpclLabel(final char theChar)
+    {
+        // If the character is a letter, enter the state to process a label.
+
+        if(Character.isLetter(theChar))
+        {
+            lexicalState = EnumLexicalState.lexicalStateInLabel;
+            return;
+        }
+
+        // Otherwise, generate an error.
+
+        final String errorString = "LEXICAL ERROR at " + stringLocation + ": Invalid character in special label.";
+        tokenList.add(new LexicalToken(EnumLexicalToken.TokenError, errorString, curTokenStart));
+        skipToNextBreak();
         lexicalState = EnumLexicalState.lexicalStateStart;
     }
 
@@ -1187,9 +1223,9 @@ public class LexicalAnalyser
      */
     private EnumLexicalToken checkKeyword (final String labelString)
     {
-        // Check for "I" (square root of -1).
+        // Check for "%I" (square root of -1).
 
-        if(labelString.compareTo("I") == 0)
+        if(labelString.compareTo("%I") == 0)
             return EnumLexicalToken.KeywordI;
 
         return EnumLexicalToken.TokenLabel;

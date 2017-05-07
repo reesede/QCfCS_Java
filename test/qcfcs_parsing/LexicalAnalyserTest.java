@@ -822,13 +822,12 @@ class LexicalAnalyserTest
         ArrayList<LexicalToken> theTokenList;
 
         theAnalyser = new LexicalAnalyser();
-        theTokenList = theAnalyser.analyseString("I");
+        theTokenList = theAnalyser.analyseString("%I");
         assertTrue(theTokenList != null);
         assertTrue(theTokenList.size() == 1);
         assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.KeywordI);
-        assertTrue(theTokenList.get(0).getStringValue().compareTo("I") == 0);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("%I") == 0);
         assertTrue(theTokenList.get(0).getSourceStart() == 0);
-
     }
 
     @Test
