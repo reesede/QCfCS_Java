@@ -66,6 +66,9 @@ import java.util.ArrayList;
 //                                      'B' and hex integers start with 'x' and 'X' (rather than 'h'). Fixed misspelling
 //                                      of underscore in error messages.
 //      20170506    D.E. Reese          Fixed minor errors in consistency in error messages for binary constants.
+//      20170507    D.E. Reese          Fixed doLexicalStateCheckEndComment() to handle star correctly.
+//                                      Added checkKeyword() and code when a label is generated to check if a label
+//                                      is a keyword.
 //
 
 public class LexicalAnalyser
@@ -348,7 +351,8 @@ public class LexicalAnalyser
                 break;
             case lexicalStateInLabel:
                 tokenString = workString.substring(curTokenStart);
-                tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, tokenString, curTokenStart));
+                final EnumLexicalToken keywordOrLabel = this.checkKeyword(tokenString);
+                tokenList.add(new LexicalToken(keywordOrLabel, tokenString, curTokenStart));
                 lexicalState = EnumLexicalState.lexicalStateStart;
                 break;
             case lexicalStateStartSpecialInteger:
@@ -525,10 +529,11 @@ public class LexicalAnalyser
 
         // If another character is found, the previous character was the end of the label. So, collect the
         // label token and decrement the stringLocation so that the current character will be reprocessed.
-        // Set the state to lexicalStateStart to begin a new token.
+        // Check if the label is a keyword. Set the state to lexicalStateStart to begin a new token.
 
         final String labelString = workString.substring(curTokenStart, stringLocation);
-        tokenList.add(new LexicalToken(EnumLexicalToken.TokenLabel, labelString, curTokenStart));
+        final EnumLexicalToken keywordOrLabel = this.checkKeyword(labelString);
+        tokenList.add(new LexicalToken(keywordOrLabel, labelString, curTokenStart));
         stringLocation--;
         lexicalState = EnumLexicalState.lexicalStateStart;
     }
@@ -1144,6 +1149,14 @@ public class LexicalAnalyser
             return;
         }
 
+        // If the character is a star, then keep checking for an end to the comment.
+
+        if(theChar == '*')
+        {
+            lexicalState = EnumLexicalState.lexicalStateCheckEndComment;
+            return;
+        }
+
         // Otherwise, the star (*) was not the end of a comment, so stay in the comment.
 
         lexicalState = EnumLexicalState.lexicalStateInComment;
@@ -1164,6 +1177,22 @@ public class LexicalAnalyser
 
         if(stringLocation != stringLength)
             stringLocation--;
+    }
+
+    /**
+     * This method determines whether a label string actually is a keyword.
+     * @param labelString   String to check.
+     * @return              Returns EnumLexicalToken for the keyword if labelString actually is a keyword.
+     *                      Returns TokenLabel otherwise.
+     */
+    private EnumLexicalToken checkKeyword (final String labelString)
+    {
+        // Check for "I" (square root of -1).
+
+        if(labelString.compareTo("I") == 0)
+            return EnumLexicalToken.KeywordI;
+
+        return EnumLexicalToken.TokenLabel;
     }
 
     /**

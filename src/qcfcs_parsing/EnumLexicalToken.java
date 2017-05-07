@@ -30,6 +30,8 @@ package qcfcs_parsing;
 //      20170329    D.E. Reese          Added TokenLeftParen, TokenRightParen, TokenDoublePlus, TokenDoubleMinus.
 //      20170408    D.E. Reese          Added TokenError.
 //      20170422    D.E. Reese          Added TokenDot, TokenDivide.
+//      20170507    D.E. Reese          Deleted TokenDoublePlus, TokenDoubleMinus. These can be re-added later when
+//                                      single addition and subtraction are added.
 //
 
 public enum EnumLexicalToken
@@ -88,16 +90,6 @@ public enum EnumLexicalToken
      * Right parenthesis, i.e. ')'.
      */
     TokenRightParen,
-
-    /**
-     * Double plus, i.e. '++'.
-     */
-    TokenDoublePlus,
-
-    /**
-     * Double minus, i.e. '--'.
-     */
-    TokenDoubleMinus,
 
     /**
      * Dot (.) which is not a decimal point.

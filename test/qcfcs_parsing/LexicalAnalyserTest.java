@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170501    D.E. Reese          Added testHexidecimalInteger().
 //      20170505    D.E. Reese          Changed start of hex integers from "0h" to "0x" and "0X".
 //      20170506    D.E. Reese          Added testBinaryInteger(), testDot(), testComment().
+//      20170507    D.E. Reese          Added testSmallTokens(), testKeywords().
 //
 
 class LexicalAnalyserTest
@@ -713,6 +714,121 @@ class LexicalAnalyserTest
         assertTrue(theTokenList.get(2).getStringValue().compareTo("2") == 0);
         assertTrue(theTokenList.get(2).getSourceStart() == 2);
         assertFalse(theAnalyser.isMoreTextNeeded());
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("2+2 /* add 2 to 2. */");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 3);
+        assertFalse(theAnalyser.isMoreTextNeeded());
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("2") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+        assertTrue(theTokenList.get(1).getTokenType() == EnumLexicalToken.TokenPlus);
+        assertTrue(theTokenList.get(1).getStringValue().compareTo("+") == 0);
+        assertTrue(theTokenList.get(1).getSourceStart() == 1);
+        assertTrue(theTokenList.get(2).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(2).getStringValue().compareTo("2") == 0);
+        assertTrue(theTokenList.get(2).getSourceStart() == 2);
+        assertFalse(theAnalyser.isMoreTextNeeded());
+
+        theAnalyser = new LexicalAnalyser();
+        theAnalyser.analyseString("/****");
+        assertTrue(theAnalyser.isMoreTextNeeded());
+        theAnalyser.analyseString("This is a multiline comment test.");
+        assertTrue(theAnalyser.isMoreTextNeeded());
+        theAnalyser.analyseString("More multiline comment testing.");
+        assertTrue(theAnalyser.isMoreTextNeeded());
+        theTokenList = theAnalyser.analyseString("Comment ends with this line. */");
+        assertFalse(theAnalyser.isMoreTextNeeded());
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("/* add 2 to 2. */2+2");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 3);
+        assertFalse(theAnalyser.isMoreTextNeeded());
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("2") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 17);
+        assertTrue(theTokenList.get(1).getTokenType() == EnumLexicalToken.TokenPlus);
+        assertTrue(theTokenList.get(1).getStringValue().compareTo("+") == 0);
+        assertTrue(theTokenList.get(1).getSourceStart() == 18);
+        assertTrue(theTokenList.get(2).getTokenType() == EnumLexicalToken.TokenInteger);
+        assertTrue(theTokenList.get(2).getStringValue().compareTo("2") == 0);
+        assertTrue(theTokenList.get(2).getSourceStart() == 19);
+        assertFalse(theAnalyser.isMoreTextNeeded());
+    }
+
+    @Test
+    public void testSmallTokens()
+    {
+        LexicalAnalyser theAnalyser;
+        ArrayList<LexicalToken> theTokenList;
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("+");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenPlus);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("+") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("-");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenMinus);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("-") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("*");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenTimes);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("*") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("/");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenDivide);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("/") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("(");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenLeftParen);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("(") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString(")");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenRightParen);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo(")") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+    }
+
+    @Test
+    public void testKeywords()
+    {
+        LexicalAnalyser theAnalyser;
+        ArrayList<LexicalToken> theTokenList;
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("I");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.KeywordI);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("I") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
     }
 
     @Test
