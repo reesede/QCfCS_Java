@@ -32,6 +32,7 @@ package qcfcs_parsing;
 //      20170422    D.E. Reese          Added TokenDot, TokenDivide.
 //      20170507    D.E. Reese          Deleted TokenDoublePlus, TokenDoubleMinus. These can be re-added later when
 //                                      single addition and subtraction are added.
+//      20170902    D.E. Reese          Added TokenUpArrow.
 //
 
 public enum EnumLexicalToken
@@ -95,6 +96,11 @@ public enum EnumLexicalToken
      * Dot (.) which is not a decimal point.
      */
     TokenDot,
+
+    /**
+     * Up-arrow (indicates exponentiation).
+     */
+    TokenUpArrow,
 
     /**
      * Keyword for I, i.e., sqrt (-1).

@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //      20170505    D.E. Reese          Changed start of hex integers from "0h" to "0x" and "0X".
 //      20170506    D.E. Reese          Added testBinaryInteger(), testDot(), testComment().
 //      20170507    D.E. Reese          Added testSmallTokens(), testKeywords().
+//      20170902    D.E. Reese          Added code in testSmallTokens() to handle TokenUpArrow.
 //
 
 class LexicalAnalyserTest
@@ -812,6 +813,14 @@ class LexicalAnalyserTest
         assertTrue(theTokenList.size() == 1);
         assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenRightParen);
         assertTrue(theTokenList.get(0).getStringValue().compareTo(")") == 0);
+        assertTrue(theTokenList.get(0).getSourceStart() == 0);
+
+        theAnalyser = new LexicalAnalyser();
+        theTokenList = theAnalyser.analyseString("^");
+        assertTrue(theTokenList != null);
+        assertTrue(theTokenList.size() == 1);
+        assertTrue(theTokenList.get(0).getTokenType() == EnumLexicalToken.TokenUpArrow);
+        assertTrue(theTokenList.get(0).getStringValue().compareTo("^") == 0);
         assertTrue(theTokenList.get(0).getSourceStart() == 0);
     }
 

@@ -70,6 +70,7 @@ import java.util.ArrayList;
 //                                      Added checkKeyword() and code when a label is generated to check if a label
 //                                      is a keyword.
 //                                      Added lexicalStateStartSpclLabel and doLexicalStateStartSpclLabel().
+//      20170902    D.E. Reese          Added code to collect LexicalToken.TokenUpArrow.
 //
 
 public class LexicalAnalyser
@@ -514,6 +515,9 @@ public class LexicalAnalyser
             case ')':
                 tokenList.add(new LexicalToken(EnumLexicalToken.TokenRightParen, String.valueOf(')'), stringLocation));
                 lexicalState = EnumLexicalState.lexicalStateStart;
+                break;
+            case '^':
+                tokenList.add(new LexicalToken(EnumLexicalToken.TokenUpArrow, String.valueOf('^'), stringLocation));
                 break;
             case '.':
                 lexicalState = EnumLexicalState.lexicalStateDot;
