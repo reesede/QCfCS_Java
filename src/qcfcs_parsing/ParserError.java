@@ -1,10 +1,7 @@
 package qcfcs_parsing;
 
-import java.util.ArrayList;
-
 /**
- * This abstract class defines the basis for parse tree entries for expressions. It must be extended
- * for the various types of expression components in the parse tree.
+ * This class contains information about errors detected by the parser.
  * Created by reesede on 9/13/2017.
  * @author David E. Reese
  * @version 3.3.2
@@ -29,15 +26,12 @@ import java.util.ArrayList;
 // along with QCfCS_java.  If not, see <http://www.gnu.org/licenses/>.
 //
 // History:
-//      20170914    D.E. Reese          Creation.
-//
+//      20170916    D.E. Reese          Creation as stub.
 
-public abstract class AbstractExpressionParseTreeEntry
+public class ParserError
 {
-    private EnumParseTreeEntry  entryType;
-
-    ArrayList<AbstractExpressionParseTreeEntry> subTrees;
-
-    ArrayList<EnumExpressionOperator> operators;
+    /**
+     * Type of error.
+     */
+    EnumParserError error;
 }
-

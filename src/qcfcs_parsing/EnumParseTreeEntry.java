@@ -27,42 +27,43 @@ package qcfcs_parsing;
 //
 // History:
 //      20170913    D.E. Reese          Creation.
+//      20170916    D.E. Reese          Renamed expression entries so that underscore is to the left of "Expression".
 //
 
 public enum EnumParseTreeEntry
 {
     /**
-     * Unknown level of expression.
+     * Unknown type of entry.
      */
-    ParseTreeEntryExpression_Unknown,
+    ParseTreeEntry_Unknown,
 
     /**
      * Level 4 Expression (+, -)
      */
-    ParseTreeEntryExpression_L4,
+    ParseTreeEntry_ExpressionL4,
 
     /**
      * Level 3 Expression (*, /)
      */
-    ParseTreeEntryExpression_L3,
+    ParseTreeEntry_ExpressionL3,
 
     /**
      * Level 2 Expression (unary +, unary -)
      */
-    ParseTreeEntryExpression_L2,
+    ParseTreeEntry_ExpressionL2,
 
     /**
      * Level 1 Expression (Exponential)
      */
-    ParseTreeEntryExpression_L1,
+    ParseTreeEntry_ExpressionL1,
 
     /**
      * Level 0 Expression (Single token or parenthetical expression)
      */
-    ParseTreeEntryExpression_L0,
+    ParseTreeEntry_ExpressionL0,
 
     /**
      * Exponent
      */
-    ParseTreeEntryExpression_Exp
+    ParseTreeEntry_ExpressionExponent
 }
