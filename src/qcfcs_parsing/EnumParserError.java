@@ -27,6 +27,7 @@ package qcfcs_parsing;
 //
 // History:
 //      20170916    D.E. Reese          Creation.
+//      20170917    D.E. Reese          Added ParserError_Empty
 
 public enum EnumParserError
 {
@@ -38,5 +39,10 @@ public enum EnumParserError
     /**
      * No parser error detected.
      */
-    ParserError_None
+    ParserError_None,
+
+    /**
+     * Indicates an empty parser tree entry. Note that this may not be an error, depending on where it occurred.
+     */
+    ParserError_Empty
 }

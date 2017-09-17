@@ -71,6 +71,7 @@ import java.util.ArrayList;
 //                                      is a keyword.
 //                                      Added lexicalStateStartSpclLabel and doLexicalStateStartSpclLabel().
 //      20170902    D.E. Reese          Added code to collect LexicalToken.TokenUpArrow.
+//      20170917    D.E. Reese          Added getNextToken() as stub.
 //
 
 public class LexicalAnalyser
@@ -1245,6 +1246,12 @@ public class LexicalAnalyser
         if(lexicalState == EnumLexicalState.lexicalStateStart)
             return false;
         return true;
+    }
+
+    public LexicalToken getNextToken()
+    {
+        // TODO: add code for getNextToken ()
+        return null;
     }
 }
 

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 //
 // History:
 //      20170914    D.E. Reese          Creation as stub.
+//      20170917    D.E. Reese          Added validTree, setValidTree (), and isValid().
 //
 
 public abstract class AbstractParseTreeEntry
@@ -50,12 +51,9 @@ public abstract class AbstractParseTreeEntry
     private LexicalAnalyser lexicalAnalyser;
 
     /**
-     * Default constructor.
+     * Indicates if the parse tree is valid (i.e., error-free).
      */
-    public AbstractParseTreeEntry()
-    {
-        initialize();
-    }
+    private boolean validTree;
 
     /**
      * Constructor for the tree parse tree.
@@ -82,6 +80,7 @@ public abstract class AbstractParseTreeEntry
         entryType = EnumParseTreeEntry.ParseTreeEntry_Unknown;
         subTrees =new ArrayList<AbstractParseTreeEntry>();
         lexicalAnalyser = null;
+        validTree = true;       // Assume that an empty parse tree is valid.
     }
 
     /**
@@ -153,14 +152,39 @@ public abstract class AbstractParseTreeEntry
     }
 
     /**
+     * This method sets the indication as to whether or not the parse tree is valid.
+     * @param validTree true if the tree is valid; false if it is invalid and contains errors.
+     */
+    public void setValidTree(final boolean validTree)
+    {
+        this.validTree = validTree;
+    }
+
+    /**
+     * This method returns an indication as to whether or not the parse tree is valid.
+     * @return  true if the tree if valid; false if it is invalid and contains errors.
+     */
+    public boolean isValid()
+    {
+        return validTree;
+    }
+
+    /**
      * Abstract method to parse the tree based on the lexical analyser given for the tree. This method assumes that
      * the first token in the parse tree must be determined by the lexical analyser.
-     * @return  A list of parser errors found during parsing.
+     * @return  A list of parser errors found during parsing. Null if no errors were found.
      * @throws  NullPointerException    Thrown if the lexical analyser for the tree is null.
      */
     public abstract ArrayList<ParserError> parse() throws NullPointerException;
 
-    public abstract ArrayList<ParserError> parse(final EnumLexicalToken initialToken)
+    /**
+     * Abstract method to parse the tree based on an existing token, which will be the first token of the entry.
+     * @param initialToken  Initial token of parse tree entry detected at a higher level.
+     * @return  List of parser errors found during parsing. Null if no errors were found.
+     * @throws IllegalArgumentException Thrown if initialToken was null or erroneous.
+     * @throws NullPointerException Thrown if the lexical analyser for the tree is null.
+     */
+    public abstract ArrayList<ParserError> parse(final LexicalToken initialToken)
             throws IllegalArgumentException,NullPointerException;
 }
 

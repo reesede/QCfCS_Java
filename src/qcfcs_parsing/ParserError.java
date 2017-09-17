@@ -27,11 +27,57 @@ package qcfcs_parsing;
 //
 // History:
 //      20170916    D.E. Reese          Creation as stub.
+//      20170917    D.E. Reese          Added constructor and initialize().
 
 public class ParserError
 {
     /**
      * Type of error.
      */
-    EnumParserError error;
+    private EnumParserError error;
+
+    /**
+     * String describing the error.
+     */
+    private String errorString;
+
+    /**
+     * Line number containing the error.
+     */
+    private int lineNumber;
+
+    /**
+     * Location within a line of the error.
+     */
+    private int location;
+
+    /**
+     * Constructor to create a new parser error.
+     * @param theError  Type of error.
+     * @param theLineNumber Line number of error (must be > 0).
+     * @param theLocation   Location in line of error (must be >= 0).
+     * @param supplementaryText Array of strings containing supplementary text to insert into string.
+     * @throws IllegalArgumentException
+     */
+    public ParserError(final EnumParserError theError, final int theLineNumber, final int theLocation,
+                       String[] supplementaryText) throws IllegalArgumentException
+    {
+        if (theError == EnumParserError.ParserError_Unknown)
+            throw new IllegalArgumentException("theError == ParserError_Unknown");
+        if (theLineNumber <= 0) throw new IllegalArgumentException("theLineNumber <= 0");
+        if (theLocation <= 0) throw new IllegalArgumentException("theLocation <= 0");
+
+        initialize();
+    }
+
+    /**
+     * This method initializes the error structure.
+     */
+    private void initialize()
+    {
+        error = EnumParserError.ParserError_Unknown;
+        errorString = null;
+        lineNumber = 0;
+        location = 0;
+    }
 }
